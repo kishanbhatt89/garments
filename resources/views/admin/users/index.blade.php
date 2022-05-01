@@ -15,7 +15,7 @@
                 <ul class="breadcrumb breadcrumb-separatorless fw-bold fs-7 my-1">
                     
                     <li class="breadcrumb-item text-muted">
-                        <a href="{{ route('dashboard') }}" class="text-muted text-hover-primary">Dashboard</a>
+                        <a href="{{ route('admin.dashboard') }}" class="text-muted text-hover-primary">Dashboard</a>
                     </li>
                     
                     <li class="breadcrumb-item">
@@ -270,6 +270,7 @@
                                 </th>
                                 <th>Name</th>
                                 <th>Email</th>
+                                <th>Role</th>
                                 <th>Created At</th>
                                 <th>Updated At</th>                                
                                 <th class="text-end min-w-100px">Actions</th>

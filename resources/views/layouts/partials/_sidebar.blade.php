@@ -5,7 +5,7 @@
         <div class="menu menu-column menu-title-gray-800 menu-state-title-primary menu-state-icon-primary menu-state-bullet-primary menu-arrow-gray-500" id="#kt_aside_menu" data-kt-menu="true" data-kt-menu-expand="false">
             
             <div class="menu-item">
-                <a class="menu-link {{ (request()->is('admin/dashboard')) ? 'active' : '' }}" href="{{ route('dashboard') }}" title="Dashboard Module" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-dismiss="click" data-bs-placement="right">
+                <a class="menu-link {{ (request()->is('admin/dashboard')) ? 'active' : '' }}" href="{{ route('admin.dashboard') }}" title="Dashboard Module" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-dismiss="click" data-bs-placement="right">
                     <span class="menu-icon">
                         
                         <span class="svg-icon svg-icon-2">
@@ -45,15 +45,16 @@
                 </span>
                 <div class="menu-sub menu-sub-accordion">
                     <div class="menu-item">
-                        <a class="menu-link {{ (request()->is('admin/users')) ? 'active' : '' }}" href="{{ route('users.index') }}">
+                        <a class="menu-link {{ (request()->is('admin/users')) ? 'active' : '' }}" href="{{ route('admin.users.index') }}">
                             <span class="menu-bullet">
                                 <span class="bullet bullet-dot"></span>
                             </span>
                             <span class="menu-title">Users</span>
                         </a>
                     </div>
+                    @role('admin')
                     <div class="menu-item">
-                        <a class="menu-link {{ (request()->is('admin/roles')) ? 'active' : '' }}" href="{{ route('roles.index') }}">
+                        <a class="menu-link {{ (request()->is('admin/roles')) ? 'active' : '' }}" href="{{ route('admin.roles.index') }}">
                             <span class="menu-bullet">
                                 <span class="bullet bullet-dot"></span>
                             </span>
@@ -61,13 +62,14 @@
                         </a>
                     </div>
                     <div class="menu-item">
-                        <a class="menu-link {{ (request()->is('admin/permissions')) ? 'active' : '' }}" href="{{ route('permissions.index') }}">
+                        <a class="menu-link {{ (request()->is('admin/permissions')) ? 'active' : '' }}" href="{{ route('admin.permissions.index') }}">
                             <span class="menu-bullet">
                                 <span class="bullet bullet-dot"></span>
                             </span>
                             <span class="menu-title">Permissions</span>
                         </a>
                     </div>
+                    @endrole
                 </div>
             </div>
             

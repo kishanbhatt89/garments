@@ -1,37 +1,41 @@
 "use strict";
 
-// Class definition
-var KTDatatablesServerSide = function () {
-    // Shared variables
-    var table;
-    var dt;
-    var filterPayment;
+let KTDatatablesServerSide = function () {
+    
+    let table;
+    let dt;
+    let filterPermission;
+    
+    let initDatatable = function () {
 
-    // Private functions
-    var initDatatable = function () {
-        dt = $("#kt_datatable_example_1").DataTable({
+        dt = $("#kt_datatable_module").DataTable({
+
             searchDelay: 500,
             processing: true,
             serverSide: true,
-            order: [[1, 'desc']],
+            order: [[1, 'asc']],
             stateSave: true,            
+
             select: {
                 style: 'multi',
                 selector: 'td:first-child input[type="checkbox"]',
                 className: 'row-selected'
             },
+
             ajax: {
-                url: "http://127.0.0.1:8000/admin/users/table",
+                url: "http://127.0.0.1:8000/admin/permissions/table",
             },
+
             columns: [
                 { data: 'id' },
                 { data: 'name' },
-                { data: 'email' },
-                { data: 'roles' },
+                { data: 'slug' },
+                { data: 'permission' },                
                 { data: 'created_at' },
                 { data: 'updated_at' },                
                 { data: null },
             ],
+
             columnDefs: [
                 {
                     targets: 0,
@@ -39,42 +43,42 @@ var KTDatatablesServerSide = function () {
                     render: function (data) {
                         return `
                             <div class="form-check form-check-sm form-check-custom form-check-solid">
-                                <input class="form-check-input" type="checkbox" value="${data}" />
+                                <input class="form-check-input" type="checkbox" name="deleteSelected" value="${data}" />
                             </div>`;
                     }
                 },
                 {
                     targets: 1,
                     render: function (data, type, row) {
-                        return data;
+                        return data.charAt(0).toUpperCase() + data.slice(1);
                     }
-                },
+                },                
                 {
                     targets: 2,
                     render: function (data, type, row) {
-                        return data;
+                        return `
+                            <span class="badge badge-light-success">${data}</span>
+                        `;                                                
                     }
-                },
+                },                
                 {
                     targets: 3,
                     render: function (data, type, row) {
                         return `
-                            <span class="badge badge-light-success">${data[0].charAt(0).toUpperCase() + data[0].slice(1)}</span>
+                            <span class="badge badge-light-success">${data}</span>
                         `;                                                
                     }
                 },
                 {
                     targets: 4,
-                    render: function (data, type, row) {
-                        let createdDate = moment(data, "YYYY-MM-DD").format('YYYY-MM-DD HH:mm:ss');
-                        return createdDate;
+                    render: function (data, type, row) {                                                
+                        return data;
                     }
                 },                
                 {
                     targets: 5,
-                    render: function (data, type, row) {
-                        let updatedDate = moment(data, "YYYY-MM-DD").format('YYYY-MM-DD HH:mm:ss');
-                        return updatedDate;
+                    render: function (data, type, row) {                        
+                        return data;
                     }
                 },
                 {
@@ -99,7 +103,7 @@ var KTDatatablesServerSide = function () {
                             <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-bold fs-7 w-125px py-4" data-kt-menu="true">
                                 <!--begin::Menu item-->
                                 <div class="menu-item px-3">
-                                    <a href="#" class="menu-link px-3" data-kt-docs-table-filter="edit_row">
+                                    <a href="#" class="menu-link px-3" onclick="edit(${data.id})" data-role="${data.id}" data-kt-docs-table-filter="edit_row">
                                         Edit
                                     </a>
                                 </div>
@@ -118,15 +122,19 @@ var KTDatatablesServerSide = function () {
                     },
                 },
             ],
-            // Add data-filter attribute
+            
             createdRow: function (row, data, dataIndex) {
+
                 $(row).find('td:eq(4)').attr('data-filter', data.CreditCardType);
+
             }
+
         });
 
         table = dt.$;
 
         new $.fn.dataTable.Buttons( dt, {
+
             buttons: [                
                 {
                     extend:    'excel',
@@ -148,72 +156,75 @@ var KTDatatablesServerSide = function () {
                 },                                 
             ]
         } );
-        dt.buttons().container().appendTo('#kt_datatable_example_1_export');
 
-        // Re-init functions on every table re-draw -- more info: https://datatables.net/reference/event/draw
+        dt.buttons().container().appendTo('#kt_datatable_exports');
+        
         dt.on('draw', function () {
             initToggleToolbar();
             toggleToolbars();
             handleDeleteRows();
             KTMenu.createInstances();
         });
+
     }
 
-    // Search Datatable --- official docs reference: https://datatables.net/reference/api/search()
-    var handleSearchDatatable = function () {
+    let handleSearchDatatable = function () {
+
         const filterSearch = document.querySelector('[data-kt-docs-table-filter="search"]');
+
         filterSearch.addEventListener('keyup', function (e) {
+
             dt.search(e.target.value).draw();
+
         });
+
     }
 
-    // Filter Datatable
-    var handleFilterDatatable = () => {
-        // Select filter options
-        filterPayment = document.querySelectorAll('[data-kt-docs-table-filter="payment_type"] [name="payment_type"]');
-        const filterButton = document.querySelector('[data-kt-docs-table-filter="filter"]');
+    // var handleFilterDatatable = () => {
+        
+    //     filterPermission = document.querySelectorAll('[data-kt-docs-table-filter="role"] [name="role"]');
+        
+    //     const filterButton = document.querySelector('[data-kt-docs-table-filter="filter"]');
+                
+    //     filterButton.addEventListener('click', function () {
+            
+    //         let role = '';
+            
+    //         filterPermission.forEach(r => 
+    //             {
+    //             if (r.checked) {
+    //                 role = r.value;
+    //             }
+                
+    //             if (role === 'all') {
+    //                 role = '';
+    //             }
+    //         });
+            
+    //         dt.search(role).draw();
 
-        // Filter datatable on submit
-        filterButton.addEventListener('click', function () {
-            // Get filter values
-            let paymentValue = '';
+    //     });
 
-            // Get payment value
-            filterPayment.forEach(r => {
-                if (r.checked) {
-                    paymentValue = r.value;
-                }
-
-                // Reset payment value if "All" is selected
-                if (paymentValue === 'all') {
-                    paymentValue = '';
-                }
-            });
-
-            // Filter datatable --- official docs reference: https://datatables.net/reference/api/search()
-            dt.search(paymentValue).draw();
-        });
-    }
-
-    // Delete customer
+    // }
+    
     var handleDeleteRows = () => {
-        // Select all delete buttons
+        
         const deleteButtons = document.querySelectorAll('[data-kt-docs-table-filter="delete_row"]');
 
         deleteButtons.forEach(d => {
-            // Delete button on click
+            
             d.addEventListener('click', function (e) {
+
                 e.preventDefault();
-
-                // Select parent row
+                
                 const parent = e.target.closest('tr');
+                
+                const permission = parent.querySelectorAll('td')[2].innerText;
+                console.log(permission);
 
-                // Get customer name
-                const customerName = parent.querySelectorAll('td')[1].innerText;
-
-                // SweetAlert2 pop up --- official docs reference: https://sweetalert2.github.io/
                 Swal.fire({
-                    text: "Are you sure you want to delete " + customerName + "?",
+
+                    text: "Are you sure you want to delete " + permission + "?",
                     icon: "warning",
                     showCancelButton: true,
                     buttonsStyling: false,
@@ -223,86 +234,85 @@ var KTDatatablesServerSide = function () {
                         confirmButton: "btn fw-bold btn-danger",
                         cancelButton: "btn fw-bold btn-active-light-primary"
                     }
+
                 }).then(function (result) {
-                    if (result.value) {
-                        // Simulate delete request -- for demo purpose only
-                        Swal.fire({
-                            text: "Deleting " + customerName,
-                            icon: "info",
-                            buttonsStyling: false,
-                            showConfirmButton: false,
-                            timer: 2000
-                        }).then(function () {
-                            Swal.fire({
-                                text: "You have deleted " + customerName + "!.",
-                                icon: "success",
-                                buttonsStyling: false,
-                                confirmButtonText: "Ok, got it!",
-                                customClass: {
-                                    confirmButton: "btn fw-bold btn-primary",
-                                }
-                            }).then(function () {
-                                // delete row data from server and re-draw datatable
-                                dt.draw();
-                            });
-                        });
-                    } else if (result.dismiss === 'cancel') {
-                        Swal.fire({
-                            text: customerName + " was not deleted.",
-                            icon: "error",
-                            buttonsStyling: false,
-                            confirmButtonText: "Ok, got it!",
-                            customClass: {
-                                confirmButton: "btn fw-bold btn-primary",
+
+                    if (result.value) {                                        
+
+                        $.ajax({
+
+                            type:'DELETE',
+                    
+                            url: 'permissions/' + permission,
+                    
+                            data: { permission },
+                    
+                            success:function(data){                                            
+                                
+                                toastr.success(data.msg);
+
+                                dt.search('').draw();                                                    
+                    
+                            },
+                    
+                            error: function(data) {                                                                
+                                
+                                toastr.error(data.responseJSON.msg);
+                                
                             }
                         });
+
+                        
+                    } else if (result.dismiss === 'cancel') {                        
+                        
+                        toastr.error(permission + " permission was not deleted.");
+                        
                     }
                 });
             })
         });
     }
 
-    // Reset Filter
-    var handleResetForm = () => {
-        // Select reset button
-        const resetButton = document.querySelector('[data-kt-docs-table-filter="reset"]');
+    // var handleResetForm = () => {
+        
+    //     const resetButton = document.querySelector('[data-kt-docs-table-filter="reset"]');
+        
+    //     resetButton.addEventListener('click', function () {
+            
+    //         filterPermission[0].checked = true;
+            
+    //         dt.search('').draw();
 
-        // Reset datatable
-        resetButton.addEventListener('click', function () {
-            // Reset payment type
-            filterPayment[0].checked = true;
+    //     });
 
-            // Reset datatable --- official docs reference: https://datatables.net/reference/api/search()
-            dt.search('').draw();
-        });
-    }
-
-    // Init toggle toolbar
+    // }
+    
     var initToggleToolbar = function () {
-        // Toggle selected action toolbar
-        // Select all checkboxes
-        const container = document.querySelector('#kt_datatable_example_1');
+        
+        const container = document.querySelector('#kt_datatable_module');
+
         const checkboxes = container.querySelectorAll('[type="checkbox"]');
-
-        // Select elements
+        
         const deleteSelected = document.querySelector('[data-kt-docs-table-select="delete_selected"]');        
-
-        // Toggle delete selected toolbar
+        
+        
         checkboxes.forEach(c => {
-            // Checkbox on click event
+            
             c.addEventListener('click', function () {
                 setTimeout(function () {
                     toggleToolbars();
                 }, 50);
             });
+
         });
 
         if (deleteSelected) {
-            // Deleted selected rows
+            
             deleteSelected.addEventListener('click', function () {
-                // SweetAlert2 pop up --- official docs reference: https://sweetalert2.github.io/
+                
                 Swal.fire({
-                    text: "Are you sure you want to delete selected customers?",
+
+                    text: "Are you sure you want to delete selected permissions?",
                     icon: "warning",
                     showCancelButton: true,
                     buttonsStyling: false,
@@ -313,99 +323,148 @@ var KTDatatablesServerSide = function () {
                         confirmButton: "btn fw-bold btn-danger",
                         cancelButton: "btn fw-bold btn-active-light-primary"
                     },
-                }).then(function (result) {
-                    if (result.value) {
-                        // Simulate delete request -- for demo purpose only
-                        Swal.fire({
-                            text: "Deleting selected customers",
-                            icon: "info",
-                            buttonsStyling: false,
-                            showConfirmButton: false,
-                            timer: 2000
-                        }).then(function () {
-                            Swal.fire({
-                                text: "You have deleted all selected customers!.",
-                                icon: "success",
-                                buttonsStyling: false,
-                                confirmButtonText: "Ok, got it!",
-                                customClass: {
-                                    confirmButton: "btn fw-bold btn-primary",
-                                }
-                            }).then(function () {
-                                // delete row data from server and re-draw datatable
-                                dt.draw();
-                            });
 
-                            // Remove header checked box
-                            const headerCheckbox = container.querySelectorAll('[type="checkbox"]')[0];
-                            headerCheckbox.checked = false;
+                }).then(function (result) {
+                    
+                    if (result.value) {
+
+                        let permissionsArr = [];
+
+                        $("input:checkbox[name=deleteSelected]:checked").each(function() {                            
+                            permissionsArr.push($(this).val());
+                        });                        
+
+                        $.ajax({
+
+                            type:'DELETE',
+                    
+                            url: 'permissions/destroyMultiple',
+                    
+                            data: { permissions: permissionsArr },
+                    
+                            success:function(data){                                            
+                                
+                                toastr.success(data.msg);
+
+                                dt.search('').draw();                                                    
+                    
+                            },
+                    
+                            error: function(data) {                                                            
+                                
+                                toastr.error(data.responseJSON.msg);
+                                
+                            }
                         });
+
+                        const headerCheckbox = container.querySelectorAll('[type="checkbox"]')[0];
+
+                        headerCheckbox.checked = false;
+                        
                     } else if (result.dismiss === 'cancel') {
+
                         Swal.fire({
-                            text: "Selected customers was not deleted.",
+
+                            text: "Selected permissions was not deleted.",
                             icon: "error",
                             buttonsStyling: false,
                             confirmButtonText: "Ok, got it!",
                             customClass: {
                                 confirmButton: "btn fw-bold btn-primary",
                             }
-                        });
-                    }
-                });
-            });
-        }
 
+                        });
+
+                    }
+
+                });
+
+            });
+
+        }
         
     }
-
-    // Toggle toolbars
-    var toggleToolbars = function () {
-        // Define variables
-        const container = document.querySelector('#kt_datatable_example_1');
+    
+    let toggleToolbars = function () {
+        
+        const container = document.querySelector('#kt_datatable_module');
         const toolbarBase = document.querySelector('[data-kt-docs-table-toolbar="base"]');
         const toolbarSelected = document.querySelector('[data-kt-docs-table-toolbar="selected"]');
         const selectedCount = document.querySelector('[data-kt-docs-table-select="selected_count"]');
-
-        // Select refreshed checkbox DOM elements
+        
         const allCheckboxes = container.querySelectorAll('tbody [type="checkbox"]');
-
-        // Detect checkboxes state & count
+        
         let checkedState = false;
+
         let count = 0;
 
-        // Count checked boxes
         allCheckboxes.forEach(c => {
             if (c.checked) {
                 checkedState = true;
                 count++;
             }
         });
-
-        // Toggle toolbars
+        
         if (checkedState && selectedCount) {
+
             selectedCount.innerHTML = count;
             toolbarBase.classList.add('d-none');
             toolbarSelected.classList.remove('d-none');
+
         } else {
+
             toolbarBase.classList.remove('d-none');
             toolbarSelected.classList.add('d-none');
-        }
-    }
 
-    // Public methods
+        }
+
+    }
+    
     return {
+
         init: function () {
             initDatatable();
             handleSearchDatatable();
             initToggleToolbar();
-            handleFilterDatatable();
+            //handleFilterDatatable();
             handleDeleteRows();
-            handleResetForm();
+            //handleResetForm();
         }
+
     }
+
 }();
 
-// On document ready
 KTUtil.onDOMContentLoaded(function () {
+
     KTDatatablesServerSide.init();
+
+});
+
+let saveBtn = document.querySelector("#saveBtn");
+saveBtn.addEventListener("click", function(e) {
+
+    e.preventDefault();
+    
+    saveBtn.setAttribute("data-kt-indicator", "on");
+
+    let name = $("#name").val();    
+
+    save(name);
+
+});
+
+
+let updateButton = document.querySelector("#updateBtn");
+updateButton.addEventListener("click", function(e) {
+
+    e.preventDefault();
+    
+    updateButton.setAttribute("data-kt-indicator", "on");
+
+    let name = $("#permission_name").val();    
+    let id = $("#permission_id").val();    
+
+    update(name, id)
+    
 });

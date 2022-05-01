@@ -46,7 +46,7 @@
                         <div class="text-center">
                             @if (Route::has('login'))                            
                                 @auth
-                                    <a href="{{ route('dashboard') }}" class="btn btn-lg btn-primary fw-bolder">Dashboard</a>                                
+                                    <a href="{{ route('admin.dashboard') }}" class="btn btn-lg btn-primary fw-bolder">Dashboard</a>                                
                                 @else
                                     <a href="{{ route('login') }}" class="btn btn-lg btn-primary fw-bolder" style="margin-right: 10px">Sign In</a>                                                                
                                     @if (Route::has('register'))

@@ -114,11 +114,40 @@
 
 		<script src="{{ asset('gapp') }}/js/custom/apps/chat/chat.js"></script>
 
+		<script src="https://momentjs.com/downloads/moment.min.js"></script>
+
 		<!-- <script src="{{ asset('gapp') }}/js/custom/utilities/modals/upgrade-plan.js"></script>
 
 		<script src="{{ asset('gapp') }}/js/custom/utilities/modals/create-app.js"></script>
 
-		<script src="{{ asset('gapp') }}/js/custom/utilities/modals/users-search.js"></script> -->
+		<script src="{{ asset('gapp') }}/js/custom/utilities/modals/users-search.js"></script> -->		
+
+		<script>
+
+			$.ajaxSetup({
+				headers: {
+					'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+				}
+			});
+
+			toastr.options = {
+				"closeButton": false,
+				"debug": false,
+				"newestOnTop": false,
+				"progressBar": true,
+				"positionClass": "toastr-top-right",
+				"preventDuplicates": false,
+				"showDuration": "300",
+				"hideDuration": "1000",
+				"timeOut": "5000",
+				"extendedTimeOut": "1000",
+				"showEasing": "swing",
+				"hideEasing": "linear",
+				"showMethod": "fadeIn",
+				"hideMethod": "fadeOut"
+			};
+
+		</script>
 
 		@yield('custom-js')
 		

@@ -8,6 +8,12 @@ use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
+
+    public function __construct() 
+    {
+        $this->middleware(['auth','role:admin']); 
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -122,6 +128,7 @@ class UserController extends Controller
             $id = $record->id;
             $name = $record->name;
             $email = $record->email;
+            $roles = $record->getRoleNames();
             $created_at = $record->created_at;
             $updated_at = $record->updated_at;
     
@@ -129,6 +136,7 @@ class UserController extends Controller
               "id" => $id,
               "name" => $name,
               "email" => $email,
+              "roles" => $roles,
               "created_at" => $created_at,
               "updated_at" => $updated_at
             );
