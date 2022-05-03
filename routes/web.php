@@ -24,14 +24,18 @@ Route::get('/', function () {
 
 Auth::routes();
 
-Route::middleware(['auth','role:admin'])->name('admin.')->prefix('admin')->group(function () {
+Route::middleware(['auth','role:admin|employee'])->name('admin.')->prefix('admin')->group(function () {
 
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-    Route::get('/users/table', [UserController::class, 'table'])->name('users.table');
-    Route::resource('/users', UserController::class);
-    
-    
+    Route::delete('employees/destroyMultiple', [UserController::class, 'destroyMultiple'])->name('employees.destroyMultiple');
+    Route::get('/employees/{user}/details', [UserController::class, 'show'])->name('employees.show');
+    Route::get('/employees/table', [UserController::class, 'table'])->name('employees.table');
+    Route::get('/employees', [UserController::class, 'index'])->name('employees.index');    
+    Route::post('/employees', [UserController::class, 'store'])->name('employees.store');
+    Route::put('/employees/{user}', [UserController::class, 'update'])->name('employees.update');
+    Route::delete('employees/{user}', [UserController::class, 'destroy'])->name('employees.destroy');
+        
     Route::delete('roles/destroyMultiple', [RoleController::class, 'destroyMultiple'])->name('roles.destroyMultiple');
     Route::get('/roles/{role}/details', [RoleController::class, 'show'])->name('roles.show');
     Route::get('/roles/table', [RoleController::class, 'table'])->name('roles.table');
@@ -39,12 +43,10 @@ Route::middleware(['auth','role:admin'])->name('admin.')->prefix('admin')->group
     Route::post('/roles', [RoleController::class, 'store'])->name('roles.store');
     Route::put('/roles/{role}', [RoleController::class, 'update'])->name('roles.update');
     Route::delete('roles/{role}', [RoleController::class, 'destroy'])->name('roles.destroy');
-    
-    //Route::resource('/roles', RoleController::class);
+        
     Route::delete('permissions/destroyMultiple', [PermissionController::class, 'destroyMultiple'])->name('permissions.destroyMultiple');
     Route::get('/permissions/{permission}/details', [PermissionController::class, 'show'])->name('permissions.show');
-    Route::get('/permissions/table', [PermissionController::class, 'table'])->name('permissions.table');
-    
+    Route::get('/permissions/table', [PermissionController::class, 'table'])->name('permissions.table');    
     Route::get('/permissions', [PermissionController::class, 'index'])->name('permissions.index');    
     Route::post('/permissions', [PermissionController::class, 'store'])->name('permissions.store');
     Route::put('/permissions/{permission}', [PermissionController::class, 'update'])->name('permissions.update');

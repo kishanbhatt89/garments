@@ -5,6 +5,10 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Spatie\Permission\Models\Role;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\View;
+use Illuminate\Support\Facades\Response;
 
 class UserController extends Controller
 {
@@ -21,8 +25,9 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users = User::all();
-        return view('admin.users.index', compact('users'));
+        $users=User::whereHas('roles', function($q){$q->whereNotIn('roles.name', ['admin']);})->get();        
+        $roles = Role::all();
+        return view('admin.employees.index', compact('users','roles'));
     }
 
     /**
@@ -43,7 +48,38 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        
+        $validator = Validator::make($request->all(), [
+            'name' => 'required',
+            'email' => 'required|email|unique:users',
+            'role' => 'required|not_in:all',
+            'password' => 'required|min:6|confirmed',   
+            'mobile' => 'required',
+            'designation' => 'required',
+            'address' => 'required'    
+        ]);        
+
+        if ($validator->fails()) {
+            return response()->json(['data'=> $validator->errors()], 400);    
+        }
+
+        $employee = new User();
+
+        $employee->name = $request->name;
+        $employee->email = $request->email;
+        $employee->password = bcrypt($request->password);
+
+        $employee->save();
+        
+        $employee->assignRole($request->role);
+
+        $employee->userDetails()->create([
+            'mobile' => $request->mobile,
+            'designation' => $request->designation,
+            'address' => $request->address
+        ]);
+
+        return response()->json(['data'=>'Employee created successfully'], 200);
     }
 
     /**
@@ -52,9 +88,19 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Request $request)
     {
-        //
+        $user = User::with('userDetails')->where('id',$request->get('id'))->first();   
+
+        $userRole = $user->getRoleNames()[0];
+        
+        $roles = Role::all();         
+
+        $contents = View::make('admin.employees.partials._edit', ['user' => $user, 'roles' => $roles, 'userRole' => $userRole]);
+        
+        $response = Response::make($contents, 200);                
+        
+        return response()->json(['data'=> $response->content()], 200 ); 
     }
 
     /**
@@ -75,21 +121,60 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
-        //
+        
+        $validator = Validator::make($request->all(), [
+            'name' => 'required',
+            'email' => 'required|email|unique:users,email,'.$request->id.',id',
+            'role' => 'required|not_in:all',            
+            'mobile' => 'required',
+            'designation' => 'required',
+            'address' => 'required'    
+        ]);        
+
+        if ($validator->fails()) {
+            return response()->json(['data'=> $validator->errors()], 400);    
+        }
+        
+        $employee = User::find($request->get('id'));
+        
+        $employee->name = $request->name;
+        $employee->email = $request->email;
+        
+        $employee->save();
+
+        $employee->syncRoles([$request->role]);
+
+        $employee->userDetails()->update([
+            'mobile' => $request->mobile,
+            'designation' => $request->designation,
+            'address' => $request->address
+        ]);
+
+        return response()->json(['msg'=>'Employee updated successfully'], 200);        
+
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
+    public function destroy(Request $request)
     {
-        //
+        $employee = User::where('name', $request->get('employee'))->first();
+        
+        if ($employee->delete()) {
+            return response()->json(['msg'=> 'Employee deleted successfully!'], 200);
+        }
+
+        return response()->json(['msg'=> 'Error in deleting employee'], 400);
     }
+
+    public function destroyMultiple(Request $request)
+    {                        
+        if (User::destroy($request->get('employees'))) {
+            return response()->json(['msg'=> 'Selected employees deleted successfully!'], 200);
+        }
+
+        return response()->json(['msg'=> 'Error in deleting selected employees'], 400);
+    }    
 
     public function table(Request $request)
     {
@@ -111,12 +196,13 @@ class UserController extends Controller
         $searchValue = $search_arr['value']; // Search value
 
          // Total records
-        $totalRecords = User::select('count(*) as allcount')->count();
-        $totalRecordswithFilter = User::select('count(*) as allcount')->where('name', 'like', '%' .$searchValue . '%')->count();
+        $totalRecords = User::select('count(*) as allcount')->whereHas('roles', function($q){$q->whereNotIn('roles.name', ['admin']);})->count();
+        $totalRecordswithFilter = User::select('count(*) as allcount')->whereHas('roles', function($q){$q->whereNotIn('roles.name', ['admin']);})->where('name', 'like', '%' .$searchValue . '%')->count();
 
         // Fetch records
         $records = User::orderBy($columnName,$columnSortOrder)
         ->where('users.name', 'like', '%' .$searchValue . '%')
+        ->whereHas('roles', function($q){$q->whereNotIn('roles.name', ['admin']);})
         ->select('users.*')
         ->skip($start)
         ->take($rowperpage)
@@ -125,21 +211,25 @@ class UserController extends Controller
         $data_arr = array();
 
         foreach($records as $record){
-            $id = $record->id;
-            $name = $record->name;
-            $email = $record->email;
-            $roles = $record->getRoleNames();
-            $created_at = $record->created_at;
-            $updated_at = $record->updated_at;
+            if (!$record->getRoleNames()->contains('admin')) {
+                $id = $record->id;
+                $name = $record->name;
+                $email = $record->email;
+                $roles = $record->getRoleNames();
+                $created_at = $record->created_at->diffForHumans();
+                $updated_at = $record->updated_at->diffForHumans();
+
+                $data_arr[] = array(
+                    "id" => $id,
+                    "name" => $name,
+                    "email" => $email,
+                    "roles" => $roles,
+                    "created_at" => $created_at,
+                    "updated_at" => $updated_at
+                  );
+            }                        
     
-            $data_arr[] = array(
-              "id" => $id,
-              "name" => $name,
-              "email" => $email,
-              "roles" => $roles,
-              "created_at" => $created_at,
-              "updated_at" => $updated_at
-            );
+            
          }
     
          $response = array(

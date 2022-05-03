@@ -15,15 +15,15 @@ class PermissionSeeder extends Seeder
      */
     public function run()
     {
-        $user_management_create = Permission::create(['name' => 'user_management-create']);
-        $user_management_read = Permission::create(['name' => 'user_management-read']);
-        $user_management_update = Permission::create(['name' => 'user_management-update']);
-        $user_management_delete = Permission::create(['name' => 'user_management-delete']);
+        $employee_management_create = Permission::create(['name' => 'employee_management-create']);
+        $employee_management_read = Permission::create(['name' => 'employee_management-read']);
+        $employee_management_update = Permission::create(['name' => 'employee_management-update']);
+        $employee_management_delete = Permission::create(['name' => 'employee_management-delete']);
 
-        $user_management_create->assignRole('admin');
-        $user_management_read->assignRole('admin');
-        $user_management_update->assignRole('admin');
-        $user_management_delete->assignRole('admin');
+        $employee_management_create->assignRole('admin');
+        $employee_management_read->assignRole('admin');
+        $employee_management_update->assignRole('admin');
+        $employee_management_delete->assignRole('admin');
 
         $role_management_create = Permission::create(['name' => 'role_management-create']);
         $role_management_read = Permission::create(['name' => 'role_management-read']);
