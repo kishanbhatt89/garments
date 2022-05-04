@@ -79,4 +79,9 @@ class User extends Authenticatable
         return $this->hasOne(City::class);
     }
 
+    public function designation()
+    {
+        return $this->hasOne(Designation::class);
+    }
+
 }

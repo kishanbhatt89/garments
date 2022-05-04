@@ -26,6 +26,7 @@ return new class extends Migration
             $table->json('settings')->nullable();
             $table->foreignId('states_id')->nullable();
             $table->foreignId('cities_id')->nullable();
+            $table->foreignId('designatioins_id')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

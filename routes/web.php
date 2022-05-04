@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\CityController;
 use App\Http\Controllers\Admin\ClientController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\DesignationController;
 use App\Http\Controllers\Admin\PermissionController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\SettingController;
@@ -79,6 +80,14 @@ Route::middleware(['auth','role:admin|employee'])->name('admin.')->prefix('admin
     Route::post('/cities', [CityController::class, 'store'])->name('cities.store');
     Route::put('/cities/{city}', [CityController::class, 'update'])->name('cities.update');
     Route::delete('cities/{city}', [CityController::class, 'destroy'])->name('cities.destroy');
+
+    Route::delete('designations/destroyMultiple', [DesignationController::class, 'destroyMultiple'])->name('designations.destroyMultiple');
+    Route::get('/designations/{designation}/details', [DesignationController::class, 'show'])->name('designations.show');
+    Route::get('/designations/table', [DesignationController::class, 'table'])->name('designations.table');
+    Route::get('/designations', [DesignationController::class, 'index'])->name('designations.index');    
+    Route::post('/designations', [DesignationController::class, 'store'])->name('designations.store');
+    Route::put('/designations/{designation}', [DesignationController::class, 'update'])->name('designations.update');
+    Route::delete('designations/{designation}', [DesignationController::class, 'destroy'])->name('designations.destroy');
 
     Route::get('/settings', [UserController::class, 'showSettings'])->name('settings.index');
     Route::post('/settings', [UserController::class, 'saveSettings'])->name('settings.store');
