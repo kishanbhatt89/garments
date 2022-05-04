@@ -23,7 +23,20 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'is_active'
+        'is_active',
+        'settings',
+        'settings->general->company_name',
+        'settings->general->company_address',
+        'settings->support->company_mobile',
+        'settings->support->company_email',
+        'settings->email->company_mail_mailer',
+        'settings->email->company_mail_host',
+        'settings->email->company_mail_port',
+        'settings->email->company_mail_username',
+        'settings->email->company_mail_password',
+        'settings->email->company_mail_encryption',
+        'settings->email->company_mail_from_address',
+        'settings->email->company_mail_from_name',
     ];
 
     /**
@@ -43,6 +56,7 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'settings' => 'json',
     ];
 
     public function userDetails()

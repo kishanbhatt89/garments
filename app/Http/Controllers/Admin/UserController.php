@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\View;
@@ -25,9 +26,10 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users=User::whereHas('roles', function($q){$q->whereNotIn('roles.name', ['admin']);})->get();        
-        $roles = Role::all();
-        return view('admin.employees.index', compact('users','roles'));
+        $users=User::whereHas('roles', function($q){$q->whereIn('roles.name', ['employee']);})->get();        
+        $role = Role::where('name', 'employee')->first();
+        
+        return view('admin.employees.index', compact('users','role'));
     }
 
     /**
@@ -250,5 +252,123 @@ class UserController extends Controller
         // print_r($request->get('draw'));
         // exit;
         //return response()->json($users);
+    }
+
+    public function showSettings()
+    {
+        $settings = auth()->user()->settings;        
+        return view('admin.settings.index', compact('settings'));
+    }
+
+    public function saveSettings(Request $request)
+    {                        
+        if (
+            $request->has('company_name') && $request->has('company_address')
+        ) {            
+
+            $user = User::find(auth()->user()->id);
+
+            if (isset($user->settings)) {         
+                
+                $user->update([
+                    'settings->general->company_name' => $request->company_name,
+                    'settings->general->company_address' => $request->company_address
+                ]);                       
+
+            } else {             
+
+                $user->update([
+                    'settings' => [
+                        'general' => [
+                            'company_name' => $request->company_name,
+                            'company_address' => $request->company_address                    
+                        ],                        
+                    ]
+                ]);
+
+            }                        
+                        
+            return response()->json(['msg'=> 'General settings updated successfully!'], 200);
+        }    
+
+
+        if (
+            $request->has('company_mail_mailer') || 
+            $request->has('company_mail_host') ||
+            $request->has('company_mail_port') ||
+            $request->has('company_mail_username') ||
+            $request->has('company_mail_password') ||
+            $request->has('company_mail_encryption') ||
+            $request->has('company_mail_from_address') ||
+            $request->has('company_mail_from_name')
+        ) {            
+            
+            $user = User::find(auth()->user()->id);
+            
+            if (isset($user->settings)) {         
+                
+                $user->update([
+                    'settings->email->company_mail_mailer' => $request->company_mail_mailer,
+                    'settings->email->company_mail_host' => $request->company_mail_host,
+                    'settings->email->company_mail_port' => $request->company_mail_port,
+                    'settings->email->company_mail_username' => $request->company_mail_username,
+                    'settings->email->company_mail_password' => $request->company_mail_password,
+                    'settings->email->company_mail_encryption' => $request->company_mail_encryption,
+                    'settings->email->company_mail_from_address' => $request->company_mail_from_address,
+                    'settings->email->company_mail_from_name' => $request->company_mail_from_name                
+                ]);                       
+
+            } else {             
+
+                $user->update([
+                    'settings' => [
+                        'email' => [
+                            'company_mail_mailer' => $request->company_mail_mailer,
+                            'company_mail_host' => $request->company_mail_host,
+                            'company_mail_port' => $request->company_mail_port,
+                            'company_mail_username' => $request->company_mail_username,
+                            'company_mail_password' => $request->company_mail_password,
+                            'company_mail_encryption' => $request->company_mail_encryption,
+                            'company_mail_from_address' => $request->company_mail_from_address,
+                            'company_mail_from_name' => $request->company_mail_from_name                        
+                        ],                        
+                    ]
+                ]);
+                
+            }                        
+                        
+            return response()->json(['msg'=> 'Email settings updated successfully!'], 200);
+        }
+
+        
+        if (
+            $request->has('company_mobile') && $request->has('company_email')
+        ) {            
+
+            $user = User::find(auth()->user()->id);
+
+            if (isset($user->settings)) {         
+                
+                $user->update([
+                    'settings->support->company_mobile' => $request->company_mobile,
+                    'settings->support->company_email' => $request->company_email
+                ]);                       
+
+            } else {             
+
+                $user->update([
+                    'settings' => [
+                        'support' => [
+                            'company_mobile' => $request->company_mobile,
+                            'company_email' => $request->company_email                    
+                        ],                        
+                    ]
+                ]);
+                
+            }                        
+                        
+            return response()->json(['msg'=> 'Support settings updated successfully!'], 200);
+        }    
+
     }
 }

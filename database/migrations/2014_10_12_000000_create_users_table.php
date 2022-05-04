@@ -23,6 +23,7 @@ return new class extends Migration
             $table->boolean('allow_admin_login')->default(false);
             $table->timestamp('last_login_at')->nullable();
             $table->timestamp('last_password_change_at')->nullable();
+            $table->json('settings')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

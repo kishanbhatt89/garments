@@ -57,15 +57,15 @@
 
                     <div class="fv-row mb-7 d-flex">                        
 
-                        @foreach ($roles as $index => $role)
+                        
 
                             <div class="d-flex fv-row">
                                 
                                 <div class="form-check form-check-custom form-check-solid me-3">
                                     
-                                    <input class="form-check-input" name="role" type="radio" value="{{ $role->name }}" id="kt_modal_update_role_option_{{ $index }}" />
+                                    <input class="form-check-input" name="role" checked type="radio" value="{{ $role->name }}" id="kt_modal_update_role_option_0" />
                                     
-                                    <label class="form-check-label" for="kt_modal_update_role_option_{{ $index }}">
+                                    <label class="form-check-label" for="kt_modal_update_role_option_0">
                                         <div class="fw-bolder text-gray-800">{{ ucfirst($role->name) }}</div>                                        
                                     </label>
 
@@ -73,7 +73,7 @@
                                 
                             </div>                            
 
-                        @endforeach  
+                        
                         
                         
                     </div>
