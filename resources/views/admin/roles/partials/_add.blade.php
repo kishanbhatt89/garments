@@ -52,29 +52,29 @@
                                     
                                     <tr>
                                         
-                                        <td class="text-gray-800 text-left">User Management</td>
+                                        <td class="text-gray-800 text-left">Employee Management</td>
                                         
                                         <td>
                                             
                                             <div class="d-flex">
                                                 
                                                 <label class="form-check form-check-sm form-check-custom form-check-solid me-5 me-lg-10">
-                                                    <input class="form-check-input" type="checkbox" value="user_management-create" name="user_management-create" />
+                                                    <input class="form-check-input" type="checkbox" value="employee_management-create" name="employee_management-create" />
                                                     <span class="form-check-label">Create</span>
                                                 </label>
                                                 
                                                 <label class="form-check form-check-sm form-check-custom form-check-solid me-5 me-lg-10">
-                                                    <input class="form-check-input" type="checkbox" value="user_management-read" name="user_management-read" />
+                                                    <input class="form-check-input" type="checkbox" value="employee_management-read" name="employee_management-read" />
                                                     <span class="form-check-label">Read</span>
                                                 </label>
                                                 
                                                 <label class="form-check form-check-sm form-check-custom form-check-solid me-5 me-lg-10">
-                                                    <input class="form-check-input" type="checkbox" value="user_management-update" name="user_management-update" />
+                                                    <input class="form-check-input" type="checkbox" value="employee_management-update" name="employee_management-update" />
                                                     <span class="form-check-label">Update</span>
                                                 </label>
 
                                                 <label class="form-check form-check-sm form-check-custom form-check-solid">
-                                                    <input class="form-check-input" type="checkbox" value="user_management-delete" name="user_management-delete" />
+                                                    <input class="form-check-input" type="checkbox" value="employee_management-delete" name="employee_management-delete" />
                                                     <span class="form-check-label">Delete</span>
                                                 </label>
 

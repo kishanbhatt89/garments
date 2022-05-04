@@ -23,13 +23,14 @@ let KTDatatablesServerSide = function () {
             },
 
             ajax: {
-                url: "http://127.0.0.1:8000/admin/roles/table",
+                url: "http://127.0.0.1:8000/admin/clients/table",
             },
 
             columns: [
                 { data: 'id' },
                 { data: 'name' },
-                { data: 'slug' },                
+                { data: 'email' },  
+                { data: 'roles' },              
                 { data: 'created_at' },
                 { data: 'updated_at' },                
                 { data: null },
@@ -42,32 +43,38 @@ let KTDatatablesServerSide = function () {
                     render: function (data) {
                         return `
                             <div class="form-check form-check-sm form-check-custom form-check-solid">
-                                <input class="form-check-input" type="checkbox" name="deleteSelected" value="${data}" />
+                                <input class="form-check-input" name="deleteSelected" type="checkbox" value="${data}" />
                             </div>`;
                     }
                 },
                 {
                     targets: 1,
                     render: function (data, type, row) {
-                        return data.charAt(0).toUpperCase() + data.slice(1);
+                        return data;
                     }
-                },                
+                },
                 {
                     targets: 2,
                     render: function (data, type, row) {
-                        return `
-                            <span class="badge badge-light-success">${data}</span>
-                        `;                                                
+                        return data;
                     }
                 },
                 {
                     targets: 3,
-                    render: function (data, type, row) {                                                
+                    render: function (data, type, row) {
+                        return `
+                            <span class="badge badge-light-success">${data[0].charAt(0).toUpperCase() + data[0].slice(1)}</span>
+                        `;                                                
+                    }
+                },
+                {
+                    targets: 4,
+                    render: function (data, type, row) {                        
                         return data;
                     }
                 },                
                 {
-                    targets: 4,
+                    targets: 5,
                     render: function (data, type, row) {                        
                         return data;
                     }
@@ -80,7 +87,7 @@ let KTDatatablesServerSide = function () {
                     render: function (data, type, row) {
                         return `
 
-                            <a href="#" onclick="edit(${data.id})" data-role="${data.id}" class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1" data-kt-docs-table-filter="edit_row">
+                            <a href="#" onclick="edit(${data.id})" data-user="${data.id}" class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1" data-kt-docs-table-filter="edit_row">
                             <!--begin::Svg Icon | path: icons/duotune/art/art005.svg-->
                                 <span class="svg-icon svg-icon-3">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
@@ -203,11 +210,11 @@ let KTDatatablesServerSide = function () {
                 
                 const parent = e.target.closest('tr');
                 
-                const role = parent.querySelectorAll('td')[2].innerText;
-
+                const client = parent.querySelectorAll('td')[1].innerText;
+                
                 Swal.fire({
 
-                    text: "Are you sure you want to delete " + role + "?",
+                    text: "Are you sure you want to delete " + client + "?",
                     icon: "warning",
                     showCancelButton: true,
                     buttonsStyling: false,
@@ -219,16 +226,16 @@ let KTDatatablesServerSide = function () {
                     }
 
                 }).then(function (result) {
-
+                    
                     if (result.value) {                                        
 
                         $.ajax({
 
                             type:'DELETE',
                     
-                            url: 'roles/' + role,
+                            url: 'clients/' + client,
                     
-                            data: { role },
+                            data: { client },
                     
                             success:function(data){                                            
                                 
@@ -248,7 +255,7 @@ let KTDatatablesServerSide = function () {
                         
                     } else if (result.dismiss === 'cancel') {                        
                         
-                        toastr.error(role + " role was not deleted.");
+                        toastr.error(client + " client was not deleted.");
                         
                     }
                 });
@@ -295,7 +302,7 @@ let KTDatatablesServerSide = function () {
                 
                 Swal.fire({
 
-                    text: "Are you sure you want to delete selected roles?",
+                    text: "Are you sure you want to delete selected clients?",
                     icon: "warning",
                     showCancelButton: true,
                     buttonsStyling: false,
@@ -311,19 +318,19 @@ let KTDatatablesServerSide = function () {
                     
                     if (result.value) {
 
-                        let rolesArr = [];
+                        let clientsArr = [];
 
                         $("input:checkbox[name=deleteSelected]:checked").each(function() {                            
-                            rolesArr.push($(this).val());
+                            clientsArr.push($(this).val());
                         });                        
-
+                        
                         $.ajax({
 
                             type:'DELETE',
                     
-                            url: 'roles/destroyMultiple',
+                            url: 'clients/destroyMultiple',
                     
-                            data: { roles: rolesArr },
+                            data: { clients: clientsArr },
                     
                             success:function(data){                                            
                                 
@@ -348,7 +355,7 @@ let KTDatatablesServerSide = function () {
 
                         Swal.fire({
 
-                            text: "Selected roles was not deleted.",
+                            text: "Selected clients was not deleted.",
                             icon: "error",
                             buttonsStyling: false,
                             confirmButtonText: "Ok, got it!",
@@ -431,14 +438,15 @@ $('#saveBtn').on('click', function(e) {
         
     $('#saveBtn').attr('data-kt-indicator', 'on');
 
-    let name = $("#name").val();    
+    let name = $("#name").val();
+    let email = $("#email").val();
+    let role = $("input[name='role']:checked").val();
+    let password = $("#password").val();    
+    let password_confirmation = $("#password_confirmation").val();    
+    let mobile = $("#mobile").val();    
+    let designation = $("#designation").val();    
+    let address = $("#address").val();    
 
-    let permissionsArray = [];
-
-    $('input[type="checkbox"]:checked').each(function() {
-        permissionsArray.push($(this).val());
-    });
-
-    save(name, permissionsArray);
+    save(name, email, role, password, password_confirmation, mobile, designation, address);
 
 });

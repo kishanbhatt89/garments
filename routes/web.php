@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\ClientController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\PermissionController;
@@ -36,6 +37,14 @@ Route::middleware(['auth','role:admin|employee'])->name('admin.')->prefix('admin
     Route::post('/employees', [UserController::class, 'store'])->name('employees.store');
     Route::put('/employees/{user}', [UserController::class, 'update'])->name('employees.update');
     Route::delete('employees/{user}', [UserController::class, 'destroy'])->name('employees.destroy');
+
+    Route::delete('clients/destroyMultiple', [ClientController::class, 'destroyMultiple'])->name('clients.destroyMultiple');
+    Route::get('/clients/{user}/details', [ClientController::class, 'show'])->name('clients.show');
+    Route::get('/clients/table', [ClientController::class, 'table'])->name('clients.table');
+    Route::get('/clients', [ClientController::class, 'index'])->name('clients.index');    
+    Route::post('/clients', [ClientController::class, 'store'])->name('clients.store');
+    Route::put('/clients/{user}', [ClientController::class, 'update'])->name('clients.update');
+    Route::delete('clients/{user}', [ClientController::class, 'destroy'])->name('clients.destroy');
         
     Route::delete('roles/destroyMultiple', [RoleController::class, 'destroyMultiple'])->name('roles.destroyMultiple');
     Route::get('/roles/{role}/details', [RoleController::class, 'show'])->name('roles.show');

@@ -49,7 +49,7 @@
                                 
                                 <tr>
                                     
-                                    <td class="text-gray-800 text-left">User Management</td>
+                                    <td class="text-gray-800 text-left">Employee Management</td>
                                     
                                     <td>
                                         
@@ -59,9 +59,9 @@
                                                 <input 
                                                     class="form-check-input" 
                                                     type="checkbox" 
-                                                    value="user_management-create" 
-                                                    name="user_management-create" 
-                                                    @if($role['permissions']->contains('name','user_management-create')) checked @endif                                              
+                                                    value="employee_management-create" 
+                                                    name="employee_management-create" 
+                                                    @if($role['permissions']->contains('name','employee_management-create')) checked @endif                                              
                                                     />
                                                 <span class="form-check-label">Create</span>
                                             </label>
@@ -70,9 +70,9 @@
                                                 <input 
                                                     class="form-check-input" 
                                                     type="checkbox" 
-                                                    value="user_management-read" 
-                                                    name="user_management-read" 
-                                                    @if($role['permissions']->contains('name','user_management-read')) checked @endif
+                                                    value="employee_management-read" 
+                                                    name="employee_management-read" 
+                                                    @if($role['permissions']->contains('name','employee_management-read')) checked @endif
                                                     />
                                                 <span class="form-check-label">Read</span>
                                             </label>
@@ -81,9 +81,9 @@
                                                 <input 
                                                     class="form-check-input" 
                                                     type="checkbox" 
-                                                    value="user_management-update" 
-                                                    name="user_management-update" 
-                                                    @if($role['permissions']->contains('name','user_management-update')) checked @endif
+                                                    value="employee_management-update" 
+                                                    name="employee_management-update" 
+                                                    @if($role['permissions']->contains('name','employee_management-update')) checked @endif
                                                     />
                                                 <span class="form-check-label">Update</span>
                                             </label>
@@ -92,9 +92,9 @@
                                                 <input 
                                                     class="form-check-input" 
                                                     type="checkbox" 
-                                                    value="user_management-delete" 
-                                                    name="user_management-delete" 
-                                                    @if($role['permissions']->contains('name','user_management-delete')) checked @endif
+                                                    value="employee_management-delete" 
+                                                    name="employee_management-delete" 
+                                                    @if($role['permissions']->contains('name','employee_management-delete')) checked @endif
                                                     />
                                                 <span class="form-check-label">Delete</span>
                                             </label>

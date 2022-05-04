@@ -81,7 +81,7 @@ class UserController extends Controller
             'address' => $request->address
         ]);
 
-        return response()->json(['data'=>'Employee created successfully'], 200);
+        return response()->json(['msg'=>'Employee created successfully'], 200);
     }
 
     /**
@@ -198,13 +198,13 @@ class UserController extends Controller
         $searchValue = $search_arr['value']; // Search value
 
          // Total records
-        $totalRecords = User::select('count(*) as allcount')->whereHas('roles', function($q){$q->whereNotIn('roles.name', ['admin']);})->count();
-        $totalRecordswithFilter = User::select('count(*) as allcount')->whereHas('roles', function($q){$q->whereNotIn('roles.name', ['admin']);})->where('name', 'like', '%' .$searchValue . '%')->count();
+        $totalRecords = User::select('count(*) as allcount')->whereHas('roles', function($q){$q->whereNotIn('roles.name', ['admin','client']);})->count();
+        $totalRecordswithFilter = User::select('count(*) as allcount')->whereHas('roles', function($q){$q->whereNotIn('roles.name', ['admin','client']);})->where('name', 'like', '%' .$searchValue . '%')->count();
 
         // Fetch records
         $records = User::orderBy($columnName,$columnSortOrder)
         ->where('users.name', 'like', '%' .$searchValue . '%')
-        ->whereHas('roles', function($q){$q->whereNotIn('roles.name', ['admin']);})
+        ->whereHas('roles', function($q){$q->whereNotIn('roles.name', ['admin','client']);})
         ->select('users.*')
         ->skip($start)
         ->take($rowperpage)
@@ -213,7 +213,7 @@ class UserController extends Controller
         $data_arr = array();
 
         foreach($records as $record){
-            if (!$record->getRoleNames()->contains('admin')) {
+            if (!$record->getRoleNames()->contains('admin','client')) {
                 $id = $record->id;
                 $name = $record->name;
                 $email = $record->email;

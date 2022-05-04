@@ -50,9 +50,9 @@ class RoleController extends Controller
         $role = new Role;
         $role->name = $request->get('name');
         $role->save();
-        //Role::create(['name' => $request->name]);
+        //Role::create(['name' => $request->name]);        
 
-        if ( count($request->get('permissions')) > 0 ) {
+        if ( $request->get('permissions') ) {
             $role->syncPermissions($request->get('permissions'));            
         } else {
             $role->syncPermissions([]);

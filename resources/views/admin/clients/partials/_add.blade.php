@@ -6,7 +6,7 @@
             
             <div class="modal-header">
                 
-                <h2 class="fw-bolder">Add a Employee</h2>
+                <h2 class="fw-bolder">Add a Client</h2>
                 
                 <div class="btn btn-icon btn-sm btn-active-icon-primary" data-kt-modal-action="cancel">
                     
@@ -56,12 +56,12 @@
                     <label class="required fw-bold fs-6 mb-5">Role</label>
 
                     <div class="fv-row mb-7 d-flex">                        
-                        
+                    
                         <div class="d-flex fv-row">
                             
                             <div class="form-check form-check-custom form-check-solid me-3">
                                 
-                                <input class="form-check-input" name="role" checked type="radio" value="{{ $role->name }}" id="kt_modal_update_role_option_0" />
+                                <input class="form-check-input" name="role" type="radio" value="{{ $role->name }}" id="kt_modal_update_role_option_0" checked  />
                                 
                                 <label class="form-check-label" for="kt_modal_update_role_option_0">
                                     <div class="fw-bolder text-gray-800">{{ ucfirst($role->name) }}</div>                                        
@@ -69,8 +69,8 @@
 
                             </div>
                             
-                        </div>                        
-                        
+                        </div>                            
+                                                                        
                     </div>
                     <div class="r-error d-none mb-4">
                             <span class="invalid-feedback d-none role-error" role="alert">
