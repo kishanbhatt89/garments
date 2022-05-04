@@ -25,6 +25,7 @@ return new class extends Migration
             $table->timestamp('last_password_change_at')->nullable();
             $table->json('settings')->nullable();
             $table->foreignId('states_id')->nullable();
+            $table->foreignId('cities_id')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

@@ -6,7 +6,7 @@
             
             <div class="modal-header">
                 
-                <h2 class="fw-bolder">Add a State</h2>
+                <h2 class="fw-bolder">Add a City</h2>
                 
                 <div class="btn btn-icon btn-sm btn-active-icon-primary" data-kt-modal-action="cancel">
                     
@@ -29,10 +29,10 @@
                     <div class="fv-row mb-10">
                     
                         <label class="fs-5 fw-bolder form-label mb-2">
-                            <span class="required">State</span>
+                            <span class="required">City</span>
                         </label>
                         
-                        <input class="form-control form-control-solid" placeholder="Enter a state name" name="name" id="name" />
+                        <input class="form-control form-control-solid" placeholder="Enter a city name" name="name" id="name" />
                         
                         <span class="invalid-feedback d-none name-error" role="alert">
                             <strong></strong>

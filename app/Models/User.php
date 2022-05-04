@@ -74,4 +74,9 @@ class User extends Authenticatable
         return $this->hasOne(State::class);
     }
 
+    public function city()
+    {
+        return $this->hasOne(City::class);
+    }
+
 }

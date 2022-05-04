@@ -23,7 +23,7 @@ let KTDatatablesServerSide = function () {
             },
 
             ajax: {
-                url: "http://127.0.0.1:8000/admin/states/table",
+                url: "http://127.0.0.1:8000/admin/cities/table",
             },
 
             columns: [
@@ -194,11 +194,11 @@ let KTDatatablesServerSide = function () {
                 
                 const parent = e.target.closest('tr');
                 
-                const state = parent.querySelectorAll('td')[1].innerText;
+                const city = parent.querySelectorAll('td')[1].innerText;
 
                 Swal.fire({
 
-                    text: "Are you sure you want to delete " + state + "?",
+                    text: "Are you sure you want to delete " + city + "?",
                     icon: "warning",
                     showCancelButton: true,
                     buttonsStyling: false,
@@ -217,9 +217,9 @@ let KTDatatablesServerSide = function () {
 
                             type:'DELETE',
                     
-                            url: 'states/' + state,
+                            url: 'cities/' + city,
                     
-                            data: { state },
+                            data: { city },
                     
                             success:function(data){                                            
                                 
@@ -239,7 +239,7 @@ let KTDatatablesServerSide = function () {
                         
                     } else if (result.dismiss === 'cancel') {                        
                         
-                        toastr.error(state + " state was not deleted.");
+                        toastr.error(city + " state was not deleted.");
                         
                     }
                 });
@@ -286,7 +286,7 @@ let KTDatatablesServerSide = function () {
                 
                 Swal.fire({
 
-                    text: "Are you sure you want to delete selected states?",
+                    text: "Are you sure you want to delete selected cities?",
                     icon: "warning",
                     showCancelButton: true,
                     buttonsStyling: false,
@@ -302,19 +302,19 @@ let KTDatatablesServerSide = function () {
                     
                     if (result.value) {
 
-                        let statesArr = [];
+                        let citiesArr = [];
 
                         $("input:checkbox[name=deleteSelected]:checked").each(function() {                            
-                            statesArr.push($(this).val());
+                            citiesArr.push($(this).val());
                         });                        
 
                         $.ajax({
 
                             type:'DELETE',
                     
-                            url: 'states/destroyMultiple',
+                            url: 'cities/destroyMultiple',
                     
-                            data: { states: statesArr },
+                            data: { cities: citiesArr },
                     
                             success:function(data){                                            
                                 
@@ -339,7 +339,7 @@ let KTDatatablesServerSide = function () {
 
                         Swal.fire({
 
-                            text: "Selected roles was not deleted.",
+                            text: "Selected cities was not deleted.",
                             icon: "error",
                             buttonsStyling: false,
                             confirmButtonText: "Ok, got it!",
@@ -424,7 +424,7 @@ $('#saveBtn').on('click', function(e) {
         
     $('#saveBtn').attr('data-kt-indicator', 'on');
 
-    let name = $("#name").val();    
+    let name = $("#name").val();        
 
     save(name);
 

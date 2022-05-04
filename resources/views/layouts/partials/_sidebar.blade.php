@@ -64,12 +64,14 @@
                 {{ 
                    request()->is('admin/roles') ||
                    request()->is('admin/permissions') ||
-                   request()->is('admin/states') ? 'show' : '' }}">
+                   request()->is('admin/states') || 
+                   request()->is('admin/cities') ? 'show' : '' }}">
                 <span class="menu-link 
                 {{ 
                    request()->is('admin/roles') ||
                    request()->is('admin/permissions') ||
-                   request()->is('admin/states') ? 'active' : '' }}">
+                   request()->is('admin/states') ||
+                   request()->is('admin/cities') ? 'active' : '' }}">
                     <span class="menu-icon">
                         
                     <span class="svg-icon svg-icon-2">
@@ -107,6 +109,14 @@
                                 <span class="bullet bullet-dot"></span>
                             </span>
                             <span class="menu-title">States</span>
+                        </a>
+                    </div>
+                    <div class="menu-item">
+                        <a class="menu-link {{ (request()->is('admin/cities')) ? 'active' : '' }}" href="{{ route('admin.cities.index') }}">
+                            <span class="menu-bullet">
+                                <span class="bullet bullet-dot"></span>
+                            </span>
+                            <span class="menu-title">Cities</span>
                         </a>
                     </div>
                     

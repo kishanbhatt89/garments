@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\CityController;
 use App\Http\Controllers\Admin\ClientController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\DashboardController;
@@ -70,6 +71,14 @@ Route::middleware(['auth','role:admin|employee'])->name('admin.')->prefix('admin
     Route::post('/states', [StateController::class, 'store'])->name('states.store');
     Route::put('/states/{state}', [StateController::class, 'update'])->name('states.update');
     Route::delete('states/{state}', [StateController::class, 'destroy'])->name('states.destroy');
+
+    Route::delete('cities/destroyMultiple', [CityController::class, 'destroyMultiple'])->name('cities.destroyMultiple');
+    Route::get('/cities/{city}/details', [CityController::class, 'show'])->name('cities.show');
+    Route::get('/cities/table', [CityController::class, 'table'])->name('cities.table');
+    Route::get('/cities', [CityController::class, 'index'])->name('cities.index');    
+    Route::post('/cities', [CityController::class, 'store'])->name('cities.store');
+    Route::put('/cities/{city}', [CityController::class, 'update'])->name('cities.update');
+    Route::delete('cities/{city}', [CityController::class, 'destroy'])->name('cities.destroy');
 
     Route::get('/settings', [UserController::class, 'showSettings'])->name('settings.index');
     Route::post('/settings', [UserController::class, 'saveSettings'])->name('settings.store');
