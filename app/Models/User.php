@@ -69,4 +69,9 @@ class User extends Authenticatable
         return $this->hasOne(ClientDetails::class);
     }
 
+    public function state()
+    {
+        return $this->hasOne(State::class);
+    }
+
 }

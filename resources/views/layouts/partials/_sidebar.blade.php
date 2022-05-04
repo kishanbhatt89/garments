@@ -63,11 +63,13 @@
             <div data-kt-menu-trigger="click" class="menu-item menu-accordion mb-1 
                 {{ 
                    request()->is('admin/roles') ||
-                   request()->is('admin/permissions') ? 'show' : '' }}">
+                   request()->is('admin/permissions') ||
+                   request()->is('admin/states') ? 'show' : '' }}">
                 <span class="menu-link 
                 {{ 
                    request()->is('admin/roles') ||
-                   request()->is('admin/permissions') ? 'active' : '' }}">
+                   request()->is('admin/permissions') ||
+                   request()->is('admin/states') ? 'active' : '' }}">
                     <span class="menu-icon">
                         
                     <span class="svg-icon svg-icon-2">
@@ -97,6 +99,14 @@
                                 <span class="bullet bullet-dot"></span>
                             </span>
                             <span class="menu-title">Permissions</span>
+                        </a>
+                    </div>
+                    <div class="menu-item">
+                        <a class="menu-link {{ (request()->is('admin/states')) ? 'active' : '' }}" href="{{ route('admin.states.index') }}">
+                            <span class="menu-bullet">
+                                <span class="bullet bullet-dot"></span>
+                            </span>
+                            <span class="menu-title">States</span>
                         </a>
                     </div>
                     

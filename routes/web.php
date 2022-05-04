@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\PermissionController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\SettingController;
+use App\Http\Controllers\Admin\StateController;
 use App\Http\Controllers\Admin\UserController;
 use Illuminate\Support\Facades\Auth;
 
@@ -61,6 +62,14 @@ Route::middleware(['auth','role:admin|employee'])->name('admin.')->prefix('admin
     Route::post('/permissions', [PermissionController::class, 'store'])->name('permissions.store');
     Route::put('/permissions/{permission}', [PermissionController::class, 'update'])->name('permissions.update');
     Route::delete('/permissions/{permission}', [PermissionController::class, 'destroy'])->name('permissions.destroy');
+
+    Route::delete('states/destroyMultiple', [StateController::class, 'destroyMultiple'])->name('states.destroyMultiple');
+    Route::get('/states/{state}/details', [StateController::class, 'show'])->name('states.show');
+    Route::get('/states/table', [StateController::class, 'table'])->name('states.table');
+    Route::get('/states', [StateController::class, 'index'])->name('states.index');    
+    Route::post('/states', [StateController::class, 'store'])->name('states.store');
+    Route::put('/states/{state}', [StateController::class, 'update'])->name('states.update');
+    Route::delete('states/{state}', [StateController::class, 'destroy'])->name('states.destroy');
 
     Route::get('/settings', [UserController::class, 'showSettings'])->name('settings.index');
     Route::post('/settings', [UserController::class, 'saveSettings'])->name('settings.store');
