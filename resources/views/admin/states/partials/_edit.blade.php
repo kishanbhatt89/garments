@@ -19,6 +19,8 @@
             
         </div>
         
+        <input type="hidden" id="existing_state" value="{{ $state->name }}">
+
         <div class="modal-body scroll-y mx-lg-5 my-7">
         
             <div class="d-flex flex-column scroll-y me-n7 pe-7" id="kt_modal_edit" data-kt-scroll="true" data-kt-scroll-activate="{default: false, lg: true}" data-kt-scroll-max-height="auto" data-kt-scroll-dependencies="#kt_modal_edit" data-kt-scroll-wrappers="#kt_modal_edit" data-kt-scroll-offset="300px">
@@ -76,7 +78,9 @@
         let name = $("#state_name").val();    
         let id = $("#state_id").val();    
 
-        update(name, id)
+        let existing_state = $('#existing_state').val();
+
+        update(name, id, existing_state)
         
     });
 

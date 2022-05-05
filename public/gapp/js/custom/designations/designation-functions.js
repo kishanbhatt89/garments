@@ -75,13 +75,13 @@ function save(name, permissions)
     });
 }
 
-function update(name, id)
+function update(name, id, existing_designation)
 {
     $.ajax({
 
         type:'PUT',
 
-        url: 'designations/'+name,
+        url: 'designations/'+existing_designation,
 
         data: { name, id },
 
@@ -91,6 +91,7 @@ function update(name, id)
                         
             $('#updateBtn').attr('data-kt-indicator', 'off');
 
+            $("#designation_name").val('');
             $('.designation-name-error').addClass('d-none');
             $("#designation_name").removeClass("is-invalid border-danger");
 
@@ -108,13 +109,11 @@ function update(name, id)
 
             if (typeof response !== 'undefined') {
                 
-                if(response.data.name[0]) {
+                if(response.data.name !== 'undefined') {
 
                     $("#designation_name").addClass("is-invalid border-danger");
                     $('.designation-name-error').text(response.data.name[0]);
-                    $('.designation-name-error').removeClass('d-none');
-
-                    $('#updateBtn').attr('data-kt-indicator', 'off');
+                    $('.designation-name-error').removeClass('d-none');                    
 
                 } else {
 
@@ -123,6 +122,8 @@ function update(name, id)
                 }
 
             }
+
+            $('#updateBtn').attr('data-kt-indicator', 'off');
 
         }
     });

@@ -31,7 +31,7 @@
                         
                         <input class="form-control form-control-solid" placeholder="Name" name="name" id="client_name" value="{{ $user->name }}" />
                         
-                        <span class="invalid-feedback d-none name-error" role="alert">
+                        <span class="invalid-feedback d-none client_name-error" role="alert">
                             <strong></strong>
                         </span>
 
@@ -45,7 +45,7 @@
                         
                         <input type="email" class="form-control form-control-solid" placeholder="Email" name="email" id="client_email" value="{{ $user->email }}" />
                         
-                        <span class="invalid-feedback d-none email-error" role="alert">
+                        <span class="invalid-feedback d-none client_email-error" role="alert">
                             <strong></strong>
                         </span>
                         
@@ -64,11 +64,11 @@
                                     name="role" 
                                     type="radio" 
                                     value="{{ $role->name }}" 
-                                    id="kt_modal_update_role_option_0" 
+                                    id="client_role" 
                                     checked
                                 />
                                 
-                                <label class="form-check-label" for="kt_modal_update_role_option_0">
+                                <label class="form-check-label" for="client_role">
                                     <div class="fw-bolder text-gray-800">{{ ucfirst($role->name) }}</div>                                        
                                 </label>
 
@@ -78,7 +78,7 @@
                                                 
                     </div>
                     <div class="r-error d-none mb-4">
-                            <span class="invalid-feedback d-none role-error" role="alert">
+                            <span class="invalid-feedback d-none client_role-error" role="alert">
                                 <strong></strong>
                             </span>                                              
                         </div>
@@ -91,7 +91,7 @@
                         
                         <input type="text" class="form-control form-control-solid" placeholder="Mobile" name="mobile" id="client_mobile" value="{{ $user->clientDetails->mobile }}" />
                         
-                        <span class="invalid-feedback d-none mobile-error" role="alert">
+                        <span class="invalid-feedback d-none client_mobile-error" role="alert">
                             <strong></strong>
                         </span>
                         
@@ -105,7 +105,7 @@
                         
                         <input type="text" class="form-control form-control-solid" placeholder="Designation" name="designation" id="client_designation" value="{{ $user->clientDetails->designation }}"/>
                         
-                        <span class="invalid-feedback d-none designation-error" role="alert">
+                        <span class="invalid-feedback d-none client_designation-error" role="alert">
                             <strong></strong>
                         </span>
                         
@@ -119,7 +119,7 @@
                                                 
                         <textarea placeholder="Address" name="address" id="client_address" class="form-control form-control-solid" rows="5">{{ $user->clientDetails->address }}</textarea>
                         
-                        <span class="invalid-feedback d-none address-error" role="alert">
+                        <span class="invalid-feedback d-none client_address-error" role="alert">
                             <strong></strong>
                         </span>
                         
@@ -162,8 +162,7 @@
         $('#updateBtn').attr("data-kt-indicator", "on");
 
         let name = $("#client_name").val();    
-        let email = $("#client_email").val();    
-        
+        let email = $("#client_email").val();            
         let mobile = $("#client_mobile").val();    
         let designation = $("#client_designation").val();    
         let address = $("#client_address").val();    

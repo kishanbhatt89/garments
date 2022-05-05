@@ -18,6 +18,8 @@
             </div>
             
         </div>
+
+        <input type="hidden" id="existing_designation" value="{{ $designation->name }}">
         
         <div class="modal-body scroll-y mx-lg-5 my-7">
         
@@ -76,7 +78,9 @@
         let name = $("#designation_name").val();    
         let id = $("#designation_id").val();    
 
-        update(name, id)
+        let existing_designation = $('#existing_designation').val();
+
+        update(name, id, existing_designation)
         
     });
 

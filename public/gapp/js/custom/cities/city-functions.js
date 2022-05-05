@@ -75,13 +75,13 @@ function save(name, permissions)
     });
 }
 
-function update(name, id)
+function update(name, id, existing_city)
 {
     $.ajax({
 
         type:'PUT',
 
-        url: 'cities/'+name,
+        url: 'cities/'+existing_city,
 
         data: { name, id },
 
@@ -90,7 +90,7 @@ function update(name, id)
             toastr.success(data.msg);
                         
             $('#updateBtn').attr('data-kt-indicator', 'off');
-
+            
             $('.city-name-error').addClass('d-none');
             $("#city_name").removeClass("is-invalid border-danger");
 

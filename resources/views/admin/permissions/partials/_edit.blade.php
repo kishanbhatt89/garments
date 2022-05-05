@@ -1,4 +1,4 @@
-<div class="modal fade" id="kt_modal_edit" tabindex="-1" aria-hidden="true" aria-label="Close">
+
         
     <div class="modal-dialog modal-dialog-centered mw-750px">
         
@@ -20,6 +20,8 @@
                 </div>
                 
             </div>
+
+            <input type="hidden" id="existing_permission_name" value="{{ $permission->name }}">
             
             <div class="modal-body scroll-y mx-lg-5 my-7">
             
@@ -31,7 +33,7 @@
                             <span class="required">Permission name</span>
                         </label>
                         
-                        <input class="form-control form-control-solid" placeholder="Enter a permission name" name="name" id="permission_name" />
+                        <input class="form-control form-control-solid" placeholder="Enter a permission name" name="name" id="permission_name" value="{{ $permission->name }}" />
                         
                         <span class="invalid-feedback d-none permission-name-error" role="alert">
                             <strong></strong>
@@ -39,7 +41,7 @@
 
                     </div>
 
-                    <input type="hidden" name="permission_id" id="permission_id" value="">
+                    <input type="hidden" name="permission_id" id="permission_id" value="{{ $permission->id }}">
                                                 
                 </div>
                                         
@@ -67,4 +69,26 @@
         
     </div>        
     
-</div>
+
+
+<script>
+
+let updateButton = document.querySelector("#updateBtn");
+
+updateButton.addEventListener("click", function(e) {
+
+    e.preventDefault();
+    
+    updateButton.setAttribute("data-kt-indicator", "on");
+
+    let name = $("#permission_name").val();    
+    let id = $("#permission_id").val();   
+    
+    let existing_permission_name = $('#existing_permission_name').val();
+
+    update(name, id, existing_permission_name)
+    
+});
+
+
+</script>

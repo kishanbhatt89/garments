@@ -449,16 +449,3 @@ saveBtn.addEventListener("click", function(e) {
 });
 
 
-let updateButton = document.querySelector("#updateBtn");
-updateButton.addEventListener("click", function(e) {
-
-    e.preventDefault();
-    
-    updateButton.setAttribute("data-kt-indicator", "on");
-
-    let name = $("#permission_name").val();    
-    let id = $("#permission_id").val();    
-
-    update(name, id)
-    
-});

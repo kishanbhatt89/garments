@@ -46,7 +46,8 @@
 
     @include('admin.permissions.partials._add')
 
-    @include('admin.permissions.partials._edit')
+    <div class="modal fade" id="kt_modal_edit" tabindex="-1" aria-hidden="true" aria-label="Close">
+    </div>
 
 @endsection
 

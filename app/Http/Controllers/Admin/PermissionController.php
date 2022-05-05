@@ -5,8 +5,10 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Permission;
-use Illuminate\Support\Facades\Validator;
 use Spatie\Permission\Models\Role;
+use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\View;
 
 class PermissionController extends Controller
 {
@@ -26,8 +28,13 @@ class PermissionController extends Controller
     {
 
         $permission = Permission::find($request->get('id'));
-
-        return response()->json(['data'=> $permission], 200);
+        
+        $contents = View::make('admin.permissions.partials._edit', ['permission' => $permission]);
+        
+        $response = Response::make($contents, 200);                
+        
+        return response()->json(['data'=> $response->content()], 200 );        
+        
     }
 
     public function store(Request $request)

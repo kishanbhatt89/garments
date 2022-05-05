@@ -18,6 +18,8 @@
             </div>
             
         </div>
+
+        <input type="hidden" id="existing_city" value="{{ $city->name }}">
         
         <div class="modal-body scroll-y mx-lg-5 my-7">
         
@@ -76,7 +78,9 @@
         let name = $("#city_name").val();    
         let id = $("#city_id").val();    
 
-        update(name, id)
+        let existing_city = $("#existing_city").val();
+
+        update(name, id, existing_city)
         
     });
 

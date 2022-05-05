@@ -18,6 +18,8 @@
             </div>
             
         </div>
+
+        <input type="hidden" id="existing_role_name" value="{{ $role->name }}">
         
         <div class="modal-body scroll-y mx-lg-5 my-7">
         
@@ -274,7 +276,9 @@
         let name = $("#role_name").val();    
         let id = $("#role_id").val();    
 
-        update(name, id, permissionsArray)
+        let existing_role_name = $('#existing_role_name').val();
+
+        update(name, id, permissionsArray, existing_role_name)
         
     });
 

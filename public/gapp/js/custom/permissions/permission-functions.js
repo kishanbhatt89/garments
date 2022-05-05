@@ -8,9 +8,10 @@ function edit(id)
         dataType: 'json',
         success: function(res) {
             
-            $('#permission_name').val(res.data.name);
-            $('#kt_modal_edit').modal('show');  
-            $('#permission_id').val(res.data.id)          
+            let data = res.data; 
+           
+            $('#kt_modal_edit').html(data);
+            $('#kt_modal_edit').modal('show');              
         }
 
     });
@@ -70,13 +71,13 @@ function save(name)
     });
 }
 
-function update(name, id)
+function update(name, id, existing_permission_name)
 {
     $.ajax({
 
         type:'PUT',
 
-        url: 'permissions/'+name,
+        url: 'permissions/'+existing_permission_name,
 
         data: { name:name, id: id },
 

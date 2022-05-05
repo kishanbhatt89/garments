@@ -35,15 +35,13 @@ function save(name, permissions)
             
             $('#saveBtn').attr('data-kt-indicator', 'off');
 
+            $("#name").val('');
             $('.name-error').addClass('d-none');
-
             $("#name").removeClass("is-invalid border-danger");
 
             $('#kt_modal_add').modal('hide');
 
-            $('#kt_datatable_module').DataTable().ajax.reload();
-
-            $("#name").val('');
+            $('#kt_datatable_module').DataTable().ajax.reload();            
 
             location.reload();
 
@@ -55,13 +53,11 @@ function save(name, permissions)
 
             if (typeof response !== 'undefined') {
                 
-                if(response.data.name[0]) {
+                if(response.data.name !== 'undefined') {
 
                     $("#name").addClass("is-invalid border-danger");
                     $('.name-error').text(response.data.name[0]);
-                    $('.name-error').removeClass('d-none');
-                    
-                    $('#saveBtn').attr('data-kt-indicator', 'off');
+                    $('.name-error').removeClass('d-none');                                    
 
                 } else {
 
@@ -71,17 +67,19 @@ function save(name, permissions)
 
             }
 
+            $('#saveBtn').attr('data-kt-indicator', 'off');
+
         }
     });
 }
 
-function update(name, id)
+function update(name, id, existing_state)
 {
     $.ajax({
 
         type:'PUT',
 
-        url: 'states/'+name,
+        url: 'states/'+existing_state,
 
         data: { name, id },
 
@@ -108,13 +106,12 @@ function update(name, id)
 
             if (typeof response !== 'undefined') {
                 
-                if(response.data.name[0]) {
+                if(response.data.name !== 'undefined') {
 
                     $("#state_name").addClass("is-invalid border-danger");
                     $('.state-name-error').text(response.data.name[0]);
                     $('.state-name-error').removeClass('d-none');
-
-                    $('#updateBtn').attr('data-kt-indicator', 'off');
+                    
 
                 } else {
 
@@ -123,6 +120,8 @@ function update(name, id)
                 }
 
             }
+
+            $('#updateBtn').attr('data-kt-indicator', 'off');
 
         }
     });

@@ -92,13 +92,11 @@ class UserController extends Controller
      */
     public function show(Request $request)
     {
-        $user = User::with('userDetails')->where('id',$request->get('id'))->first();   
-
-        $userRole = $user->getRoleNames()[0];
+        $user = User::with('userDetails')->where('id',$request->get('id'))->first();           
         
-        $roles = Role::all();         
+        $role = Role::where('name','employee')->first();         
 
-        $contents = View::make('admin.employees.partials._edit', ['user' => $user, 'roles' => $roles, 'userRole' => $userRole]);
+        $contents = View::make('admin.employees.partials._edit', ['user' => $user, 'role' => $role]);
         
         $response = Response::make($contents, 200);                
         

@@ -75,13 +75,13 @@ function save(name, permissions)
     });
 }
 
-function update(name, id, permissions)
+function update(name, id, permissions, existing_role_name)
 {
     $.ajax({
 
         type:'PUT',
 
-        url: 'roles/'+name,
+        url: 'roles/'+existing_role_name,
 
         data: { name:name, id: id, permissions:permissions },
 

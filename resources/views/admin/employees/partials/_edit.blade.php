@@ -31,7 +31,7 @@
                         
                         <input class="form-control form-control-solid" placeholder="Name" name="name" id="employee_name" value="{{ $user->name }}" />
                         
-                        <span class="invalid-feedback d-none name-error" role="alert">
+                        <span class="invalid-feedback d-none employee_name-error" role="alert">
                             <strong></strong>
                         </span>
 
@@ -45,7 +45,7 @@
                         
                         <input type="email" class="form-control form-control-solid" placeholder="Email" name="email" id="employee_email" value="{{ $user->email }}" />
                         
-                        <span class="invalid-feedback d-none email-error" role="alert">
+                        <span class="invalid-feedback d-none employee_email-error" role="alert">
                             <strong></strong>
                         </span>
                         
@@ -54,39 +54,28 @@
                     <label class="required fw-bold fs-6 mb-5">Role</label>
 
                     <div class="fv-row mb-7 d-flex">                        
-
-                        @foreach ($roles as $index => $role)
-
-                            <div class="d-flex fv-row">
-                                
-                                <div class="form-check form-check-custom form-check-solid me-3">
-                                    
-                                    <input 
-                                        class="form-check-input" 
-                                        name="role" 
-                                        type="radio" 
-                                        value="{{ $role->name }}" 
-                                        id="kt_modal_update_role_option_{{ $index }}" 
-                                        @if($userRole === $role->name) checked @endif
-                                    />
-                                    
-                                    <label class="form-check-label" for="kt_modal_update_role_option_{{ $index }}">
-                                        <div class="fw-bolder text-gray-800">{{ ucfirst($role->name) }}</div>                                        
-                                    </label>
-
-                                </div>
-                                
-                            </div>                            
-
-                        @endforeach  
                         
-                        
+
+                        <div class="d-flex fv-row">
+                            
+                            <div class="form-check form-check-custom form-check-solid me-3">
+                                
+                                <input class="form-check-input" name="employee_role" checked type="radio" value="{{ $role->name }}" id="employee_role" />
+                                
+                                <label class="form-check-label" for="employee_role">
+                                    <div class="fw-bolder text-gray-800">{{ ucfirst($role->name) }}</div>                                        
+                                </label>
+
+                            </div>
+                            
+                        </div>    
+                                                
                     </div>
                     <div class="r-error d-none mb-4">
-                            <span class="invalid-feedback d-none role-error" role="alert">
-                                <strong></strong>
-                            </span>                                              
-                        </div>
+                        <span class="invalid-feedback d-none employee_role-error" role="alert">
+                            <strong></strong>
+                        </span>                                              
+                    </div>
                     
                     <div class="fv-row mb-7">
                         
@@ -94,9 +83,9 @@
                             <span class="required">Mobile</span>
                         </label>
                         
-                        <input type="text" class="form-control form-control-solid" placeholder="Mobile" name="mobile" id="employee_mobile" value="{{ $user->userDetails->mobile }}" />
+                        <input type="text" class="form-control form-control-solid" placeholder="Mobile" name="employee_mobile" id="employee_mobile" value="{{ $user->userDetails->mobile }}" />
                         
-                        <span class="invalid-feedback d-none mobile-error" role="alert">
+                        <span class="invalid-feedback d-none employee_mobile-error" role="alert">
                             <strong></strong>
                         </span>
                         
@@ -108,9 +97,9 @@
                             <span class="required">Designation</span>
                         </label>
                         
-                        <input type="text" class="form-control form-control-solid" placeholder="Designation" name="designation" id="employee_designation" value="{{ $user->userDetails->designation }}"/>
+                        <input type="text" class="form-control form-control-solid" placeholder="Designation" name="employee_designation" id="employee_designation" value="{{ $user->userDetails->designation }}"/>
                         
-                        <span class="invalid-feedback d-none designation-error" role="alert">
+                        <span class="invalid-feedback d-none employee_designation-error" role="alert">
                             <strong></strong>
                         </span>
                         
@@ -122,9 +111,9 @@
                             <span class="required">Address</span>
                         </label>
                                                 
-                        <textarea placeholder="Address" name="address" id="employee_address" class="form-control form-control-solid" rows="5">{{ $user->userDetails->address }}</textarea>
+                        <textarea placeholder="Address" name="employee_address" id="employee_address" class="form-control form-control-solid" rows="5">{{ $user->userDetails->address }}</textarea>
                         
-                        <span class="invalid-feedback d-none address-error" role="alert">
+                        <span class="invalid-feedback d-none employee_address-error" role="alert">
                             <strong></strong>
                         </span>
                         
