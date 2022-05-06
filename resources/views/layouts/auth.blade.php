@@ -80,7 +80,34 @@
 
 		@if (request()->is('register'))
         	<!-- <script src="{{ asset('gapp') }}/js/custom/authentication/sign-up/general.js"></script> -->
-		@endif
+		@endif		
+
+		<script>
+
+			toastr.options = {
+				"closeButton": false,
+				"debug": false,
+				"newestOnTop": false,
+				"progressBar": true,
+				"positionClass": "toastr-top-right",
+				"preventDuplicates": false,
+				"showDuration": "300",
+				"hideDuration": "1000",
+				"timeOut": "5000",
+				"extendedTimeOut": "1000",
+				"showEasing": "swing",
+				"hideEasing": "linear",
+				"showMethod": "fadeIn",
+				"hideMethod": "fadeOut"
+			};			
+
+		</script>
+
+		@error('active')
+			<script>
+				toastr.error('{{ $message }}');
+			</script>				
+		@enderror
 		
 	</body>
 	
