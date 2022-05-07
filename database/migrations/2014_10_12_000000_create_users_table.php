@@ -27,6 +27,7 @@ return new class extends Migration
             $table->foreignId('states_id')->nullable();
             $table->foreignId('cities_id')->nullable();
             $table->foreignId('designatioins_id')->nullable();
+            $table->foreignId('gst_profiles_id')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

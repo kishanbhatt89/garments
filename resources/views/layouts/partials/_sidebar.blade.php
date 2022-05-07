@@ -66,14 +66,16 @@
                    request()->is('admin/permissions') ||
                    request()->is('admin/states') || 
                    request()->is('admin/cities') || 
-                   request()->is('admin/designations') ? 'show' : '' }}">
+                   request()->is('admin/designations') ||
+                   request()->is('admin/gst-profiles') ? 'show' : '' }}">
                 <span class="menu-link 
                 {{ 
                    request()->is('admin/roles') ||
                    request()->is('admin/permissions') ||
                    request()->is('admin/states') ||
                    request()->is('admin/cities') ||
-                   request()->is('admin/designations') ? 'active' : '' }}">
+                   request()->is('admin/designations') ||
+                   request()->is('admin/gst-profiles') ? 'active' : '' }}">
                     <span class="menu-icon">
                         
                     <span class="svg-icon svg-icon-2">
@@ -127,6 +129,14 @@
                                 <span class="bullet bullet-dot"></span>
                             </span>
                             <span class="menu-title">Designations</span>
+                        </a>
+                    </div>
+                    <div class="menu-item">
+                        <a class="menu-link {{ (request()->is('admin/gst-profiles')) ? 'active' : '' }}" href="{{ route('admin.gst-profiles.index') }}">
+                            <span class="menu-bullet">
+                                <span class="bullet bullet-dot"></span>
+                            </span>
+                            <span class="menu-title">Gst Profile</span>
                         </a>
                     </div>
                     

@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\ClientController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\DesignationController;
+use App\Http\Controllers\Admin\GstProfileController;
 use App\Http\Controllers\Admin\PermissionController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\SettingController;
@@ -104,6 +105,14 @@ Route::middleware(['auth','role:admin|employee'])->name('admin.')->prefix('admin
     Route::post('/designations', [DesignationController::class, 'store'])->name('designations.store');
     Route::put('/designations/{designation}', [DesignationController::class, 'update'])->name('designations.update');
     Route::delete('designations/{designation}', [DesignationController::class, 'destroy'])->name('designations.destroy');
+
+    Route::delete('gst-profiles/destroyMultiple', [GstProfileController::class, 'destroyMultiple'])->name('gst-profiles.destroyMultiple');
+    Route::get('/gst-profiles/{designation}/details', [GstProfileController::class, 'show'])->name('gst-profiles.show');
+    Route::get('/gst-profiles/table', [GstProfileController::class, 'table'])->name('gst-profiles.table');
+    Route::get('/gst-profiles', [GstProfileController::class, 'index'])->name('gst-profiles.index');    
+    Route::post('/gst-profiles', [GstProfileController::class, 'store'])->name('gst-profiles.store');
+    Route::put('/gst-profiles/{designation}', [GstProfileController::class, 'update'])->name('gst-profiles.update');
+    Route::delete('gst-profiles/{designation}', [GstProfileController::class, 'destroy'])->name('gst-profiles.destroy');
 
     Route::get('/settings', [UserController::class, 'showSettings'])->name('settings.index');
     Route::post('/settings', [UserController::class, 'saveSettings'])->name('settings.store');

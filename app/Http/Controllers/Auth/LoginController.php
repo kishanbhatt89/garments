@@ -58,7 +58,7 @@ class LoginController extends Controller
                 // Send the normal successful login response
                 $this->sendLoginResponse($request);
             } else {
-                if ($user->getRoleNames()->first() == 'admin' && $user->is_active && $this->attemptLogin($request)) {
+                if ($user->getRoleNames()->first() == 'employee' && $user->is_active && $this->attemptLogin($request)) {
 
                     $this->sendLoginResponse($request);
                     
