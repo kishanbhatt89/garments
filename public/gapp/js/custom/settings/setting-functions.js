@@ -11,7 +11,7 @@ $('#saveGeneralSettingBtn').on('click', function(e) {
 
         type:'POST',
 
-        url: 'settings',
+        url: APP_URL+'/admin/settings',
 
         data: { company_name, company_address },
 
@@ -51,7 +51,7 @@ $('#saveEmailSettingBtn').on('click', function(e) {
 
         type:'POST',
 
-        url: 'settings',
+        url: APP_URL+'/admin/settings',
 
         data: { 
             company_mail_mailer, 
@@ -106,7 +106,7 @@ $('#saveSupportSettingBtn').on('click', function(e) {
 
         type:'POST',
 
-        url: 'settings',
+        url: APP_URL+'/admin/settings',
 
         data: { company_mobile, company_email },
 

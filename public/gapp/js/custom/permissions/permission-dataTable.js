@@ -23,7 +23,7 @@ let KTDatatablesServerSide = function () {
             },
 
             ajax: {
-                url: "http://127.0.0.1:8000/admin/permissions/table",
+                url: APP_URL+"/admin/permissions/table",
             },
 
             columns: [
@@ -237,7 +237,7 @@ let KTDatatablesServerSide = function () {
 
                             type:'DELETE',
                     
-                            url: 'permissions/' + permission,
+                            url: APP_URL+'/admin/permissions/' + permission,
                     
                             data: { permission },
                     
@@ -332,7 +332,7 @@ let KTDatatablesServerSide = function () {
 
                             type:'DELETE',
                     
-                            url: 'permissions/destroyMultiple',
+                            url: APP_URL+'/admin/permissions/destroyMultiple',
                     
                             data: { permissions: permissionsArr },
                     

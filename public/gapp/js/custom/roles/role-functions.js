@@ -3,7 +3,7 @@ function edit(id)
     
     $.ajax({
 
-        url: "roles/"+id+"/details",
+        url: APP_URL+"/admin/roles/"+id+"/details",
         type: 'GET',
         data: {id:id},
         dataType: 'json',
@@ -25,7 +25,7 @@ function save(name, permissions)
 
         type:'POST',
 
-        url: 'roles',
+        url: APP_URL+'/admin/roles',
 
         data: { name:name, permissions: permissions },
 
@@ -81,7 +81,7 @@ function update(name, id, permissions, existing_role_name)
 
         type:'PUT',
 
-        url: 'roles/'+existing_role_name,
+        url: APP_URL+'/admin/roles/'+existing_role_name,
 
         data: { name:name, id: id, permissions:permissions },
 

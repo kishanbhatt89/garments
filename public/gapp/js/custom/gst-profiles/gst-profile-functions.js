@@ -3,7 +3,7 @@ function edit(id)
     
     $.ajax({
 
-        url: "gst-profiles/"+id+"/details",
+        url: APP_URL+"/admin/gst-profiles/"+id+"/details",
         type: 'GET',
         data: {id:id},
         dataType: 'json',
@@ -25,7 +25,7 @@ function save(company_name, company_gst_number)
 
         type:'POST',
 
-        url: 'gst-profiles',
+        url: APP_URL+'/admin/gst-profiles',
 
         data: { company_name, company_gst_number },
 
@@ -101,7 +101,7 @@ function update(name, gst, id, existing_company_name)
 
         type:'PUT',
 
-        url: 'gst-profiles/'+existing_company_name,
+        url: APP_URL+'/admin/gst-profiles/'+existing_company_name,
 
         data: { name, gst, id },
 

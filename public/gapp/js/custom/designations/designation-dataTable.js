@@ -23,7 +23,7 @@ let KTDatatablesServerSide = function () {
             },
 
             ajax: {
-                url: "http://127.0.0.1:8000/admin/designations/table",
+                url: APP_URL+"/admin/designations/table",
             },
 
             columns: [
@@ -217,7 +217,7 @@ let KTDatatablesServerSide = function () {
 
                             type:'DELETE',
                     
-                            url: 'designations/' + designation,
+                            url: APP_URL+'/admin/designations/' + designation,
                     
                             data: { designation },
                     
@@ -312,7 +312,7 @@ let KTDatatablesServerSide = function () {
 
                             type:'DELETE',
                     
-                            url: 'designations/destroyMultiple',
+                            url: APP_URL+'/admin/designations/destroyMultiple',
                     
                             data: { designations: designationsArr },
                     

@@ -3,7 +3,7 @@ function edit(id)
     
     $.ajax({
 
-        url: "cities/"+id+"/details",
+        url: APP_URL+"/admin/cities/"+id+"/details",
         type: 'GET',
         data: {id:id},
         dataType: 'json',
@@ -25,7 +25,7 @@ function save(name, permissions)
 
         type:'POST',
 
-        url: 'cities',
+        url: APP_URL+'/admin/cities',
 
         data: { name },
 
@@ -81,7 +81,7 @@ function update(name, id, existing_city)
 
         type:'PUT',
 
-        url: 'cities/'+existing_city,
+        url: APP_URL+'/admin/cities/'+existing_city,
 
         data: { name, id },
 

@@ -48,10 +48,7 @@
                                 @auth
                                     <a href="{{ route('admin.dashboard') }}" class="btn btn-lg btn-primary fw-bolder">Dashboard</a>                                
                                 @else
-                                    <a href="{{ route('login') }}" class="btn btn-lg btn-primary fw-bolder" style="margin-right: 10px">Sign In</a>                                                                
-                                    @if (Route::has('register'))
-                                        <a href="{{ route('register') }}" class="btn btn-lg btn-primary fw-bolder" style="margin-left: 10px">Sign Up</a>            
-                                    @endif
+                                    <a href="{{ route('login') }}" class="btn btn-lg btn-primary fw-bolder" style="margin-right: 10px">Sign In</a>                                                                                                    
                                 @endauth                            
                             @endif
                         </div>												

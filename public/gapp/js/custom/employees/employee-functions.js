@@ -3,7 +3,7 @@ function edit(id)
     
     $.ajax({
 
-        url: "employees/"+id+"/details",
+        url: APP_URL+"/admin/employees/"+id+"/details",
         type: 'GET',
         data: {id:id},
         dataType: 'json',
@@ -25,7 +25,7 @@ function save(name, email, role, password, password_confirmation, mobile, design
 
         type:'POST',
 
-        url: 'employees',
+        url: APP_URL+'/admin/employees',
 
         data: { name, email, role, password, password_confirmation, mobile, designation, address },
 
@@ -136,7 +136,7 @@ function update(id, name, email, role, mobile, designation, address)
 
         type:'PUT',
 
-        url: 'employees/'+id,
+        url: APP_URL+'/admin/employees/'+id,
 
         data: { id, name, email, role, mobile, designation, address },
 

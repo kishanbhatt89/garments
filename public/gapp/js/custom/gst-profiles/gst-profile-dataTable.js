@@ -23,7 +23,7 @@ let KTDatatablesServerSide = function () {
             },
 
             ajax: {
-                url: "http://127.0.0.1:8000/admin/gst-profiles/table",
+                url: APP_URL+"/admin/gst-profiles/table",
             },
 
             columns: [
@@ -224,7 +224,7 @@ let KTDatatablesServerSide = function () {
 
                             type:'DELETE',
                     
-                            url: 'gst-profiles/' + gstProfile,
+                            url: APP_URL+'/admin/gst-profiles/' + gstProfile,
                     
                             data: { gstProfile },
                     
@@ -319,7 +319,7 @@ let KTDatatablesServerSide = function () {
 
                             type:'DELETE',
                     
-                            url: 'gst-profiles/destroyMultiple',
+                            url: APP_URL+'/admin/gst-profiles/destroyMultiple',
                     
                             data: { gstProfiles: gstProfilesArr },
                     

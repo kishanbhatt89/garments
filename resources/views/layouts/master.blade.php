@@ -147,6 +147,8 @@
 				"hideMethod": "fadeOut"
 			};
 
+			const APP_URL = "{{ url('/') }}";
+
 		</script>
 
 		@yield('custom-js')
