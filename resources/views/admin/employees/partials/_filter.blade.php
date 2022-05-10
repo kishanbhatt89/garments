@@ -31,18 +31,16 @@
                         <span class="form-check-label text-gray-600">All</span>
 
                     </label>
-
-                    @foreach ($roles as $role)
+                    
                         
-                        <label class="form-check form-check-sm form-check-custom form-check-solid mb-3 me-5">
+                    <label class="form-check form-check-sm form-check-custom form-check-solid mb-3 me-5">
 
-                            <input class="form-check-input" type="radio" name="role" value="{{ $role->name }}" id="role_{{ $role->id }}">
+                        <input class="form-check-input" type="radio" name="role" value="{{ $role->name }}" id="role_{{ $role->id }}">
 
-                            <span class="form-check-label text-gray-600">{{ ucfirst($role->name) }}</span>
+                        <span class="form-check-label text-gray-600">{{ ucfirst($role->name) }}</span>
 
-                        </label>
-                        
-                    @endforeach                                                                                        
+                    </label>
+                                            
                 </div>
                 
             </div>
