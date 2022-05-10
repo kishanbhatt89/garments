@@ -25,7 +25,7 @@ function save(name, email, role, password, password_confirmation, mobile, design
 
         type:'POST',
 
-        url: APP_URL+'/amdin/clients',
+        url: APP_URL+'/admin/clients',
 
         data: { name, email, role, password, password_confirmation, mobile, designation, address },
 
