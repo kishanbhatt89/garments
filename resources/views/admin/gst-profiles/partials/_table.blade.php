@@ -9,8 +9,8 @@
                     <input class="form-check-input" type="checkbox" data-kt-check="true" data-kt-check-target="#kt_datatable_module .form-check-input" value="1"/>
                 </div>
             </th>
-            <th>Company Name</th>
-            <th>Company GST Number</th>                                        
+            <th>Name</th>
+            <th>GST Percentage</th>                                        
             <th>Created At</th>
             <th>Updated At</th>                                
             <th class="text-end min-w-100px">Actions</th>

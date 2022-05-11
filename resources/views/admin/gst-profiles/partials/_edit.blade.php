@@ -19,7 +19,7 @@
             
         </div>
         
-        <input type="hidden" id="existing_company_name" value="{{ $gstProfile->company_name }}">
+        <input type="hidden" id="existing_name" value="{{ $gstProfile->name }}">
 
         <div class="modal-body scroll-y mx-lg-5 my-7">
         
@@ -28,12 +28,12 @@
                 <div class="fv-row mb-10">
                     
                     <label class="fs-5 fw-bolder form-label mb-2">
-                        <span class="required">Company Name</span>
+                        <span class="required">Name</span>
                     </label>
                     
-                    <input class="form-control form-control-solid" placeholder="Enter a company name" name="company_name" id="company_name_edit" value="{{ $gstProfile->company_name }}" />
+                    <input class="form-control form-control-solid" placeholder="Enter a name" name="name" id="name_edit" value="{{ $gstProfile->name }}" />
                     
-                    <span class="invalid-feedback d-none company_name_edit-error" role="alert">
+                    <span class="invalid-feedback d-none name_edit-error" role="alert">
                         <strong></strong>
                     </span>
 
@@ -42,12 +42,12 @@
                 <div class="fv-row mb-10">
                     
                     <label class="fs-5 fw-bolder form-label mb-2">
-                        <span class="required">Company GST Number</span>
+                        <span class="required">GST Percentage</span>
                     </label>
                     
-                    <input class="form-control form-control-solid" placeholder="Enter a company gst number" name="company_gst_number" id="company_gst_number_edit" value="{{ $gstProfile->company_gst_number }}" />
+                    <input class="form-control form-control-solid" placeholder="Enter a gst percentage" name="gst_percentage" id="gst_percentage_edit" value="{{ $gstProfile->gst_percentage }}" />
                     
-                    <span class="invalid-feedback d-none company_gst_number_edit-error" role="alert">
+                    <span class="invalid-feedback d-none gst_percentage_edit-error" role="alert">
                         <strong></strong>
                     </span>
 
@@ -89,13 +89,14 @@
                 
         $('#updateBtn').attr("data-kt-indicator", "on");
         
-        let name = $("#company_name_edit").val();    
-        let gst = $("#company_gst_number_edit").val();    
+        let name = $("#name_edit").val();    
+        let gst_percentage = $("#gst_percentage_edit").val();    
+
         let id = $("#gst_profiles_id").val();    
 
-        let existing_company_name = $('#existing_company_name').val();        
+        let existing_name = $('#existing_name').val();        
         
-        update(name, gst, id, existing_company_name)
+        update(name, gst_percentage, id, existing_name)
         
     });
 

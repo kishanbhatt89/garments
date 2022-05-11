@@ -19,7 +19,7 @@ function edit(id)
     });
 }
 
-function save(company_name, company_gst_number)
+function save(name, gst_percentage)
 {
     $.ajax({
 
@@ -27,7 +27,7 @@ function save(company_name, company_gst_number)
 
         url: APP_URL+'/admin/gst-profiles',
 
-        data: { company_name, company_gst_number },
+        data: { name, gst_percentage },
 
         success:function(data){            
             
@@ -35,13 +35,13 @@ function save(company_name, company_gst_number)
             
             $('#saveBtn').attr('data-kt-indicator', 'off');
 
-            $("#company_name").val('');
-            $('.company_name-error').addClass('d-none');
-            $("#company_name").removeClass("is-invalid border-danger");
+            $("#name").val('');
+            $('.name-error').addClass('d-none');
+            $("#name").removeClass("is-invalid border-danger");
 
-            $("#company_gst_number").val('');
-            $('.company_gst_number-error').addClass('d-none');
-            $("#company_gst_number").removeClass("is-invalid border-danger");
+            $("#gst_percentage").val('');
+            $('.gst_percentage-error').addClass('d-none');
+            $("#gst_percentage").removeClass("is-invalid border-danger");
 
             $('#kt_modal_add').modal('hide');
 
@@ -57,30 +57,28 @@ function save(company_name, company_gst_number)
 
             if (typeof response !== 'undefined') {
 
-                if(response.data.company_gst_number !== 'undefined') {
+                if(response.data.gst_percentage !== 'undefined') {
 
-                    $("#company_gst_number").addClass("is-invalid border-danger");
-                    $('.company_gst_number-error').text(response.data.company_gst_number[0]);
-                    $('.company_gst_number-error').removeClass('d-none');                                    
-
-                } else {
-
-                    $("#company_gst_number").removeClass("is-invalid border-danger");
-
-                }
-
-                console.log(response.data.company_name !== 'undefined' ? response.data.company_name[0] : '');
-                
-                
-                if(response.data.company_name !== 'undefined') {
-
-                    $("#company_name").addClass("is-invalid border-danger");
-                    $('.company_name-error').text(response.data.company_name[0]);
-                    $('.company_name-error').removeClass('d-none');                                    
+                    $("#gst_percentage").addClass("is-invalid border-danger");
+                    $('.gst_percentage-error').text(response.data.gst_percentage[0]);
+                    $('.gst_percentage-error').removeClass('d-none');                                    
 
                 } else {
 
-                    $("#company_name").removeClass("is-invalid border-danger");
+                    $("#gst_percentage").removeClass("is-invalid border-danger");
+
+                }                
+                
+                
+                if(response.data.name !== 'undefined') {
+
+                    $("#name").addClass("is-invalid border-danger");
+                    $('.name-error').text(response.data.name[0]);
+                    $('.name-error').removeClass('d-none');                                    
+
+                } else {
+
+                    $("#name").removeClass("is-invalid border-danger");
 
                 }
 
@@ -94,16 +92,16 @@ function save(company_name, company_gst_number)
     });
 }
 
-function update(name, gst, id, existing_company_name)
+function update(name, gst_percentage, id, existing_name)
 {
     
     $.ajax({
 
         type:'PUT',
 
-        url: APP_URL+'/admin/gst-profiles/'+existing_company_name,
+        url: APP_URL+'/admin/gst-profiles/'+existing_name,
 
-        data: { name, gst, id },
+        data: { name, gst: gst_percentage, id },
 
         success:function(data){                        
             
@@ -111,10 +109,11 @@ function update(name, gst, id, existing_company_name)
                         
             $('#updateBtn').attr('data-kt-indicator', 'off');
 
-            $('.company_name_edit-error').addClass('d-none');
-            $("#company_name_edit").removeClass("is-invalid border-danger");
-            $('.company_gst_number_edit-error').addClass('d-none');
-            $("#company_gst_number_edit").removeClass("is-invalid border-danger");
+            $('.name_edit-error').addClass('d-none');
+            $("#name_edit").removeClass("is-invalid border-danger");
+            
+            $('.gst_percentage_edit-error').addClass('d-none');
+            $("#gst_percentage_edit").removeClass("is-invalid border-danger");
 
             $('#kt_modal_edit').modal('hide');
 
@@ -130,29 +129,29 @@ function update(name, gst, id, existing_company_name)
 
             if (typeof response !== 'undefined') {
                 
-                if(response.data.company_name !== 'undefined') {
+                if(response.data.name !== 'undefined') {
 
-                    $("#company_name").addClass("is-invalid border-danger");
-                    $('.company_name-error').text(response.data.company_name[0]);
-                    $('.company_name-error').removeClass('d-none');
+                    $("#name").addClass("is-invalid border-danger");
+                    $('.name-error').text(response.data.name[0]);
+                    $('.name-error').removeClass('d-none');
                     
 
                 } else {
 
-                    $("#company_name").removeClass("is-invalid border-danger");
+                    $("#name").removeClass("is-invalid border-danger");
 
                 }
 
-                if(response.data.company_gst_number !== 'undefined') {
+                if(response.data.gst_percentage !== 'undefined') {
 
-                    $("#company_gst_number").addClass("is-invalid border-danger");
-                    $('.company_gst_number-error').text(response.data.company_gst_number[0]);
-                    $('.company_gst_number-error').removeClass('d-none');
+                    $("#gst_percentage").addClass("is-invalid border-danger");
+                    $('.gst_percentage-error').text(response.data.gst_percentage[0]);
+                    $('.gst_percentage-error').removeClass('d-none');
                     
 
                 } else {
 
-                    $("#company_gst_number").removeClass("is-invalid border-danger");
+                    $("#gst_percentage").removeClass("is-invalid border-danger");
 
                 }
 

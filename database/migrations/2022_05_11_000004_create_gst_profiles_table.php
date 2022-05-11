@@ -15,8 +15,8 @@ return new class extends Migration
     {
         Schema::create('gst_profiles', function (Blueprint $table) {
             $table->id();
-            $table->string('company_name');
-            $table->string('company_gst_number')->unique();
+            $table->string('name')->unique();
+            $table->string('gst_percentage');
             $table->timestamps();
         });
     }

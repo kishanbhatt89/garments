@@ -37,15 +37,15 @@ class GstProfileController extends Controller
     {
 
         $validator = Validator::make($request->all(), [
-            'company_name' => 'required',
-            'company_gst_number' => 'required|unique:gst_profiles,company_gst_number',
+            'name' => 'required|unique:gst_profiles,name',
+            'gst_percentage' => 'required',
         ]);
 
         if ($validator->fails()) {
             return response()->json(['data'=> $validator->errors()], 400);    
         }
         
-        if (GstProfile::create(['company_name' => $request->company_name, 'company_gst_number' => $request->company_gst_number]))
+        if (GstProfile::create(['name' => $request->name, 'gst_percentage' => $request->gst_percentage]))
         {
             return response()->json(['msg'=> 'GST profile added successfully!'], 200);    
         }
@@ -58,8 +58,8 @@ class GstProfileController extends Controller
     {
         
         $validator = Validator::make($request->all(), [
-            'name' => 'required',
-            'gst' => 'required|unique:gst_profiles,company_gst_number,'.$request->id.',id',        
+            'name' => 'required|unique:gst_profiles,name,'.$request->id.',id',
+            'gst' => 'required',        
         ]);   
 
         if ($validator->fails()) {
@@ -67,8 +67,8 @@ class GstProfileController extends Controller
         }
 
         $gstProfile = GstProfile::find($request->id);
-        $gstProfile->company_name = $request->name;
-        $gstProfile->company_gst_number = $request->gst;
+        $gstProfile->name = $request->name;
+        $gstProfile->gst_percentage = $request->gst;
 
         if($gstProfile->save()) 
         {
@@ -80,7 +80,7 @@ class GstProfileController extends Controller
 
     public function destroy(Request $request)
     {
-        $gstProfile = GstProfile::where('company_name', $request->get('gstProfile'))->first();
+        $gstProfile = GstProfile::where('name', $request->get('gstProfile'))->first();
         
         if ($gstProfile->delete()) {
             return response()->json(['msg'=> 'GST profile deleted successfully!'], 200);
@@ -119,11 +119,11 @@ class GstProfileController extends Controller
 
          // Total records
         $totalRecords = GstProfile::select('count(*) as allcount')->count();
-        $totalRecordswithFilter = GstProfile::select('count(*) as allcount')->where('company_name', 'like', '%' .$searchValue . '%')->count();
+        $totalRecordswithFilter = GstProfile::select('count(*) as allcount')->where('name', 'like', '%' .$searchValue . '%')->count();
 
         // Fetch records
         $records = GstProfile::orderBy($columnName,$columnSortOrder)
-        ->where('gst_profiles.company_name', 'like', '%' .$searchValue . '%')        
+        ->where('gst_profiles.name', 'like', '%' .$searchValue . '%')        
         ->select('gst_profiles.*')
         ->skip($start)
         ->take($rowperpage)
@@ -133,15 +133,15 @@ class GstProfileController extends Controller
 
         foreach($records as $record){
             $id = $record->id;
-            $company_name = $record->company_name;  
-            $company_gst_number = $record->company_gst_number;
+            $name = $record->name;  
+            $gst_percentage = $record->gst_percentage;
             $created_at = $record->created_at->diffForHumans();
             $updated_at = $record->updated_at->diffForHumans();
     
             $data_arr[] = array(
               "id" => $id,
-              "company_name" => $company_name,                  
-              "company_gst_number" => $company_gst_number,
+              "name" => $name,                  
+              "gst_percentage" => $gst_percentage,
               "created_at" => $created_at,
               "updated_at" => $updated_at
             );

@@ -28,8 +28,8 @@ let KTDatatablesServerSide = function () {
 
             columns: [
                 { data: 'id' },
-                { data: 'company_name' },
-                { data: 'company_gst_number' },                
+                { data: 'name' },
+                { data: 'gst_percentage' },                
                 { data: 'created_at' },
                 { data: 'updated_at' },                
                 { data: null },
@@ -203,53 +203,33 @@ let KTDatatablesServerSide = function () {
                 
                 const gstProfile = parent.querySelectorAll('td')[1].innerText;
 
-                Swal.fire({
+                $.ajax({
 
-                    text: "Are you sure you want to delete " + gstProfile + "?",
-                    icon: "warning",
-                    showCancelButton: true,
-                    buttonsStyling: false,
-                    confirmButtonText: "Yes, delete!",
-                    cancelButtonText: "No, cancel",
-                    customClass: {
-                        confirmButton: "btn fw-bold btn-danger",
-                        cancelButton: "btn fw-bold btn-active-light-primary"
-                    }
-
-                }).then(function (result) {
-
-                    if (result.value) {                                        
-
-                        $.ajax({
-
-                            type:'DELETE',
-                    
-                            url: APP_URL+'/admin/gst-profiles/' + gstProfile,
-                    
-                            data: { gstProfile },
-                    
-                            success:function(data){                                            
-                                
-                                toastr.success(data.msg);
-
-                                dt.search('').draw();                                                    
-                    
-                            },
-                    
-                            error: function(data) {                                                                
-                                
-                                toastr.error(data.responseJSON.msg);
-                                
-                            }
-                        });
-
+                    type:'DELETE',
+            
+                    url: APP_URL+'/admin/gst-profiles/' + gstProfile,
+            
+                    data: { gstProfile },
+            
+                    success:function(data){                                            
                         
-                    } else if (result.dismiss === 'cancel') {                        
+                        toastr.success(data.msg);
+
+                        dt.search('').draw();                                                    
+
+                        return false;
+            
+                    },
+            
+                    error: function(data) {                                                                
                         
-                        toastr.error(gstProfile + " gst profile was not deleted.");
+                        toastr.error(data.responseJSON.msg);
+
+                        return false;
                         
                     }
                 });
+                
             })
         });
     }
@@ -291,74 +271,42 @@ let KTDatatablesServerSide = function () {
             
             deleteSelected.addEventListener('click', function () {
                 
-                Swal.fire({
+                let gstProfilesArr = [];
 
-                    text: "Are you sure you want to delete selected gstProfiles?",
-                    icon: "warning",
-                    showCancelButton: true,
-                    buttonsStyling: false,
-                    showLoaderOnConfirm: true,
-                    confirmButtonText: "Yes, delete!",
-                    cancelButtonText: "No, cancel",
-                    customClass: {
-                        confirmButton: "btn fw-bold btn-danger",
-                        cancelButton: "btn fw-bold btn-active-light-primary"
-                    },
+                $("input:checkbox[name=deleteSelected]:checked").each(function() {                            
+                    gstProfilesArr.push($(this).val());
+                });                        
 
-                }).then(function (result) {
-                    
-                    if (result.value) {
+                $.ajax({
 
-                        let gstProfilesArr = [];
-
-                        $("input:checkbox[name=deleteSelected]:checked").each(function() {                            
-                            gstProfilesArr.push($(this).val());
-                        });                        
-
-                        $.ajax({
-
-                            type:'DELETE',
-                    
-                            url: APP_URL+'/admin/gst-profiles/destroyMultiple',
-                    
-                            data: { gstProfiles: gstProfilesArr },
-                    
-                            success:function(data){                                            
-                                
-                                toastr.success(data.msg);
-
-                                dt.search('').draw();                                                    
-                    
-                            },
-                    
-                            error: function(data) {                                                            
-                                
-                                toastr.error(data.responseJSON.msg);
-                                
-                            }
-                        });
-
-                        const headerCheckbox = container.querySelectorAll('[type="checkbox"]')[0];
-
-                        headerCheckbox.checked = false;
+                    type:'DELETE',
+            
+                    url: APP_URL+'/admin/gst-profiles/destroyMultiple',
+            
+                    data: { gstProfiles: gstProfilesArr },
+            
+                    success:function(data){                                            
                         
-                    } else if (result.dismiss === 'cancel') {
+                        toastr.success(data.msg);
 
-                        Swal.fire({
+                        dt.search('').draw();  
+                        
+                        return false;
+            
+                    },
+            
+                    error: function(data) {                                                            
+                        
+                        toastr.error(data.responseJSON.msg);
 
-                            text: "Selected gst profile was not deleted.",
-                            icon: "error",
-                            buttonsStyling: false,
-                            confirmButtonText: "Ok, got it!",
-                            customClass: {
-                                confirmButton: "btn fw-bold btn-primary",
-                            }
-
-                        });
-
+                        return false;
+                        
                     }
-
                 });
+
+                const headerCheckbox = container.querySelectorAll('[type="checkbox"]')[0];
+
+                headerCheckbox.checked = false;
 
             });
 
@@ -431,9 +379,9 @@ $('#saveBtn').on('click', function(e) {
         
     $('#saveBtn').attr('data-kt-indicator', 'on');
 
-    let company_name = $("#company_name").val();    
-    let company_gst_number = $("#company_gst_number").val();    
-
-    save(company_name, company_gst_number);
+    let name = $("#name").val();    
+    let gst_percentage = $("#gst_percentage").val();    
+    
+    save(name, gst_percentage);
 
 });

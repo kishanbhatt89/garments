@@ -29,12 +29,12 @@
                     <div class="fv-row mb-10">
                     
                         <label class="fs-5 fw-bolder form-label mb-2">
-                            <span class="required">Company Name</span>
+                            <span class="required">Name</span>
                         </label>
                         
-                        <input class="form-control form-control-solid" placeholder="Enter a company name" name="company_name" id="company_name" />
+                        <input class="form-control form-control-solid" placeholder="Enter a name" name="name" id="name" />
                         
-                        <span class="invalid-feedback d-none company_name-error" role="alert">
+                        <span class="invalid-feedback d-none name-error" role="alert">
                             <strong></strong>
                         </span>
 
@@ -43,12 +43,12 @@
                     <div class="fv-row mb-10">
                     
                         <label class="fs-5 fw-bolder form-label mb-2">
-                            <span class="required">Company GST Number</span>
+                            <span class="required">GST Percentage</span>
                         </label>
                         
-                        <input class="form-control form-control-solid" placeholder="Enter a company gst number" name="company_gst_number" id="company_gst_number" />
+                        <input class="form-control form-control-solid" placeholder="Enter a gst percentage" name="gst_percentage" id="gst_percentage" />
                         
-                        <span class="invalid-feedback d-none company_gst_number-error" role="alert">
+                        <span class="invalid-feedback d-none gst_percentage-error" role="alert">
                             <strong></strong>
                         </span>
 
