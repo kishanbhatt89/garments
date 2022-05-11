@@ -49,33 +49,64 @@
                             <strong></strong>
                         </span>
                         
-                    </div>                
+                    </div>              
                     
-                    <label class="required fw-bold fs-6 mb-5">Role</label>
-
-                    <div class="fv-row mb-7 d-flex">                        
+                    <div class="fv-row mb-7">
                         
+                        <label class="fs-5 fw-bolder form-label mb-2">
+                            <span class="required">Designation</span>
+                        </label>
 
-                        <div class="d-flex fv-row">
-                            
-                            <div class="form-check form-check-custom form-check-solid me-3">
-                                
-                                <input class="form-check-input" name="employee_role" checked type="radio" value="{{ $role->name }}" id="employee_role" />
-                                
-                                <label class="form-check-label" for="employee_role">
-                                    <div class="fw-bolder text-gray-800">{{ ucfirst($role->name) }}</div>                                        
-                                </label>
-
-                            </div>
-                            
-                        </div>    
-                                                
-                    </div>
-                    <div class="r-error d-none mb-4">
-                        <span class="invalid-feedback d-none employee_role-error" role="alert">
+                        <select class="form-select form-control form-select-solid" data-allow-clear="true" name="designations_id" id="employee_designations_id" data-control="select2" data-placeholder="Select a designation">
+                            <option></option>
+                            @foreach ($designations as $designation)
+                                <option value="{{ $designation->id }}" @if($user->designation->id == $designation->id) selected @endif>{{ $designation->name }}</option>    
+                            @endforeach                                                    
+                        </select>                                            
+                        
+                        <span class="invalid-feedback d-none employee_designation-error" role="alert">
                             <strong></strong>
-                        </span>                                              
+                        </span>
+                        
                     </div>
+                    
+                    <div class="fv-row mb-7">
+                        
+                        <label class="fs-5 fw-bolder form-label mb-2">
+                            <span class="required">State</span>
+                        </label>
+
+                        <select class="form-select form-control form-select-solid" data-allow-clear="true" name="states_id" id="employee_states_id" data-control="select2" data-placeholder="Select a state">
+                            <option></option>
+                            @foreach ($states as $state)
+                                <option value="{{ $state->id }}" @if($user->state->id == $state->id) selected @endif>{{ $state->name }}</option>    
+                            @endforeach                                                    
+                        </select>                                            
+                        
+                        <span class="invalid-feedback d-none employee_state-error" role="alert">
+                            <strong></strong>
+                        </span>
+                        
+                    </div>
+
+                    <div class="fv-row mb-7">
+                        
+                        <label class="fs-5 fw-bolder form-label mb-2">
+                            <span class="required">City</span>
+                        </label>
+
+                        <select class="form-select form-control form-select-solid" data-allow-clear="true" name="cities_id" id="employee_cities_id" data-control="select2" data-placeholder="Select a city">
+                            <option></option>
+                            @foreach ($cities as $city)
+                                <option value="{{ $city->id }}" @if($user->city->id == $city->id) selected @endif>{{ $city->name }}</option>    
+                            @endforeach                                                    
+                        </select>                                            
+                        
+                        <span class="invalid-feedback d-none employee_city-error" role="alert">
+                            <strong></strong>
+                        </span>
+                        
+                    </div>                                    
                     
                     <div class="fv-row mb-7">
                         
@@ -89,21 +120,7 @@
                             <strong></strong>
                         </span>
                         
-                    </div>    
-
-                    <div class="fv-row mb-7">
-                        
-                        <label class="fs-5 fw-bolder form-label mb-2">
-                            <span class="required">Designation</span>
-                        </label>
-                        
-                        <input type="text" class="form-control form-control-solid" placeholder="Designation" name="employee_designation" id="employee_designation" value="{{ $user->userDetails->designation }}"/>
-                        
-                        <span class="invalid-feedback d-none employee_designation-error" role="alert">
-                            <strong></strong>
-                        </span>
-                        
-                    </div>    
+                    </div>                           
 
                     <div class="fv-row mb-7">
                         
@@ -157,20 +174,26 @@
 
         let name = $("#employee_name").val();    
         let email = $("#employee_email").val();    
+
+        let designation = $('#employee_designations_id').val();
+        let state = $('#employee_states_id').val();
+        let city = $('#employee_cities_id').val();
         
-        let mobile = $("#employee_mobile").val();    
-        let designation = $("#employee_designation").val();    
+        let mobile = $("#employee_mobile").val();            
         let address = $("#employee_address").val();    
 
-        let id = $("#user_id").val();    
+        let id = $("#user_id").val();            
+        
+        update(id, name, email, designation, state, city, mobile, address);
+        
+    });
 
-        let role;
-        $('input[type="radio"]:checked').each(function() {            
-            role = $(this).val();
-        });
-        
-        update(id, name, email, role, mobile, designation, address);
-        
+    //let cancelBtnEdit = document.querySelectorAll('[data-kt-modal-action="cancel"]');
+    document.querySelectorAll('[data-kt-modal-action="cancel"]').forEach( function(cancelButtonEdit) {
+        cancelButtonEdit.addEventListener('click', e => {
+            e.preventDefault();            
+            $('#kt_modal_edit').modal('hide');
+        })
     });
 
 </script>

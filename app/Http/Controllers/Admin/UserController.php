@@ -3,6 +3,9 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\City;
+use App\Models\Designation;
+use App\Models\State;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -28,18 +31,11 @@ class UserController extends Controller
     {
         $users=User::whereHas('roles', function($q){$q->whereIn('roles.name', ['employee']);})->get();        
         $role = Role::where('name', 'employee')->first();
+        $designations = Designation::all();
+        $states = State::all();
+        $cities = City::all();
         
-        return view('admin.employees.index', compact('users','role'));
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        return view('admin.employees.index', compact('users','role','designations','states','cities'));
     }
 
     /**
@@ -50,14 +46,14 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        
         $validator = Validator::make($request->all(), [
             'name' => 'required',
             'email' => 'required|email|unique:users',
-            'role' => 'required|not_in:all',
+            'designation' => 'required|not_in:0',
+            'state' => 'required|not_in:0',
+            'city' => 'required|not_in:0',
             'password' => 'required|min:6|confirmed',   
-            'mobile' => 'required',
-            'designation' => 'required',
+            'mobile' => 'required',            
             'address' => 'required'    
         ]);        
 
@@ -70,14 +66,16 @@ class UserController extends Controller
         $employee->name = $request->name;
         $employee->email = $request->email;
         $employee->password = bcrypt($request->password);
+        $employee->designation_id = $request->designation;
+        $employee->state_id = $request->state;
+        $employee->city_id = $request->city;
 
         $employee->save();
         
-        $employee->assignRole($request->role);
+        $employee->assignRole('employee');
 
         $employee->userDetails()->create([
             'mobile' => $request->mobile,
-            'designation' => $request->designation,
             'address' => $request->address
         ]);
 
@@ -92,26 +90,21 @@ class UserController extends Controller
      */
     public function show(Request $request)
     {
-        $user = User::with('userDetails')->where('id',$request->get('id'))->first();           
+        $user = User::with(['userDetails','state','city','designation'])                
+                ->where('id',$request->get('id'))
+                ->first();                           
         
         $role = Role::where('name','employee')->first();         
 
-        $contents = View::make('admin.employees.partials._edit', ['user' => $user, 'role' => $role]);
+        $designations = Designation::all();
+        $states = State::all();
+        $cities = City::all();
+
+        $contents = View::make('admin.employees.partials._edit', ['user' => $user, 'role' => $role, 'designations' => $designations, 'states' => $states, 'cities' => $cities])->render();
         
         $response = Response::make($contents, 200);                
         
         return response()->json(['data'=> $response->content()], 200 ); 
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
     }
 
     /**
@@ -126,10 +119,11 @@ class UserController extends Controller
         
         $validator = Validator::make($request->all(), [
             'name' => 'required',
-            'email' => 'required|email|unique:users,email,'.$request->id.',id',
-            'role' => 'required|not_in:all',            
-            'mobile' => 'required',
-            'designation' => 'required',
+            'email' => 'required|email|unique:users,email,'.$request->id.',id',            
+            'designation' => 'required|not_in:0',
+            'state' => 'required|not_in:0',
+            'city' => 'required|not_in:0',
+            'mobile' => 'required',            
             'address' => 'required'    
         ]);        
 
@@ -141,14 +135,14 @@ class UserController extends Controller
         
         $employee->name = $request->name;
         $employee->email = $request->email;
+        $employee->designation_id = $request->designation;
+        $employee->state_id = $request->state;
+        $employee->city_id = $request->city;
         
-        $employee->save();
-
-        $employee->syncRoles([$request->role]);
+        $employee->save();        
 
         $employee->userDetails()->update([
-            'mobile' => $request->mobile,
-            'designation' => $request->designation,
+            'mobile' => $request->mobile,            
             'address' => $request->address
         ]);
 
@@ -203,29 +197,35 @@ class UserController extends Controller
         $records = User::orderBy($columnName,$columnSortOrder)
         ->where('users.name', 'like', '%' .$searchValue . '%')
         ->whereHas('roles', function($q){$q->whereNotIn('roles.name', ['admin','client']);})
+        ->with(['userDetails','state','city','designation'])
         ->select('users.*')
         ->skip($start)
         ->take($rowperpage)
         ->get();
 
-        $data_arr = array();
+        $data_arr = array();        
 
         foreach($records as $record){
+            
             if (!$record->getRoleNames()->contains('admin','client')) {
                 $id = $record->id;
                 $name = $record->name;
                 $email = $record->email;
+                $mobile = $record->userDetails->mobile;
+                $status = ($record->status) ? '<span class="badge badge-light-success">Active</span>' : '<span class="badge badge-light-danger">Blocked</span>';                
                 $roles = $record->getRoleNames();
-                $created_at = $record->created_at->diffForHumans();
-                $updated_at = $record->updated_at->diffForHumans();
+                $designation = $record->designation->name;
+                $created_at = $record->created_at->diffForHumans();                
 
                 $data_arr[] = array(
                     "id" => $id,
                     "name" => $name,
                     "email" => $email,
+                    "mobile" => $mobile,
+                    "status" => $status,
                     "roles" => $roles,
-                    "created_at" => $created_at,
-                    "updated_at" => $updated_at
+                    "designation" => $designation,
+                    "created_at" => $created_at                    
                   );
             }                        
     

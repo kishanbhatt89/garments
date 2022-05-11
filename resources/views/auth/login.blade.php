@@ -10,10 +10,7 @@
 			
 			<div class="text-center mb-10">
 			
-				<h1 class="text-dark mb-3">Sign In</h1>
-			
-				<div class="text-gray-400 fw-bold fs-4">New Here?
-				<a href="{{ route('register') }}" class="link-primary fw-bolder">Create an Account</a></div>
+				<h1 class="text-dark mb-3">Sign In</h1>				
 				
 			</div>
 			

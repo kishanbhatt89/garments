@@ -30,9 +30,11 @@ let KTDatatablesServerSide = function () {
                 { data: 'id' },
                 { data: 'name' },
                 { data: 'email' },  
+                { data: 'mobile' },  
+                { data: 'status' },  
                 { data: 'roles' },              
-                { data: 'created_at' },
-                { data: 'updated_at' },                
+                { data: 'designation' },  
+                { data: 'created_at' },                
                 { data: null },
             ],
 
@@ -62,19 +64,31 @@ let KTDatatablesServerSide = function () {
                 {
                     targets: 3,
                     render: function (data, type, row) {
+                        return data;
+                    }
+                },
+                {
+                    targets: 4,
+                    render: function (data, type, row) {
+                        return `${data}`;                                                
+                    }
+                },
+                {
+                    targets: 5,
+                    render: function (data, type, row) {
                         return `
                             <span class="badge badge-light-success">${data[0].charAt(0).toUpperCase() + data[0].slice(1)}</span>
                         `;                                                
                     }
                 },
                 {
-                    targets: 4,
+                    targets: 6,
                     render: function (data, type, row) {                        
                         return data;
                     }
                 },                
                 {
-                    targets: 5,
+                    targets: 7,
                     render: function (data, type, row) {                        
                         return data;
                     }
@@ -172,6 +186,7 @@ let KTDatatablesServerSide = function () {
 
     }
 
+    /*
     var handleFilterDatatable = () => {
         
         filterRole = document.querySelectorAll('[data-kt-docs-table-filter="role"] [name="role"]');
@@ -197,6 +212,8 @@ let KTDatatablesServerSide = function () {
         });
 
     }
+
+    */
     
     var handleDeleteRows = () => {
         
@@ -211,58 +228,40 @@ let KTDatatablesServerSide = function () {
                 const parent = e.target.closest('tr');
                 
                 const employee = parent.querySelectorAll('td')[1].innerText;
-                
-                Swal.fire({
 
-                    text: "Are you sure you want to delete " + employee + "?",
-                    icon: "warning",
-                    showCancelButton: true,
-                    buttonsStyling: false,
-                    confirmButtonText: "Yes, delete!",
-                    cancelButtonText: "No, cancel",
-                    customClass: {
-                        confirmButton: "btn fw-bold btn-danger",
-                        cancelButton: "btn fw-bold btn-active-light-primary"
-                    }
+                $.ajax({
 
-                }).then(function (result) {
-                    
-                    if (result.value) {                                        
-
-                        $.ajax({
-
-                            type:'DELETE',
-                    
-                            url: APP_URL+'/admin/employees/' + employee,
-                    
-                            data: { employee },
-                    
-                            success:function(data){                                            
-                                
-                                toastr.success(data.msg);
-
-                                dt.search('').draw();                                                    
-                    
-                            },
-                    
-                            error: function(data) {                                                                
-                                
-                                toastr.error(data.responseJSON.msg);
-                                
-                            }
-                        });
-
+                    type:'DELETE',
+            
+                    url: APP_URL+'/admin/employees/' + employee,
+            
+                    data: { employee },
+            
+                    success:function(data){                                            
                         
-                    } else if (result.dismiss === 'cancel') {                        
+                        toastr.success(data.msg);
+
+                        dt.search('').draw();           
                         
-                        toastr.error(employee + " employee was not deleted.");
+                        return false;
+            
+                    },
+            
+                    error: function(data) {                                                                
+                        
+                        toastr.error(data.responseJSON.msg);
+
+                        return false;
                         
                     }
                 });
+                
+                
             })
         });
     }
 
+    /*
     var handleResetForm = () => {
         
         const resetButton = document.querySelector('[data-kt-docs-table-filter="reset"]');
@@ -276,6 +275,7 @@ let KTDatatablesServerSide = function () {
         });
 
     }
+    */
     
     var initToggleToolbar = function () {
         
@@ -300,74 +300,40 @@ let KTDatatablesServerSide = function () {
             
             deleteSelected.addEventListener('click', function () {
                 
-                Swal.fire({
+                let employeesArr = [];
 
-                    text: "Are you sure you want to delete selected employees?",
-                    icon: "warning",
-                    showCancelButton: true,
-                    buttonsStyling: false,
-                    showLoaderOnConfirm: true,
-                    confirmButtonText: "Yes, delete!",
-                    cancelButtonText: "No, cancel",
-                    customClass: {
-                        confirmButton: "btn fw-bold btn-danger",
-                        cancelButton: "btn fw-bold btn-active-light-primary"
+                $("input:checkbox[name=deleteSelected]:checked").each(function() {                            
+                    employeesArr.push($(this).val());
+                });                        
+                
+                $.ajax({
+
+                    type:'DELETE',
+            
+                    url: APP_URL+'/admin/employees/destroyMultiple',
+            
+                    data: { employees: employeesArr },
+            
+                    success:function(data, status, jqXHR){                                            
+                        
+                        
+                        toastr.success(data.msg);
+
+                        dt.search('').draw();  
+                        return false;                                                  
+            
                     },
-
-                }).then(function (result) {
-                    
-                    if (result.value) {
-
-                        let employeesArr = [];
-
-                        $("input:checkbox[name=deleteSelected]:checked").each(function() {                            
-                            employeesArr.push($(this).val());
-                        });                        
+            
+                    error: function(jqXHR, status, err) {                                                            
                         
-                        $.ajax({
-
-                            type:'DELETE',
-                    
-                            url: APP_URL+'/admin/employees/destroyMultiple',
-                    
-                            data: { employees: employeesArr },
-                    
-                            success:function(data){                                            
-                                
-                                toastr.success(data.msg);
-
-                                dt.search('').draw();                                                    
-                    
-                            },
-                    
-                            error: function(data) {                                                            
-                                
-                                toastr.error(data.responseJSON.msg);
-                                
-                            }
-                        });
-
-                        const headerCheckbox = container.querySelectorAll('[type="checkbox"]')[0];
-
-                        headerCheckbox.checked = false;
-                        
-                    } else if (result.dismiss === 'cancel') {
-
-                        Swal.fire({
-
-                            text: "Selected employees was not deleted.",
-                            icon: "error",
-                            buttonsStyling: false,
-                            confirmButtonText: "Ok, got it!",
-                            customClass: {
-                                confirmButton: "btn fw-bold btn-primary",
-                            }
-
-                        });
-
+                        toastr.error(data.responseJSON.msg);
+                        return false;
                     }
-
                 });
+
+                const headerCheckbox = container.querySelectorAll('[type="checkbox"]')[0];
+
+                headerCheckbox.checked = false;
 
             });
 
@@ -416,9 +382,9 @@ let KTDatatablesServerSide = function () {
             initDatatable();
             handleSearchDatatable();
             initToggleToolbar();
-            handleFilterDatatable();
+            //handleFilterDatatable();
             handleDeleteRows();
-            handleResetForm();
+            //handleResetForm();
         }
 
     }
@@ -440,13 +406,14 @@ $('#saveBtn').on('click', function(e) {
 
     let name = $("#name").val();
     let email = $("#email").val();
-    let role = $("input[name='role']:checked").val();
+    let designation = $("#designations_id").val();
+    let state = $('#states_id').val();
+    let city = $('#cities_id').val();
     let password = $("#password").val();    
     let password_confirmation = $("#password_confirmation").val();    
-    let mobile = $("#mobile").val();    
-    let designation = $("#designation").val();    
+    let mobile = $("#mobile").val();        
     let address = $("#address").val();    
 
-    save(name, email, role, password, password_confirmation, mobile, designation, address);
+    save(name, email, designation, state, city, password, password_confirmation, mobile, address);
 
 });

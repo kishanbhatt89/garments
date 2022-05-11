@@ -36,6 +36,9 @@ class User extends Authenticatable implements JWTSubject
         'settings->email->company_mail_encryption',
         'settings->email->company_mail_from_address',
         'settings->email->company_mail_from_name',
+        'designations_id',
+        'states_id',
+        'cities_id'
     ];
 
     /**
@@ -70,22 +73,22 @@ class User extends Authenticatable implements JWTSubject
 
     public function state()
     {
-        return $this->hasOne(State::class);
+        return $this->belongsTo(State::class);
     }
 
     public function city()
     {
-        return $this->hasOne(City::class);
+        return $this->belongsTo(City::class);
     }
 
     public function designation()
     {
-        return $this->hasOne(Designation::class);
+        return $this->belongsTo(Designation::class);
     }
 
     public function gstProfile()
     {
-        return $this->hasOne(GstProfile::class);
+        return $this->belongsTo(GstProfile::class);
     }
 
     /**

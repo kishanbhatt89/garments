@@ -172,31 +172,31 @@ let KTDatatablesServerSide = function () {
 
     }
 
-    var handleFilterDatatable = () => {
+    // var handleFilterDatatable = () => {
         
-        filterRole = document.querySelectorAll('[data-kt-docs-table-filter="role"] [name="role"]');
+    //     filterRole = document.querySelectorAll('[data-kt-docs-table-filter="role"] [name="role"]');
 
-        const filterButton = document.querySelector('[data-kt-docs-table-filter="filter"]');
+    //     const filterButton = document.querySelector('[data-kt-docs-table-filter="filter"]');
                 
-        filterButton.addEventListener('click', function () {
+    //     filterButton.addEventListener('click', function () {
             
-            let role = '';
+    //         let role = '';
             
-            filterRole.forEach(r => {
-                if (r.checked) {
-                    role = r.value;
-                }
+    //         filterRole.forEach(r => {
+    //             if (r.checked) {
+    //                 role = r.value;
+    //             }
                 
-                if (role === 'all') {
-                    role = '';
-                }
-            });
+    //             if (role === 'all') {
+    //                 role = '';
+    //             }
+    //         });
             
-            dt.search(role).draw();
+    //         dt.search(role).draw();
 
-        });
+    //     });
 
-    }
+    // }
     
     var handleDeleteRows = () => {
         
@@ -263,19 +263,19 @@ let KTDatatablesServerSide = function () {
         });
     }
 
-    var handleResetForm = () => {
+    // var handleResetForm = () => {
         
-        const resetButton = document.querySelector('[data-kt-docs-table-filter="reset"]');
+    //     const resetButton = document.querySelector('[data-kt-docs-table-filter="reset"]');
         
-        resetButton.addEventListener('click', function () {
+    //     resetButton.addEventListener('click', function () {
             
-            filterRole[0].checked = true;
+    //         filterRole[0].checked = true;
             
-            dt.search('').draw();
+    //         dt.search('').draw();
 
-        });
+    //     });
 
-    }
+    // }
     
     var initToggleToolbar = function () {
         
@@ -416,9 +416,9 @@ let KTDatatablesServerSide = function () {
             initDatatable();
             handleSearchDatatable();
             initToggleToolbar();
-            handleFilterDatatable();
+            //handleFilterDatatable();
             handleDeleteRows();
-            handleResetForm();
+            //handleResetForm();
         }
 
     }

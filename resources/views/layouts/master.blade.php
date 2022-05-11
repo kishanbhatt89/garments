@@ -110,9 +110,9 @@
 		
 		<script src="{{ asset('gapp') }}/js/widgets.bundle.js"></script>
 
-		<script src="{{ asset('gapp') }}/js/custom/widgets.js"></script>
+		<!-- <script src="{{ asset('gapp') }}/js/custom/widgets.js"></script>
 
-		<script src="{{ asset('gapp') }}/js/custom/apps/chat/chat.js"></script>
+		<script src="{{ asset('gapp') }}/js/custom/apps/chat/chat.js"></script> -->
 
 		<script src="https://momentjs.com/downloads/moment.min.js"></script>
 

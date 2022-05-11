@@ -24,10 +24,10 @@ return new class extends Migration
             $table->timestamp('last_login_at')->nullable();
             $table->timestamp('last_password_change_at')->nullable();
             $table->json('settings')->nullable();
-            $table->foreignId('states_id')->nullable();
-            $table->foreignId('cities_id')->nullable();
-            $table->foreignId('designatioins_id')->nullable();
-            $table->foreignId('gst_profiles_id')->nullable();
+            $table->foreignId('state_id')->nullable()->constrained();
+            $table->foreignId('city_id')->nullable()->constrained();
+            $table->foreignId('designation_id')->nullable()->constrained();
+            $table->foreignId('gst_profile_id')->nullable()->constrained();
             $table->rememberToken();
             $table->timestamps();
         });
