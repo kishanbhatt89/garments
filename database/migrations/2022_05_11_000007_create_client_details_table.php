@@ -17,8 +17,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained()->cascadeOnUpdate()->cascadeOnDelete();
             $table->string('mobile');
-            $table->text('address');
-            $table->string('designation');
+            $table->text('address');            
             $table->timestamps();
         });
     }

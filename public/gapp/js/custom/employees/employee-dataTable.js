@@ -324,7 +324,7 @@ let KTDatatablesServerSide = function () {
             
                     },
             
-                    error: function(jqXHR, status, err) {                                                            
+                    error: function(data) {                                                            
                         
                         toastr.error(data.responseJSON.msg);
                         return false;

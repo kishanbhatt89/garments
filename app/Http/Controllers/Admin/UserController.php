@@ -30,12 +30,12 @@ class UserController extends Controller
     public function index()
     {
         $users=User::whereHas('roles', function($q){$q->whereIn('roles.name', ['employee']);})->get();        
-        $role = Role::where('name', 'employee')->first();
+        
         $designations = Designation::all();
         $states = State::all();
         $cities = City::all();
         
-        return view('admin.employees.index', compact('users','role','designations','states','cities'));
+        return view('admin.employees.index', compact('users','designations','states','cities'));
     }
 
     /**
@@ -92,15 +92,13 @@ class UserController extends Controller
     {
         $user = User::with(['userDetails','state','city','designation'])                
                 ->where('id',$request->get('id'))
-                ->first();                           
-        
-        $role = Role::where('name','employee')->first();         
+                ->first();                                   
 
         $designations = Designation::all();
         $states = State::all();
         $cities = City::all();
 
-        $contents = View::make('admin.employees.partials._edit', ['user' => $user, 'role' => $role, 'designations' => $designations, 'states' => $states, 'cities' => $cities])->render();
+        $contents = View::make('admin.employees.partials._edit', ['user' => $user, 'designations' => $designations, 'states' => $states, 'cities' => $cities])->render();
         
         $response = Response::make($contents, 200);                
         

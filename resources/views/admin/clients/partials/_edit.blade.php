@@ -49,39 +49,45 @@
                             <strong></strong>
                         </span>
                         
-                    </div>                
+                    </div>                                     
                     
-                    <label class="required fw-bold fs-6 mb-5">Role</label>
+                    <div class="fv-row mb-7">
+                        
+                        <label class="fs-5 fw-bolder form-label mb-2">
+                            <span class="required">State</span>
+                        </label>
 
-                    <div class="fv-row mb-7 d-flex">                                                
-
-                        <div class="d-flex fv-row">
-                            
-                            <div class="form-check form-check-custom form-check-solid me-3">
-                                
-                                <input 
-                                    class="form-check-input" 
-                                    name="role" 
-                                    type="radio" 
-                                    value="{{ $role->name }}" 
-                                    id="client_role" 
-                                    checked
-                                />
-                                
-                                <label class="form-check-label" for="client_role">
-                                    <div class="fw-bolder text-gray-800">{{ ucfirst($role->name) }}</div>                                        
-                                </label>
-
-                            </div>
-                            
-                        </div>                                                    
-                                                
+                        <select class="form-select form-control form-select-solid" data-allow-clear="true" name="states_id" id="client_states_id" data-control="select2" data-placeholder="Select a state">
+                            <option></option>
+                            @foreach ($states as $state)
+                                <option value="{{ $state->id }}" @if($user->state->id == $state->id) selected @endif>{{ $state->name }}</option>    
+                            @endforeach                                                    
+                        </select>                                            
+                        
+                        <span class="invalid-feedback d-none client_state-error" role="alert">
+                            <strong></strong>
+                        </span>
+                        
                     </div>
-                    <div class="r-error d-none mb-4">
-                            <span class="invalid-feedback d-none client_role-error" role="alert">
-                                <strong></strong>
-                            </span>                                              
-                        </div>
+
+                    <div class="fv-row mb-7">
+                        
+                        <label class="fs-5 fw-bolder form-label mb-2">
+                            <span class="required">City</span>
+                        </label>
+
+                        <select class="form-select form-control form-select-solid" data-allow-clear="true" name="cities_id" id="client_cities_id" data-control="select2" data-placeholder="Select a city">
+                            <option></option>
+                            @foreach ($cities as $city)
+                                <option value="{{ $city->id }}" @if($user->city->id == $city->id) selected @endif>{{ $city->name }}</option>    
+                            @endforeach                                                    
+                        </select>                                            
+                        
+                        <span class="invalid-feedback d-none client_city-error" role="alert">
+                            <strong></strong>
+                        </span>
+                        
+                    </div>            
                     
                     <div class="fv-row mb-7">
                         
@@ -95,21 +101,7 @@
                             <strong></strong>
                         </span>
                         
-                    </div>    
-
-                    <div class="fv-row mb-7">
-                        
-                        <label class="fs-5 fw-bolder form-label mb-2">
-                            <span class="required">Designation</span>
-                        </label>
-                        
-                        <input type="text" class="form-control form-control-solid" placeholder="Designation" name="designation" id="client_designation" value="{{ $user->clientDetails->designation }}"/>
-                        
-                        <span class="invalid-feedback d-none client_designation-error" role="alert">
-                            <strong></strong>
-                        </span>
-                        
-                    </div>    
+                    </div>                        
 
                     <div class="fv-row mb-7">
                         
@@ -162,9 +154,12 @@
         $('#updateBtn').attr("data-kt-indicator", "on");
 
         let name = $("#client_name").val();    
-        let email = $("#client_email").val();            
-        let mobile = $("#client_mobile").val();    
-        let designation = $("#client_designation").val();    
+        let email = $("#client_email").val();   
+
+        let state = $('#client_states_id').val();
+        let city = $('#client_cities_id').val();
+
+        let mobile = $("#client_mobile").val();            
         let address = $("#client_address").val();    
 
         let id = $("#user_id").val();    
@@ -174,8 +169,15 @@
             role = $(this).val();
         });
         
-        update(id, name, email, role, mobile, designation, address);
+        update(id, name, email, state, city, mobile, address);
         
+    });
+
+    document.querySelectorAll('[data-kt-modal-action="cancel"]').forEach( function(cancelButtonEdit) {
+        cancelButtonEdit.addEventListener('click', e => {
+            e.preventDefault();            
+            $('#kt_modal_edit').modal('hide');
+        })
     });
 
 </script>

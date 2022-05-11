@@ -3,6 +3,9 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\City;
+use App\Models\Designation;
+use App\Models\State;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Role;
@@ -25,20 +28,13 @@ class ClientController extends Controller
      */
     public function index()
     {
-        $users=User::whereHas('roles', function($q){$q->whereIn('roles.name', ['client']);})->get();        
-        $role = Role::where('name', 'client')->first();
-        
-        return view('admin.clients.index', compact('users','role'));
-    }
+        $users=User::whereHas('roles', function($q){$q->whereIn('roles.name', ['client']);})->get();                
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        $designations = Designation::all();
+        $states = State::all();
+        $cities = City::all();
+        
+        return view('admin.clients.index', compact('users','designations','states','cities'));
     }
 
     /**
@@ -52,11 +48,11 @@ class ClientController extends Controller
         
         $validator = Validator::make($request->all(), [
             'name' => 'required',
-            'email' => 'required|email|unique:users',
-            'role' => 'required|not_in:all',
+            'email' => 'required|email|unique:users',            
+            'state' => 'required|not_in:0',
+            'city' => 'required|not_in:0',
             'password' => 'required|min:6|confirmed',   
-            'mobile' => 'required',
-            'designation' => 'required',
+            'mobile' => 'required',            
             'address' => 'required'    
         ]);        
 
@@ -68,15 +64,16 @@ class ClientController extends Controller
 
         $client->name = $request->name;
         $client->email = $request->email;
-        $client->password = bcrypt($request->password);
+        $client->password = bcrypt($request->password);        
+        $client->state_id = $request->state;
+        $client->city_id = $request->city;
 
         $client->save();
         
-        $client->assignRole($request->role);
+        $client->assignRole('client');
 
         $client->clientDetails()->create([
-            'mobile' => $request->mobile,
-            'designation' => $request->designation,
+            'mobile' => $request->mobile,            
             'address' => $request->address
         ]);
         
@@ -91,29 +88,21 @@ class ClientController extends Controller
      */
     public function show(Request $request)
     {
-        $user = User::with('clientDetails')->where('id',$request->get('id'))->first();   
+        $user = User::with(['clientDetails','designation','state','city'])
+                ->where('id',$request->get('id'))
+                ->first();       
+                
+        $designations = Designation::all();
+        $states = State::all();
+        $cities = City::all();
 
-        $clientRole = $user->getRoleNames()[0];
-        
-        $role = Role::where('name','client')->first();         
-
-        $contents = View::make('admin.clients.partials._edit', ['user' => $user, 'role' => $role, 'clientRole' => $clientRole]);
+        $contents = View::make('admin.clients.partials._edit', ['user' => $user, 'designations' => $designations, 'states' => $states, 'cities' => $cities])->render();
         
         $response = Response::make($contents, 200);                
         
         return response()->json(['data'=> $response->content()], 200 ); 
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
 
     /**
      * Update the specified resource in storage.
@@ -127,10 +116,10 @@ class ClientController extends Controller
         
         $validator = Validator::make($request->all(), [
             'name' => 'required',
-            'email' => 'required|email|unique:users,email,'.$request->id.',id',
-            'role' => 'required|not_in:all',            
-            'mobile' => 'required',
-            'designation' => 'required',
+            'email' => 'required|email|unique:users,email,'.$request->id.',id',                        
+            'state' => 'required|not_in:0',
+            'city' => 'required|not_in:0',
+            'mobile' => 'required',            
             'address' => 'required'    
         ]);        
 
@@ -141,15 +130,14 @@ class ClientController extends Controller
         $client = User::find($request->get('id'));
         
         $client->name = $request->name;
-        $client->email = $request->email;
+        $client->email = $request->email;        
+        $client->state_id = $request->state;
+        $client->city_id = $request->city;
         
-        $client->save();
-
-        $client->syncRoles([$request->role]);
+        $client->save();        
 
         $client->clientDetails()->update([
-            'mobile' => $request->mobile,
-            'designation' => $request->designation,
+            'mobile' => $request->mobile,            
             'address' => $request->address
         ]);
 
@@ -216,17 +204,17 @@ class ClientController extends Controller
                 $id = $record->id;
                 $name = $record->name;
                 $email = $record->email;
-                $roles = $record->getRoleNames();
-                $created_at = $record->created_at->diffForHumans();
-                $updated_at = $record->updated_at->diffForHumans();
+                $mobile = $record->clientDetails->mobile;
+                $status = ($record->status == 0) ? '<span class="badge badge-light-success">Active</span>' : '<span class="badge badge-light-danger">Blocked</span>';                                
+                $created_at = $record->created_at->diffForHumans();                
 
                 $data_arr[] = array(
                     "id" => $id,
                     "name" => $name,
                     "email" => $email,
-                    "roles" => $roles,
-                    "created_at" => $created_at,
-                    "updated_at" => $updated_at
+                    "mobile" => $mobile,
+                    "status" => $status,                                        
+                    "created_at" => $created_at                    
                   );
             }                        
     

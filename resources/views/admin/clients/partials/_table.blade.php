@@ -11,10 +11,10 @@
             </th>
             <th>Name</th>
             <th>Email</th>
-            <th>Role</th>
-            <th>Created At</th>
-            <th>Updated At</th>                                
-            <th class="text-end min-w-100px">Actions</th>
+            <th>Mobile</th>
+            <th>Status</th>
+            <th>Created At</th>                                            
+            <th class="text-end">Actions</th>
 
         </tr>
 

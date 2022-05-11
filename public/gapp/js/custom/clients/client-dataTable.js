@@ -30,9 +30,9 @@ let KTDatatablesServerSide = function () {
                 { data: 'id' },
                 { data: 'name' },
                 { data: 'email' },  
-                { data: 'roles' },              
-                { data: 'created_at' },
-                { data: 'updated_at' },                
+                { data: 'mobile' },              
+                { data: 'status' },              
+                { data: 'created_at' },                
                 { data: null },
             ],
 
@@ -62,23 +62,21 @@ let KTDatatablesServerSide = function () {
                 {
                     targets: 3,
                     render: function (data, type, row) {
-                        return `
-                            <span class="badge badge-light-success">${data[0].charAt(0).toUpperCase() + data[0].slice(1)}</span>
-                        `;                                                
+                        return data;
                     }
                 },
                 {
                     targets: 4,
-                    render: function (data, type, row) {                        
-                        return data;
+                    render: function (data, type, row) {
+                        return `${data}`;                                                
                     }
-                },                
+                },
                 {
                     targets: 5,
                     render: function (data, type, row) {                        
                         return data;
                     }
-                },
+                },                                
                 {
                     targets: -1,
                     data: null,
@@ -212,53 +210,33 @@ let KTDatatablesServerSide = function () {
                 
                 const client = parent.querySelectorAll('td')[1].innerText;
                 
-                Swal.fire({
+                $.ajax({
 
-                    text: "Are you sure you want to delete " + client + "?",
-                    icon: "warning",
-                    showCancelButton: true,
-                    buttonsStyling: false,
-                    confirmButtonText: "Yes, delete!",
-                    cancelButtonText: "No, cancel",
-                    customClass: {
-                        confirmButton: "btn fw-bold btn-danger",
-                        cancelButton: "btn fw-bold btn-active-light-primary"
-                    }
-
-                }).then(function (result) {
-                    
-                    if (result.value) {                                        
-
-                        $.ajax({
-
-                            type:'DELETE',
-                    
-                            url: APP_URL+'/admin/clients/' + client,
-                    
-                            data: { client },
-                    
-                            success:function(data){                                            
-                                
-                                toastr.success(data.msg);
-
-                                dt.search('').draw();                                                    
-                    
-                            },
-                    
-                            error: function(data) {                                                                
-                                
-                                toastr.error(data.responseJSON.msg);
-                                
-                            }
-                        });
-
+                    type:'DELETE',
+            
+                    url: APP_URL+'/admin/clients/' + client,
+            
+                    data: { client },
+            
+                    success:function(data){                                            
                         
-                    } else if (result.dismiss === 'cancel') {                        
+                        toastr.success(data.msg);
+
+                        dt.search('').draw();      
                         
-                        toastr.error(client + " client was not deleted.");
+                        return false;
+            
+                    },
+            
+                    error: function(data) {                                                                
+                        
+                        toastr.error(data.responseJSON.msg);
+
+                        return false;
                         
                     }
                 });
+
             })
         });
     }
@@ -300,74 +278,42 @@ let KTDatatablesServerSide = function () {
             
             deleteSelected.addEventListener('click', function () {
                 
-                Swal.fire({
+                let clientsArr = [];
 
-                    text: "Are you sure you want to delete selected clients?",
-                    icon: "warning",
-                    showCancelButton: true,
-                    buttonsStyling: false,
-                    showLoaderOnConfirm: true,
-                    confirmButtonText: "Yes, delete!",
-                    cancelButtonText: "No, cancel",
-                    customClass: {
-                        confirmButton: "btn fw-bold btn-danger",
-                        cancelButton: "btn fw-bold btn-active-light-primary"
+                $("input:checkbox[name=deleteSelected]:checked").each(function() {                            
+                    clientsArr.push($(this).val());
+                });                        
+                
+                $.ajax({
+
+                    type:'DELETE',
+            
+                    url: APP_URL+'/admin/clients/destroyMultiple',
+            
+                    data: { clients: clientsArr },
+            
+                    success:function(data, status, jqXHR){                                            
+                        
+                        toastr.success(data.msg);
+
+                        dt.search('').draw();                                                    
+
+                        return false;
+            
                     },
-
-                }).then(function (result) {
-                    
-                    if (result.value) {
-
-                        let clientsArr = [];
-
-                        $("input:checkbox[name=deleteSelected]:checked").each(function() {                            
-                            clientsArr.push($(this).val());
-                        });                        
+            
+                    error: function(data) {                                                            
                         
-                        $.ajax({
+                        toastr.error(data.responseJSON.msg);
 
-                            type:'DELETE',
-                    
-                            url: APP_URL+'/admin/clients/destroyMultiple',
-                    
-                            data: { clients: clientsArr },
-                    
-                            success:function(data){                                            
-                                
-                                toastr.success(data.msg);
-
-                                dt.search('').draw();                                                    
-                    
-                            },
-                    
-                            error: function(data) {                                                            
-                                
-                                toastr.error(data.responseJSON.msg);
-                                
-                            }
-                        });
-
-                        const headerCheckbox = container.querySelectorAll('[type="checkbox"]')[0];
-
-                        headerCheckbox.checked = false;
+                        return false;
                         
-                    } else if (result.dismiss === 'cancel') {
-
-                        Swal.fire({
-
-                            text: "Selected clients was not deleted.",
-                            icon: "error",
-                            buttonsStyling: false,
-                            confirmButtonText: "Ok, got it!",
-                            customClass: {
-                                confirmButton: "btn fw-bold btn-primary",
-                            }
-
-                        });
-
                     }
-
                 });
+
+                const headerCheckbox = container.querySelectorAll('[type="checkbox"]')[0];
+
+                headerCheckbox.checked = false;
 
             });
 
@@ -439,14 +385,14 @@ $('#saveBtn').on('click', function(e) {
     $('#saveBtn').attr('data-kt-indicator', 'on');
 
     let name = $("#name").val();
-    let email = $("#email").val();
-    let role = $("input[name='role']:checked").val();
+    let email = $("#email").val();    
+    let state = $('#states_id').val();
+    let city = $('#cities_id').val();
     let password = $("#password").val();    
     let password_confirmation = $("#password_confirmation").val();    
-    let mobile = $("#mobile").val();    
-    let designation = $("#designation").val();    
-    let address = $("#address").val();    
+    let mobile = $("#mobile").val();        
+    let address = $("#address").val();        
 
-    save(name, email, role, password, password_confirmation, mobile, designation, address);
+    save(name, email, state, city, password, password_confirmation, mobile, address);
 
 });

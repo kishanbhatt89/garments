@@ -51,33 +51,46 @@
                             <strong></strong>
                         </span>
                         
-                    </div>                
+                    </div>                                             
                     
-                    <label class="required fw-bold fs-6 mb-5">Role</label>
+                    <div class="fv-row mb-7">
+                        
+                        <label class="fs-5 fw-bolder form-label mb-2">
+                            <span class="required">State</span>
+                        </label>
 
-                    <div class="fv-row mb-7 d-flex">                        
-                    
-                        <div class="d-flex fv-row">
-                            
-                            <div class="form-check form-check-custom form-check-solid me-3">
-                                
-                                <input class="form-check-input" name="role" type="radio" value="{{ $role->name }}" id="role" checked  />
-                                
-                                <label class="form-check-label" for="role">
-                                    <div class="fw-bolder text-gray-800">{{ ucfirst($role->name) }}</div>                                        
-                                </label>
-
-                            </div>
-                            
-                        </div>                            
-                                                                        
+                        <select class="form-select form-control form-select-solid" data-allow-clear="true" name="states_id" id="states_id" data-control="select2" data-placeholder="Select a state">
+                            <option></option>
+                            @foreach ($states as $state)
+                                <option value="{{ $state->id }}">{{ $state->name }}</option>    
+                            @endforeach                                                    
+                        </select>                                            
+                        
+                        <span class="invalid-feedback d-none state-error" role="alert">
+                            <strong></strong>
+                        </span>
+                        
                     </div>
-                    <div class="r-error d-none mb-4">
-                            <span class="invalid-feedback d-none role-error" role="alert">
-                                <strong></strong>
-                            </span>                                              
-                        </div>
 
+                    <div class="fv-row mb-7">
+                        
+                        <label class="fs-5 fw-bolder form-label mb-2">
+                            <span class="required">City</span>
+                        </label>
+
+                        <select class="form-select form-control form-select-solid" data-allow-clear="true" name="cities_id" id="cities_id" data-control="select2" data-placeholder="Select a city">
+                            <option></option>
+                            @foreach ($cities as $city)
+                                <option value="{{ $city->id }}">{{ $city->name }}</option>    
+                            @endforeach                                                    
+                        </select>                                            
+                        
+                        <span class="invalid-feedback d-none city-error" role="alert">
+                            <strong></strong>
+                        </span>
+                        
+                    </div>
+                                        
                     <div class="fv-row mb-7">
                         
                         <label class="fs-5 fw-bolder form-label mb-2">
@@ -114,21 +127,7 @@
                             <strong></strong>
                         </span>
                         
-                    </div>    
-
-                    <div class="fv-row mb-7">
-                        
-                        <label class="fs-5 fw-bolder form-label mb-2">
-                            <span class="required">Designation</span>
-                        </label>
-                        
-                        <input type="text" class="form-control form-control-solid" placeholder="Designation" name="designation" id="designation" />
-                        
-                        <span class="invalid-feedback d-none designation-error" role="alert">
-                            <strong></strong>
-                        </span>
-                        
-                    </div>    
+                    </div>                        
 
                     <div class="fv-row mb-7">
                         

@@ -187,8 +187,7 @@
         update(id, name, email, designation, state, city, mobile, address);
         
     });
-
-    //let cancelBtnEdit = document.querySelectorAll('[data-kt-modal-action="cancel"]');
+    
     document.querySelectorAll('[data-kt-modal-action="cancel"]').forEach( function(cancelButtonEdit) {
         cancelButtonEdit.addEventListener('click', e => {
             e.preventDefault();            
