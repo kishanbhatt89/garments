@@ -212,7 +212,7 @@ class UserController extends Controller
                 $name = $record->name;
                 $email = $record->email;
                 $mobile = $record->userDetails->mobile;
-                $status = ($record->status) ? '<span class="badge badge-light-success">Active</span>' : '<span class="badge badge-light-danger">Blocked</span>';                
+                $status = ($record->status == 0) ? '<span class="badge badge-light-success">Active</span>' : '<span class="badge badge-light-danger">Blocked</span>';                
                 $roles = $record->getRoleNames();
                 $designation = $record->designation->name;
                 $created_at = $record->created_at->diffForHumans();                
