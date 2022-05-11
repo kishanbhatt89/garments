@@ -241,4 +241,9 @@ class ClientController extends Controller
         //return response()->json($users);
     }
 
+    public function details(User $user)
+    {
+        return view('admin.clients.partials._details', compact('user'));
+    }
+
 }

@@ -58,6 +58,7 @@ Route::middleware(['auth','role:admin|employee'])->name('admin.')->prefix('admin
     Route::put('/employees/{user}', [UserController::class, 'update'])->name('employees.update');
     Route::delete('employees/{user}', [UserController::class, 'destroy'])->name('employees.destroy');
 
+    Route::get('client/details/{user}', [ClientController::class, 'details'])->name('clients.details');
     Route::delete('clients/destroyMultiple', [ClientController::class, 'destroyMultiple'])->name('clients.destroyMultiple');
     Route::get('/clients/{user}/details', [ClientController::class, 'show'])->name('clients.show');
     Route::get('/clients/table', [ClientController::class, 'table'])->name('clients.table');
