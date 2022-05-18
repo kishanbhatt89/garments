@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\DesignationController;
 use App\Http\Controllers\Admin\GstProfileController;
 use App\Http\Controllers\Admin\PermissionController;
+use App\Http\Controllers\Admin\PlanController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\StateController;
@@ -117,6 +118,11 @@ Route::middleware(['auth','role:admin|employee'])->name('admin.')->prefix('admin
 
     Route::get('/settings', [UserController::class, 'showSettings'])->name('settings.index');
     Route::post('/settings', [UserController::class, 'saveSettings'])->name('settings.store');
+    
+    Route::get('/plans/{plan}/details', [PlanController::class, 'show'])->name('plans.show');
+    Route::get('/plans/table', [PlanController::class, 'table'])->name('plans.table');
+    Route::get('/plans', [PlanController::class, 'index'])->name('plans.index');    
+    Route::post('/plans', [PlanController::class, 'store'])->name('plans.store');    
 
 });
 
