@@ -91,6 +91,11 @@ class User extends Authenticatable implements JWTSubject
         return $this->belongsTo(GstProfile::class);
     }
 
+    public function store()
+    {
+        return $this->hasOne(Store::class);
+    }
+
     /**
      * Get the identifier that will be stored in the subject claim of the JWT.
      *
