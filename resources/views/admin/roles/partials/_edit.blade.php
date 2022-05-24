@@ -222,6 +222,414 @@
                                     </td>
                                     
                                 </tr>
+
+                                <tr>
+                                    
+                                    <td class="text-gray-800 text-left">Client Management</td>
+                                    
+                                    <td>
+                                        
+                                        <div class="d-flex">
+                                            
+                                            <label class="form-check form-check-sm form-check-custom form-check-solid me-5 me-lg-10">
+                                                <input 
+                                                    class="form-check-input" 
+                                                    type="checkbox" 
+                                                    value="client_management-create" 
+                                                    name="client_management-create" 
+                                                    @if($role['permissions']->contains('name','client_management-create')) checked @endif                                              
+                                                    />
+                                                <span class="form-check-label">Create</span>
+                                            </label>
+                                            
+                                            <label class="form-check form-check-sm form-check-custom form-check-solid me-5 me-lg-10">
+                                                <input 
+                                                    class="form-check-input" 
+                                                    type="checkbox" 
+                                                    value="client_management-read" 
+                                                    name="client_management-read" 
+                                                    @if($role['permissions']->contains('name','client_management-read')) checked @endif
+                                                    />
+                                                <span class="form-check-label">Read</span>
+                                            </label>
+                                            
+                                            <label class="form-check form-check-sm form-check-custom form-check-solid me-5 me-lg-10">
+                                                <input 
+                                                    class="form-check-input" 
+                                                    type="checkbox" 
+                                                    value="client_management-update" 
+                                                    name="client_management-update" 
+                                                    @if($role['permissions']->contains('name','client_management-update')) checked @endif
+                                                    />
+                                                <span class="form-check-label">Update</span>
+                                            </label>
+
+                                            <label class="form-check form-check-sm form-check-custom form-check-solid">
+                                                <input 
+                                                    class="form-check-input" 
+                                                    type="checkbox" 
+                                                    value="client_management-delete" 
+                                                    name="client_management-delete" 
+                                                    @if($role['permissions']->contains('name','client_management-delete')) checked @endif
+                                                    />
+                                                <span class="form-check-label">Delete</span>
+                                            </label>
+
+                                        </div>
+                                        
+                                    </td>
+                                    
+                                </tr>
+
+                                <!--
+                                <tr>
+                                    
+                                    <td class="text-gray-800 text-left">Subscription Management</td>
+                                    
+                                    <td>
+                                        
+                                        <div class="d-flex">
+                                            
+                                            <label class="form-check form-check-sm form-check-custom form-check-solid me-5 me-lg-10">
+                                                <input 
+                                                    class="form-check-input" 
+                                                    type="checkbox" 
+                                                    value=subscription_management-create" 
+                                                    name="subscription_management-create" 
+                                                    @if($role['permissions']->contains('name','subscription_management-create')) checked @endif                                              
+                                                    />
+                                                <span class="form-check-label">Create</span>
+                                            </label>
+                                            
+                                            <label class="form-check form-check-sm form-check-custom form-check-solid me-5 me-lg-10">
+                                                <input 
+                                                    class="form-check-input" 
+                                                    type="checkbox" 
+                                                    value="subscription_management-read" 
+                                                    name="subscription_management-read" 
+                                                    @if($role['permissions']->contains('name','subscription_management-read')) checked @endif
+                                                    />
+                                                <span class="form-check-label">Read</span>
+                                            </label>
+                                            
+                                            <label class="form-check form-check-sm form-check-custom form-check-solid me-5 me-lg-10">
+                                                <input 
+                                                    class="form-check-input" 
+                                                    type="checkbox" 
+                                                    value="subscription_management-update" 
+                                                    name="subscription_management-update" 
+                                                    @if($role['permissions']->contains('name','subscription_management-update')) checked @endif
+                                                    />
+                                                <span class="form-check-label">Update</span>
+                                            </label>
+
+                                            <label class="form-check form-check-sm form-check-custom form-check-solid">
+                                                <input 
+                                                    class="form-check-input" 
+                                                    type="checkbox" 
+                                                    value="subscription_management-delete" 
+                                                    name="subscription_management-delete" 
+                                                    @if($role['permissions']->contains('name','subscription_management-delete')) checked @endif
+                                                    />
+                                                <span class="form-check-label">Delete</span>
+                                            </label>
+
+                                        </div>
+                                        
+                                    </td>
+                                    
+                                </tr>
+                                -->
+                                
+                                <tr>
+                                    
+                                    <td class="text-gray-800 text-left">State Management</td>
+                                    
+                                    <td>
+                                        
+                                        <div class="d-flex">
+                                            
+                                            <label class="form-check form-check-sm form-check-custom form-check-solid me-5 me-lg-10">
+                                                <input 
+                                                    class="form-check-input" 
+                                                    type="checkbox" 
+                                                    value=state_management-create" 
+                                                    name="state_management-create" 
+                                                    @if($role['permissions']->contains('name','state_management-create')) checked @endif                                              
+                                                    />
+                                                <span class="form-check-label">Create</span>
+                                            </label>
+                                            
+                                            <label class="form-check form-check-sm form-check-custom form-check-solid me-5 me-lg-10">
+                                                <input 
+                                                    class="form-check-input" 
+                                                    type="checkbox" 
+                                                    value="state_management-read" 
+                                                    name="state_management-read" 
+                                                    @if($role['permissions']->contains('name','state_management-read')) checked @endif
+                                                    />
+                                                <span class="form-check-label">Read</span>
+                                            </label>
+                                            
+                                            <label class="form-check form-check-sm form-check-custom form-check-solid me-5 me-lg-10">
+                                                <input 
+                                                    class="form-check-input" 
+                                                    type="checkbox" 
+                                                    value="state_management-update" 
+                                                    name="state_management-update" 
+                                                    @if($role['permissions']->contains('name','state_management-update')) checked @endif
+                                                    />
+                                                <span class="form-check-label">Update</span>
+                                            </label>
+
+                                            <label class="form-check form-check-sm form-check-custom form-check-solid">
+                                                <input 
+                                                    class="form-check-input" 
+                                                    type="checkbox" 
+                                                    value="state_management-delete" 
+                                                    name="state_management-delete" 
+                                                    @if($role['permissions']->contains('name','state_management-delete')) checked @endif
+                                                    />
+                                                <span class="form-check-label">Delete</span>
+                                            </label>
+
+                                        </div>
+                                        
+                                    </td>
+                                    
+                                </tr>
+
+                                <tr>
+                                    
+                                    <td class="text-gray-800 text-left">City Management</td>
+                                    
+                                    <td>
+                                        
+                                        <div class="d-flex">
+                                            
+                                            <label class="form-check form-check-sm form-check-custom form-check-solid me-5 me-lg-10">
+                                                <input 
+                                                    class="form-check-input" 
+                                                    type="checkbox" 
+                                                    value=city_management-create" 
+                                                    name="city_management-create" 
+                                                    @if($role['permissions']->contains('name','city_management-create')) checked @endif                                              
+                                                    />
+                                                <span class="form-check-label">Create</span>
+                                            </label>
+                                            
+                                            <label class="form-check form-check-sm form-check-custom form-check-solid me-5 me-lg-10">
+                                                <input 
+                                                    class="form-check-input" 
+                                                    type="checkbox" 
+                                                    value="city_management-read" 
+                                                    name="city_management-read" 
+                                                    @if($role['permissions']->contains('name','city_management-read')) checked @endif
+                                                    />
+                                                <span class="form-check-label">Read</span>
+                                            </label>
+                                            
+                                            <label class="form-check form-check-sm form-check-custom form-check-solid me-5 me-lg-10">
+                                                <input 
+                                                    class="form-check-input" 
+                                                    type="checkbox" 
+                                                    value="city_management-update" 
+                                                    name="city_management-update" 
+                                                    @if($role['permissions']->contains('name','city_management-update')) checked @endif
+                                                    />
+                                                <span class="form-check-label">Update</span>
+                                            </label>
+
+                                            <label class="form-check form-check-sm form-check-custom form-check-solid">
+                                                <input 
+                                                    class="form-check-input" 
+                                                    type="checkbox" 
+                                                    value="city_management-delete" 
+                                                    name="city_management-delete" 
+                                                    @if($role['permissions']->contains('name','city_management-delete')) checked @endif
+                                                    />
+                                                <span class="form-check-label">Delete</span>
+                                            </label>
+
+                                        </div>
+                                        
+                                    </td>
+                                    
+                                </tr>
+
+                                <tr>
+                                    
+                                    <td class="text-gray-800 text-left">Designation Management</td>
+                                    
+                                    <td>
+                                        
+                                        <div class="d-flex">
+                                            
+                                            <label class="form-check form-check-sm form-check-custom form-check-solid me-5 me-lg-10">
+                                                <input 
+                                                    class="form-check-input" 
+                                                    type="checkbox" 
+                                                    value=designation_management-create" 
+                                                    name="designation_management-create" 
+                                                    @if($role['permissions']->contains('name','designation_management-create')) checked @endif                                              
+                                                    />
+                                                <span class="form-check-label">Create</span>
+                                            </label>
+                                            
+                                            <label class="form-check form-check-sm form-check-custom form-check-solid me-5 me-lg-10">
+                                                <input 
+                                                    class="form-check-input" 
+                                                    type="checkbox" 
+                                                    value="designation_management-read" 
+                                                    name="designation_management-read" 
+                                                    @if($role['permissions']->contains('name','designation_management-read')) checked @endif
+                                                    />
+                                                <span class="form-check-label">Read</span>
+                                            </label>
+                                            
+                                            <label class="form-check form-check-sm form-check-custom form-check-solid me-5 me-lg-10">
+                                                <input 
+                                                    class="form-check-input" 
+                                                    type="checkbox" 
+                                                    value="designation_management-update" 
+                                                    name="designation_management-update" 
+                                                    @if($role['permissions']->contains('name','designation_management-update')) checked @endif
+                                                    />
+                                                <span class="form-check-label">Update</span>
+                                            </label>
+
+                                            <label class="form-check form-check-sm form-check-custom form-check-solid">
+                                                <input 
+                                                    class="form-check-input" 
+                                                    type="checkbox" 
+                                                    value="designation_management-delete" 
+                                                    name="designation_management-delete" 
+                                                    @if($role['permissions']->contains('name','designation_management-delete')) checked @endif
+                                                    />
+                                                <span class="form-check-label">Delete</span>
+                                            </label>
+
+                                        </div>
+                                        
+                                    </td>
+                                    
+                                </tr>
+
+                                <tr>
+                                    
+                                    <td class="text-gray-800 text-left">GST Profile Management</td>
+                                    
+                                    <td>
+                                        
+                                        <div class="d-flex">
+                                            
+                                            <label class="form-check form-check-sm form-check-custom form-check-solid me-5 me-lg-10">
+                                                <input 
+                                                    class="form-check-input" 
+                                                    type="checkbox" 
+                                                    value=gst_profile_management-create" 
+                                                    name="gst_profile_management-create" 
+                                                    @if($role['permissions']->contains('name','gst_profile_management-create')) checked @endif                                              
+                                                    />
+                                                <span class="form-check-label">Create</span>
+                                            </label>
+                                            
+                                            <label class="form-check form-check-sm form-check-custom form-check-solid me-5 me-lg-10">
+                                                <input 
+                                                    class="form-check-input" 
+                                                    type="checkbox" 
+                                                    value="gst_profile_management-read" 
+                                                    name="gst_profile_management-read" 
+                                                    @if($role['permissions']->contains('name','gst_profile_management-read')) checked @endif
+                                                    />
+                                                <span class="form-check-label">Read</span>
+                                            </label>
+                                            
+                                            <label class="form-check form-check-sm form-check-custom form-check-solid me-5 me-lg-10">
+                                                <input 
+                                                    class="form-check-input" 
+                                                    type="checkbox" 
+                                                    value="gst_profile_management-update" 
+                                                    name="gst_profile_management-update" 
+                                                    @if($role['permissions']->contains('name','gst_profile_management-update')) checked @endif
+                                                    />
+                                                <span class="form-check-label">Update</span>
+                                            </label>
+
+                                            <label class="form-check form-check-sm form-check-custom form-check-solid">
+                                                <input 
+                                                    class="form-check-input" 
+                                                    type="checkbox" 
+                                                    value="gst_profile_management-delete" 
+                                                    name="gst_profile_management-delete" 
+                                                    @if($role['permissions']->contains('name','gst_profile_management-delete')) checked @endif
+                                                    />
+                                                <span class="form-check-label">Delete</span>
+                                            </label>
+
+                                        </div>
+                                        
+                                    </td>
+                                    
+                                </tr>
+
+                                <tr>
+                                    
+                                    <td class="text-gray-800 text-left">Setting Management</td>
+                                    
+                                    <td>
+                                        
+                                        <div class="d-flex">
+                                            
+                                            <label class="form-check form-check-sm form-check-custom form-check-solid me-5 me-lg-10">
+                                                <input 
+                                                    class="form-check-input" 
+                                                    type="checkbox" 
+                                                    valuesettingmanagement-create" 
+                                                    name="setting_management-create" 
+                                                    @if($role['permissions']->contains('name','setting_management-create')) checked @endif                                              
+                                                    />
+                                                <span class="form-check-label">Create</span>
+                                            </label>
+                                            
+                                            <label class="form-check form-check-sm form-check-custom form-check-solid me-5 me-lg-10">
+                                                <input 
+                                                    class="form-check-input" 
+                                                    type="checkbox" 
+                                                    value="setting_management-read" 
+                                                    name="setting_management-read" 
+                                                    @if($role['permissions']->contains('name','setting_management-read')) checked @endif
+                                                    />
+                                                <span class="form-check-label">Read</span>
+                                            </label>
+                                            
+                                            <label class="form-check form-check-sm form-check-custom form-check-solid me-5 me-lg-10">
+                                                <input 
+                                                    class="form-check-input" 
+                                                    type="checkbox" 
+                                                    value="setting_management-update" 
+                                                    name="setting_management-update" 
+                                                    @if($role['permissions']->contains('name','setting_management-update')) checked @endif
+                                                    />
+                                                <span class="form-check-label">Update</span>
+                                            </label>
+
+                                            <label class="form-check form-check-sm form-check-custom form-check-solid">
+                                                <input 
+                                                    class="form-check-input" 
+                                                    type="checkbox" 
+                                                    value="setting_management-delete" 
+                                                    name="setting_management-delete" 
+                                                    @if($role['permissions']->contains('name','setting_management-delete')) checked @endif
+                                                    />
+                                                <span class="form-check-label">Delete</span>
+                                            </label>
+
+                                        </div>
+                                        
+                                    </td>
+                                    
+                                </tr>
                                 
                             </tbody>
 
