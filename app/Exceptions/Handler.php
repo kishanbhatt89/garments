@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -63,6 +64,13 @@ class Handler extends ExceptionHandler
                 return response()->json(['error' => 'Unauthorized'], 403);
             }
         });
+
+        $this->renderable(function (UnauthorizedHttpException $e, $request) {
+            if ($e instanceof UnauthorizedHttpException && $request->wantsJson()) {
+                return response()->json(['error' => 'Token not found'], 403);
+            }
+        });
+        
         
     }
 }
