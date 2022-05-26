@@ -37,6 +37,11 @@ class AuthController extends Controller
 
         }
 
+        if (auth()->guard('client')->user()->email_verified_at == null) 
+        {
+            return response()->json(['error' => 'Please verify your email first'], 401);
+        }        
+
         return $this->respondWithToken($token);
     }
 

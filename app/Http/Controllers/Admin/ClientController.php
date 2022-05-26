@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\City;
+use App\Models\Client;
 use App\Models\Designation;
 use App\Models\State;
 use Illuminate\Http\Request;
@@ -28,13 +29,9 @@ class ClientController extends Controller
      */
     public function index()
     {
-        $users=User::whereHas('roles', function($q){$q->whereIn('roles.name', ['client']);})->get();                
-
-        $designations = Designation::all();
-        $states = State::all();
-        $cities = City::all();
+        $clients = Client::with(['clientDetails'])->get();
         
-        return view('admin.clients.index', compact('users','designations','states','cities'));
+        return view('admin.clients.index', compact('clients'));
     }
 
     /**
@@ -47,12 +44,11 @@ class ClientController extends Controller
     {
         
         $validator = Validator::make($request->all(), [
-            'name' => 'required',
-            'email' => 'required|email|unique:users',            
-            'state' => 'required|not_in:0',
-            'city' => 'required|not_in:0',
-            'password' => 'required|min:6|confirmed',   
-            'mobile' => 'required',            
+            'first_name' => 'required',
+            'last_name' => 'required',
+            'phone' => 'required',
+            'email' => 'required|email|unique:clients',            
+            'password' => 'required|min:6|confirmed',            
             'address' => 'required'    
         ]);        
 
@@ -60,20 +56,17 @@ class ClientController extends Controller
             return response()->json(['data'=> $validator->errors()], 400);    
         }
 
-        $client = new User();
+        $client = new Client();
 
-        $client->name = $request->name;
+        $client->first_name = $request->first_name;
+        $client->last_name = $request->last_name;
+        $client->phone = $request->phone;
         $client->email = $request->email;
-        $client->password = bcrypt($request->password);        
-        $client->state_id = $request->state;
-        $client->city_id = $request->city;
+        $client->password = bcrypt($request->password);                
 
-        $client->save();
-        
-        $client->assignRole('client');
+        $client->save();        
 
-        $client->clientDetails()->create([
-            'mobile' => $request->mobile,            
+        $client->clientDetails()->create([            
             'address' => $request->address
         ]);
         
@@ -88,15 +81,11 @@ class ClientController extends Controller
      */
     public function show(Request $request)
     {
-        $user = User::with(['clientDetails','designation','state','city'])
+        $client = Client::with(['clientDetails'])
                 ->where('id',$request->get('id'))
-                ->first();       
-                
-        $designations = Designation::all();
-        $states = State::all();
-        $cities = City::all();
+                ->first();                           
 
-        $contents = View::make('admin.clients.partials._edit', ['user' => $user, 'designations' => $designations, 'states' => $states, 'cities' => $cities])->render();
+        $contents = View::make('admin.clients.partials._edit', ['client' => $client])->render();
         
         $response = Response::make($contents, 200);                
         
