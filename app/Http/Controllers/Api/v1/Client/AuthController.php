@@ -30,14 +30,14 @@ class AuthController extends Controller
             $token = auth()->guard('client')->attempt(request(['email', 'password']));
 
             return response()->json([
-                'status_code' => 201,
+                'status_code' => 200,
                 'msg' => 'Registered successfully. OTP has been sent to your registered phone number.',
                 'status' => true,
                 'data' => [
                     'otp' => '000000',
                     'token' => $token
                 ]
-            ], 201);
+            ], 200);
 
         }
 

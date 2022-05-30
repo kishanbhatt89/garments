@@ -187,14 +187,14 @@ class VerficationController extends Controller
         $token = auth('client')->refresh();
 
         return response()->json([
-            'status_code' => 201,
+            'status_code' => 200,
             'msg' => '',
             'status' => true,
             'data' => [
                 'otp' => '000000',
                 'token' => $token
             ]
-        ], 201);
+        ], 200);
 
     }
 
