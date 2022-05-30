@@ -8,6 +8,7 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Throwable;
+use Tymon\JWTAuth\Exceptions\TokenInvalidException;
 
 class Handler extends ExceptionHandler
 {
@@ -54,20 +55,46 @@ class Handler extends ExceptionHandler
         $this->renderable(function (NotFoundHttpException $e, $request) {
             
             if ($e instanceof NotFoundHttpException && $request->wantsJson()) {
-                return response()->json(['error' => 'Record not found'], 404);
+                return response()->json([
+                    'status_code' => 404,                
+                    'msg'   => 'Record not found.',
+                    'status'   => false,
+                    'data'  => []
+                ], 404);
             }
                         
         });
 
         $this->renderable(function (AccessDeniedHttpException $e, $request) {
             if ($e instanceof AccessDeniedHttpException && $request->wantsJson()) {
-                return response()->json(['error' => 'Unauthorized'], 403);
+                return response()->json([
+                    'status_code' => 401,                
+                    'msg'   => 'Unauthorized',
+                    'status'   => false,
+                    'data'  => []
+                ], 401);
             }
         });
 
         $this->renderable(function (UnauthorizedHttpException $e, $request) {
             if ($e instanceof UnauthorizedHttpException && $request->wantsJson()) {
-                return response()->json(['error' => 'Token not found'], 403);
+                return response()->json([
+                    'status_code' => 401,                
+                    'msg'   => 'Token not found.',
+                    'status'   => false,
+                    'data'  => []
+                ], 401);
+            }
+        });
+
+        $this->renderable(function (TokenInvalidException $e, $request) {
+            if ($e instanceof TokenInvalidException && $request->wantsJson()) {                
+                return response()->json([
+                    'status_code' => 401,                
+                    'msg'   => 'Invalid token',
+                    'status'   => false,
+                    'data'  => []
+                ], 401);
             }
         });
         

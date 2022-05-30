@@ -38,16 +38,20 @@ Route::group(['prefix' => 'v1/client','middleware' => ['assign.guard:client']],f
     
     Route::get('email/verify/{id}', [ClientVerificationController::class, 'emailVerify'])->name('verification.verify');
     Route::get('email/resend', [ClientVerificationController::class, 'emailResend'])->name('verification.resend');
+
+    Route::post('otp/verify', [ClientVerificationController::class, 'otpVerfiy'])->name('verification.otp.verify');
+    Route::post('otp/resetPasswordVerify', [ClientVerificationController::class, 'resetPasswordOtpVerfiy'])->name('verification.otp.resetPassword');
     
-    Route::get('sms/verify/{id}', [ClientVerificationController::class, 'smsVerify'])->name('sms.verify');
-    Route::get('sms/resend', [ClientVerificationController::class, 'smsResend'])->name('sms.resend');
+    Route::post('reset-password', [ClientVerificationController::class, 'resetPassword'])->name('verification.reset-password');
+
+    Route::post('forgot-password', [ClientVerificationController::class, 'forgotPassword'])->name('client.forgot-password');
 
     Route::post('login', [ClientAuthController::class, 'login']);
     Route::post('logout', [ClientAuthController::class, 'logout'])->middleware(['jwt.auth']);
 
-    Route::post('store/save', [StoreController::class, 'store'])->middleware(['jwt.auth']);
-    Route::patch('store/{store}/update', [StoreController::class, 'update'])->middleware(['jwt.auth']);
-    Route::delete('store/{store}/delete', [StoreController::class, 'destroy'])->middleware(['jwt.auth']);
+    Route::post('store/save', [StoreController::class, 'store'])->middleware(['jwt.auth', 'is_client_sms_verified']);
+    Route::patch('store/{store}/update', [StoreController::class, 'update'])->middleware(['jwt.auth','is_client_sms_verified']);
+    Route::delete('store/{store}/delete', [StoreController::class, 'destroy'])->middleware(['jwt.auth','is_client_sms_verified']);
 
 });
 

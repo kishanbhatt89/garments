@@ -3,8 +3,13 @@
 namespace App\Http\Controllers\Api\v1\Client;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Api\v1\Client\ForgotPasswordRequest;
+use App\Http\Requests\Api\v1\Client\OtpVerifyRequest;
+use App\Http\Requests\Api\v1\Client\ResetPasswordRequest;
 use App\Models\Client;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class VerficationController extends Controller
 {
@@ -38,6 +43,7 @@ class VerficationController extends Controller
         return response()->json(["msg" => "Email verification link sent on your email id"], 200);
     }
 
+    /*
     public function smsVerify($client_id, Request $request)
     {
         $client = Client::where('id', $client_id)->update(['sms_verified_at' => now()]);
@@ -48,6 +54,148 @@ class VerficationController extends Controller
         }
 
         return response()->json(['msg' => 'Something went wrong!'], 400);
+    }
+    */
+
+    public function otpVerfiy(OtpVerifyRequest $request)
+    {
+        $otp = $request->otp;
+        $token = $request->token;
+
+        $client = JWTAuth::parseToken()->authenticate();        
+
+        if (!$client) 
+        {
+            return response()->json([
+                'status_code' => 401,                
+                'msg'   => 'Invalid token',
+                'status'   => false,
+                'data'  => []
+            ], 401);
+        }        
+
+        if ($otp == '000000') 
+        {            
+
+            $client->sms_verified_at = now();
+            $client->save();
+
+            return response()->json([
+                'status_code' => 200,                
+                'msg'   => 'OTP verified successfully.',
+                'status'   => true,
+                'data'  => [
+                    'token' => $token,
+                    'client' => $client, 
+                    'clientDetails' => $client->clientDetails,
+                    'store' => $client->store,
+                ]
+            ], 200);
+
+        } 
+
+        return response()->json([
+            'status_code' => 401,                
+            'msg'   => 'Invalid otp',
+            'status'   => false,
+            'data'  => []
+        ], 401);
+    }
+
+    public function resetPasswordOtpVerfiy(OtpVerifyRequest $request)
+    {
+        $otp = $request->otp;
+        $token = $request->token;
+
+        $client = JWTAuth::parseToken()->authenticate();        
+
+        if (!$client) 
+        {
+            return response()->json([
+                'status_code' => 401,                
+                'msg'   => 'Invalid token',
+                'status'   => false,
+                'data'  => []
+            ], 401);
+        }        
+
+        if ($otp == '000000') 
+        {                        
+
+            return response()->json([
+                'status_code' => 200,                
+                'msg'   => 'OTP verified successfully.',
+                'status'   => true,
+                'data'  => [
+                    'token' => $token                    
+                ]
+            ], 200);
+
+        } 
+
+        return response()->json([
+            'status_code' => 401,                
+            'msg'   => 'Invalid otp',
+            'status'   => false,
+            'data'  => []
+        ], 401);
+    }
+
+    public function resetPassword(ResetPasswordRequest $request)
+    {
+        $password = $request->password;
+        $token = $request->token;
+
+        $client = JWTAuth::parseToken()->authenticate();        
+
+        if (!$client) 
+        {
+            return response()->json([
+                'status_code' => 401,                
+                'msg'   => 'Invalid token',
+                'status'   => false,
+                'data'  => []
+            ], 401);
+        }        
+
+        $client->password = bcrypt($password);
+        $client->save();
+
+        return response()->json([
+            'status_code' => 200,                
+            'msg'   => 'Password changed successfully.',
+            'status'   => true,
+            'data'  => []
+        ], 200);
+    }
+
+    public function forgotPassword(ForgotPasswordRequest $request)
+    {
+        $client = Client::where('phone', $request->phone)->first();
+
+        if (!$client) {
+            return response()->json([
+                'status_code' => 401,                
+                'msg'   => 'Invalid phone number',
+                'status'   => false,
+                'data'  => []
+            ], 401);
+        }
+
+        Auth::login($client);
+
+        $token = auth('client')->refresh();
+
+        return response()->json([
+            'status_code' => 201,
+            'msg' => '',
+            'status' => true,
+            'data' => [
+                'otp' => '000000',
+                'token' => $token
+            ]
+        ], 201);
+
     }
 
 }

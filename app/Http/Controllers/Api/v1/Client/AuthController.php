@@ -14,35 +14,80 @@ class AuthController extends Controller
     
     public function register(RegisterRequest $request)
     {
-        $client = Client::create(array_merge(
-            $request->except('password'),
-            ['password' => bcrypt($request->password)]
-        ))->sendEmailVerificationNotification();        
+        $client = new Client();
+
+        $client->first_name = $request->first_name;
+        $client->last_name = $request->last_name;
+        $client->email = $request->email;
+        $client->phone = $request->phone;
+        $client->password = bcrypt($request->password);                        
+
+        if ($client->save()) 
+        {
+
+            $client->sendEmailVerificationNotification();
+
+            $token = auth()->guard('client')->attempt(request(['email', 'password']));
+
+            return response()->json([
+                'status_code' => 201,
+                'msg' => 'Registered successfully. OTP has been sent to your registered phone number.',
+                'status' => true,
+                'data' => [
+                    'otp' => '000000',
+                    'token' => $token
+                ]
+            ], 201);
+
+        }
 
         // Send SMS Verification Code
 
         return response()->json([
-            'message' => 'Client successfully registered',
-            'client' => auth('client')->user()
-        ], 201);
+            'status_code' => 401,
+            'msg' => 'Error registering client',
+            'status' => false,
+            'data' => []
+        ], 400);
     }
 
     public function login(LoginRequest $request)
     {
-        $credentials = request(['email', 'password']);
+        $client = Client::where('phone', $request->phone)->first(); 
+        
+        if ($client) {            
 
-        if (!$token = auth()->guard('client')->attempt($credentials)) {
+            $credentials = array_merge($request->only('password'), ['email' => $client->email]);
+            
+            if (!$token = auth()->guard('client')->attempt($credentials)) {
 
-            return response()->json(['error' => 'Unauthorized'], 401);
+                return response()->json([
+                    'status_code' => 401,
+                    'msg'   => 'Invalid credentials',
+                    'status'   => false,                    
+                    'data'  => []
+                ], 401);
+    
+            }
 
-        }
+            return response()->json([
+                'status_code' => 200,                
+                'msg'   => 'OTP has been sent to your registered phone number.',
+                'status'   => true,
+                'data'  => [
+                    'otp' => '000000' ,          
+                    'token' => $token        
+                ]
+            ], 200);
 
-        if (auth()->guard('client')->user()->email_verified_at == null) 
-        {
-            return response()->json(['error' => 'Please verify your email first'], 401);
         }        
 
-        return $this->respondWithToken($token);
+        return response()->json([
+            'status_code' => 401,
+            'msg'   => 'Invalid credentials',
+            'status'   => false,                    
+            'data'  => []
+        ], 401);
     }
 
     /**

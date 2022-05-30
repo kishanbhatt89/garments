@@ -26,7 +26,7 @@ class LoginRequest extends FormRequest
     public function rules()
     {
         return [
-            'email' => 'required|string|email|max:255',
+            'phone' => 'required|digits:10',
             'password' => 'required|string|min:6'
         ];
     }
@@ -34,10 +34,11 @@ class LoginRequest extends FormRequest
     public function failedValidation(Validator $validator)
     {
         throw new HttpResponseException(response()->json([
+            'status_code' => 401,
             'success'   => false,
-            'message'   => 'Validation errors',
+            'msg'   => 'Validation errors',
             'data'      => $validator->errors()
-        ]));
+        ], 400));
     }
 
 }

@@ -42,6 +42,7 @@ class Kernel extends HttpKernel
             // \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
             'throttle:api',
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
+            \Illuminate\Session\Middleware\StartSession::class
         ],
     ];
 
@@ -68,5 +69,6 @@ class Kernel extends HttpKernel
         'role_or_permission' => \Spatie\Permission\Middlewares\RoleOrPermissionMiddleware::class,
         'assign.guard' => \App\Http\Middleware\AssignGuard::class,
         'is_client_email_verified' => \App\Http\Middleware\ClientEmailVerified::class,
+        'is_client_sms_verified' => \App\Http\Middleware\ClientSmsVerified::class,
     ];
 }
