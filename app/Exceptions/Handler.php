@@ -56,11 +56,11 @@ class Handler extends ExceptionHandler
             
             if ($e instanceof NotFoundHttpException && $request->wantsJson()) {
                 return response()->json([
-                    'status_code' => 404,                
+                    'status_code' => 200,                
                     'msg'   => 'Record not found.',
                     'status'   => false,
                     'data'  => []
-                ], 404);
+                ], 200);
             }
                         
         });
@@ -68,33 +68,33 @@ class Handler extends ExceptionHandler
         $this->renderable(function (AccessDeniedHttpException $e, $request) {
             if ($e instanceof AccessDeniedHttpException && $request->wantsJson()) {
                 return response()->json([
-                    'status_code' => 401,                
+                    'status_code' => 200,                
                     'msg'   => 'Unauthorized',
                     'status'   => false,
                     'data'  => []
-                ], 401);
+                ], 200);
             }
         });
 
         $this->renderable(function (UnauthorizedHttpException $e, $request) {
             if ($e instanceof UnauthorizedHttpException && $request->wantsJson()) {
                 return response()->json([
-                    'status_code' => 401,                
+                    'status_code' => 200,                
                     'msg'   => 'Token not found.',
                     'status'   => false,
                     'data'  => []
-                ], 401);
+                ], 200);
             }
         });
 
         $this->renderable(function (TokenInvalidException $e, $request) {
             if ($e instanceof TokenInvalidException && $request->wantsJson()) {                
                 return response()->json([
-                    'status_code' => 401,                
+                    'status_code' => 200,                
                     'msg'   => 'Invalid token',
                     'status'   => false,
                     'data'  => []
-                ], 401);
+                ], 200);
             }
         });
         

@@ -17,7 +17,7 @@ class VerficationController extends Controller
     {
         if (!$request->hasValidSignature()) 
         {
-            return response()->json(["msg" => "Invalid/Expired url provided."], 401);
+            return response()->json(["msg" => "Invalid/Expired url provided."], 200);
         }
     
         $client = Client::findOrFail($client_id);
@@ -35,7 +35,7 @@ class VerficationController extends Controller
         
         if (auth('client')->user()->hasVerifiedEmail()) 
         {
-            return response()->json(["msg" => "Email already verified."], 400);
+            return response()->json(["msg" => "Email already verified."], 200);
         }
     
         auth('client')->user()->sendEmailVerificationNotification();
@@ -67,11 +67,11 @@ class VerficationController extends Controller
         if (!$client) 
         {
             return response()->json([
-                'status_code' => 401,                
+                'status_code' => 200,                
                 'msg'   => 'Invalid token',
                 'status'   => false,
                 'data'  => []
-            ], 401);
+            ], 200);
         }        
 
         if ($otp == '000000') 
@@ -95,11 +95,11 @@ class VerficationController extends Controller
         } 
 
         return response()->json([
-            'status_code' => 401,                
+            'status_code' => 200,                
             'msg'   => 'Invalid otp',
             'status'   => false,
             'data'  => []
-        ], 401);
+        ], 200);
     }
 
     public function resetPasswordOtpVerfiy(OtpVerifyRequest $request)
@@ -112,11 +112,11 @@ class VerficationController extends Controller
         if (!$client) 
         {
             return response()->json([
-                'status_code' => 401,                
+                'status_code' => 200,                
                 'msg'   => 'Invalid token',
                 'status'   => false,
                 'data'  => []
-            ], 401);
+            ], 200);
         }        
 
         if ($otp == '000000') 
@@ -134,11 +134,11 @@ class VerficationController extends Controller
         } 
 
         return response()->json([
-            'status_code' => 401,                
+            'status_code' => 200,                
             'msg'   => 'Invalid otp',
             'status'   => false,
             'data'  => []
-        ], 401);
+        ], 200);
     }
 
     public function resetPassword(ResetPasswordRequest $request)
@@ -151,11 +151,11 @@ class VerficationController extends Controller
         if (!$client) 
         {
             return response()->json([
-                'status_code' => 401,                
+                'status_code' => 200,                
                 'msg'   => 'Invalid token',
                 'status'   => false,
                 'data'  => []
-            ], 401);
+            ], 200);
         }        
 
         $client->password = bcrypt($password);
@@ -175,11 +175,11 @@ class VerficationController extends Controller
 
         if (!$client) {
             return response()->json([
-                'status_code' => 401,                
+                'status_code' => 200,                
                 'msg'   => 'Invalid phone number',
                 'status'   => false,
                 'data'  => []
-            ], 401);
+            ], 200);
         }
 
         Auth::login($client);

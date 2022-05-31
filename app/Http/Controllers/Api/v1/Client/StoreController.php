@@ -35,7 +35,7 @@ class StoreController extends Controller
         if ($store) {
             return new StoreResource($store);
         } else {
-            return response()->json(['msg'=> 'Something went wrong'], 400);
+            return response()->json(['msg'=> 'Something went wrong'], 200);
         }
 
     }
@@ -45,13 +45,13 @@ class StoreController extends Controller
         $store = Store::find($id);
 
         if (!$store) {
-            return response()->json(['msg'=> 'Store not found.'], 400);
+            return response()->json(['msg'=> 'Store not found.'], 200);
         }
         
         if ($store->update($request->all())) {
             return new StoreResource($store);
         } else {
-            return response()->json(['msg'=> 'Something went wrong'], 400);
+            return response()->json(['msg'=> 'Something went wrong'], 200);
         }                
     }
     
@@ -60,13 +60,13 @@ class StoreController extends Controller
         $store = Store::find($id);
 
         if (!$store) {
-            return response()->json(['msg'=> 'Store not found.'], 400);
+            return response()->json(['msg'=> 'Store not found.'], 200);
         }
         
         if ($store->delete()) {
             return response()->json(['msg'=> 'Store deleted successfully.'], 200);
         } else {
-            return response()->json(['msg'=> 'Something went wrong'], 400);
+            return response()->json(['msg'=> 'Something went wrong'], 200);
         }        
     }
 }

@@ -44,11 +44,11 @@ class AuthController extends Controller
         // Send SMS Verification Code
 
         return response()->json([
-            'status_code' => 401,
+            'status_code' => 200,
             'msg' => 'Error registering client',
             'status' => false,
             'data' => []
-        ], 400);
+        ], 200);
     }
 
     public function login(LoginRequest $request)
@@ -62,11 +62,11 @@ class AuthController extends Controller
             if (!$token = auth()->guard('client')->attempt($credentials)) {
 
                 return response()->json([
-                    'status_code' => 401,
+                    'status_code' => 200,
                     'msg'   => 'Invalid credentials',
                     'status'   => false,                    
                     'data'  => []
-                ], 401);
+                ], 200);
     
             }
 
@@ -83,11 +83,11 @@ class AuthController extends Controller
         }        
 
         return response()->json([
-            'status_code' => 401,
+            'status_code' => 200,
             'msg'   => 'Invalid credentials',
             'status'   => false,                    
             'data'  => []
-        ], 401);
+        ], 200);
     }
 
     /**
@@ -115,7 +115,7 @@ class AuthController extends Controller
     {        
         if (!$request->bearerToken() || !auth('client')->check()) {
 
-            return response()->json(['message' => 'Token not found'], 401);
+            return response()->json(['message' => 'Token not found'], 200);
 
         }
 
