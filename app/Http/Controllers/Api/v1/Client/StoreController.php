@@ -29,44 +29,53 @@ class StoreController extends Controller
         auth('client')->user()->is_store_setup = true;
 
         auth('client')->user()->save();
-    
-        $store = auth('client')->user()->store()->create($request->all());
+        
+        $data = $request->except('state');
+        
+        $data['state_id'] = $request->state;
+
+        $store = auth('client')->user()->store()->create($data);
 
         if ($store) {
             return new StoreResource($store);
         } else {
-            return response()->json(['msg'=> 'Something went wrong'], 200);
+            return response()->json([
+                'status_code' => 200,
+                'msg'   => 'Error in setting up store',
+                'status'   => false,                    
+                'data'  => (object) []
+            ], 200);
         }
 
     }
         
-    public function update(UpdateStoreRequest $request, $id)
-    {                                
-        $store = Store::find($id);
+    // public function update(UpdateStoreRequest $request, $id)
+    // {                                
+    //     $store = Store::find($id);
 
-        if (!$store) {
-            return response()->json(['msg'=> 'Store not found.'], 200);
-        }
+    //     if (!$store) {
+    //         return response()->json(['msg'=> 'Store not found.'], 200);
+    //     }
         
-        if ($store->update($request->all())) {
-            return new StoreResource($store);
-        } else {
-            return response()->json(['msg'=> 'Something went wrong'], 200);
-        }                
-    }
+    //     if ($store->update($request->all())) {
+    //         return new StoreResource($store);
+    //     } else {
+    //         return response()->json(['msg'=> 'Something went wrong'], 200);
+    //     }                
+    // }
     
-    public function destroy($id)
-    {        
-        $store = Store::find($id);
+    // public function destroy($id)
+    // {        
+    //     $store = Store::find($id);
 
-        if (!$store) {
-            return response()->json(['msg'=> 'Store not found.'], 200);
-        }
+    //     if (!$store) {
+    //         return response()->json(['msg'=> 'Store not found.'], 200);
+    //     }
         
-        if ($store->delete()) {
-            return response()->json(['msg'=> 'Store deleted successfully.'], 200);
-        } else {
-            return response()->json(['msg'=> 'Something went wrong'], 200);
-        }        
-    }
+    //     if ($store->delete()) {
+    //         return response()->json(['msg'=> 'Store deleted successfully.'], 200);
+    //     } else {
+    //         return response()->json(['msg'=> 'Something went wrong'], 200);
+    //     }        
+    // }
 }

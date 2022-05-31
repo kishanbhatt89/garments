@@ -16,4 +16,9 @@ class Store extends Model
         return $this->belongsTo(Client::class);
     }
 
+    public function state()
+    {
+        return $this->belongsTo(State::class);
+    }
+
 }

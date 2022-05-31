@@ -22,8 +22,7 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->text('address');
             $table->string('city');
-            $table->foreignId('state_id')->nullable()->constrained();
-            $table->string('email');
+            $table->foreignId('state_id')->nullable()->constrained();            
             $table->string('zipcode');
             $table->string('gst')->nullable();
             $table->timestamps();

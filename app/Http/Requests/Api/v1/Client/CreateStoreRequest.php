@@ -27,19 +27,24 @@ class CreateStoreRequest extends FormRequest
     {
         return [
             'name' => 'required|string|unique:stores',
+            'type' => 'required|integer',
+            'description' => 'nullable|string',
             'address' => 'required|string',
-            'email' => 'required|string|email|unique:stores',
-            'phone' => 'required|string',
+            'city' => 'required|string',
+            'state' => 'required|integer|exists:states,id',
+            'zipcode' => 'required|string',
+            'gst' => 'nullable|string'            
         ];
     }
 
     public function failedValidation(Validator $validator)
     {
         throw new HttpResponseException(response()->json([
+            'status_code' => 200,
             'success'   => false,
-            'message'   => 'Validation errors',
+            'msg'   => 'Validation errors',
             'data'      => $validator->errors()
-        ]));
+        ], 200));
     }
 
 }

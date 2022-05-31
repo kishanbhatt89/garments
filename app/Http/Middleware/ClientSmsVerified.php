@@ -15,7 +15,7 @@ class ClientSmsVerified
      * @return \Illuminate\Http\Response|\Illuminate\Http\RedirectResponse
      */
     public function handle(Request $request, Closure $next)
-    {
+    {           
         if (auth('client')->user()->sms_verified_at == null) {
 
             auth('client')->logout();
@@ -23,5 +23,7 @@ class ClientSmsVerified
             return response()->json(['msg' => 'You need to confirm your account. We have sent you an otp, please check your sms.']);            
 
         }
+
+        return $next($request);
     }
 }

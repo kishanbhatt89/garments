@@ -13,13 +13,21 @@ class StoreResource extends JsonResource
      * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
      */
     public function toArray($request)
-    {
+    {        
         return [
-            'name' => $this->name,
-            'address' => $this->address,
-            'email' => $this->email,
-            'phone' => $this->phone,
-            'created_at' => $this->created_at->diffForHumans(),
+            'status_code' => 200,
+            'msg' => 'Store created successfully!',
+            'status' => true,
+            'data' => [                
+                'name' => $this->name,
+                'type' => $this->type == 1 ? 'Retailer' : 'Distributor',
+                'description' => $this->description,
+                'address' => $this->address,
+                'city' => $this->city,
+                'state' => $this->state->name,
+                'zipcode' => $this->zipcode,
+                'gst' => $this->gst
+            ]
         ];
     }
 }
