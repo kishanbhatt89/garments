@@ -65,7 +65,7 @@ class AuthController extends Controller
                     'status_code' => 200,
                     'msg'   => 'Invalid credentials',
                     'status'   => false,                    
-                    'data'  => []
+                    'data'  => (object) []
                 ], 200);
     
             }
@@ -86,7 +86,7 @@ class AuthController extends Controller
             'status_code' => 200,
             'msg'   => 'Invalid credentials',
             'status'   => false,                    
-            'data'  => []
+            'data'  => (object) []
         ], 200);
     }
 

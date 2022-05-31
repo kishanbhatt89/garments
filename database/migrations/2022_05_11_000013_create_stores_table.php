@@ -18,9 +18,14 @@ return new class extends Migration
             $table->unsignedBigInteger('client_id');
             $table->foreign('client_id')->references('id')->on('clients');
             $table->string('name');
+            $table->integer('type');
+            $table->text('description')->nullable();
             $table->text('address');
+            $table->string('city');
+            $table->foreignId('state_id')->nullable()->constrained();
             $table->string('email');
-            $table->string('phone');
+            $table->string('zipcode');
+            $table->string('gst')->nullable();
             $table->timestamps();
         });
     }

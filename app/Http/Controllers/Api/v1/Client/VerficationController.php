@@ -70,7 +70,7 @@ class VerficationController extends Controller
                 'status_code' => 200,                
                 'msg'   => 'Invalid token',
                 'status'   => false,
-                'data'  => []
+                'data'  => (object) []
             ], 200);
         }        
 
@@ -98,7 +98,7 @@ class VerficationController extends Controller
             'status_code' => 200,                
             'msg'   => 'Invalid otp',
             'status'   => false,
-            'data'  => []
+            'data'  => (object) []
         ], 200);
     }
 
@@ -115,7 +115,7 @@ class VerficationController extends Controller
                 'status_code' => 200,                
                 'msg'   => 'Invalid token',
                 'status'   => false,
-                'data'  => []
+                'data'  => (object) []
             ], 200);
         }        
 
@@ -137,7 +137,7 @@ class VerficationController extends Controller
             'status_code' => 200,                
             'msg'   => 'Invalid otp',
             'status'   => false,
-            'data'  => []
+            'data'  => (object) []
         ], 200);
     }
 
@@ -154,7 +154,7 @@ class VerficationController extends Controller
                 'status_code' => 200,                
                 'msg'   => 'Invalid token',
                 'status'   => false,
-                'data'  => []
+                'data'  => (object) []
             ], 200);
         }        
 
@@ -165,7 +165,7 @@ class VerficationController extends Controller
             'status_code' => 200,                
             'msg'   => 'Password changed successfully.',
             'status'   => true,
-            'data'  => []
+            'data'  => (object) []
         ], 200);
     }
 
@@ -178,7 +178,7 @@ class VerficationController extends Controller
                 'status_code' => 200,                
                 'msg'   => 'Invalid phone number',
                 'status'   => false,
-                'data'  => []
+                'data'  => (object) []
             ], 200);
         }
 
