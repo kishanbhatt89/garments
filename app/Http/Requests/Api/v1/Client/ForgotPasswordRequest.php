@@ -34,8 +34,8 @@ class ForgotPasswordRequest extends FormRequest
     {
         throw new HttpResponseException(response()->json([
             'status_code' => 200,
-            'success'   => false,
             'msg'   => 'Validation errors',
+            'status'   => false,            
             'data'      => $validator->errors()
         ], 200));
     }
