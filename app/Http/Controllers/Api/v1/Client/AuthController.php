@@ -70,38 +70,39 @@ class AuthController extends Controller
     
             }
 
-            return response()->json([
-                'status_code' => 200,                
-                'msg'   => '',
-                'status'   => true,
-                'data'  => [
-                    'otp' => '000000',
-                    'token' => $token
-                ]
-            ], 200);
-            
-
             // return response()->json([
             //     'status_code' => 200,                
             //     'msg'   => '',
             //     'status'   => true,
             //     'data'  => [
-            //         'first_name' => auth('client')->user()->first_name,
-            //         'last_name' => auth('client')->user()->last_name,
-            //         'email' => auth('client')->user()->email,
-            //         'phone' => auth('client')->user()->phone,
-            //         'is_store_setup' => auth('client')->user()->is_store_setup,
-            //         'address' => isset(auth('client')->user()->clientDetails->address) ? auth('client')->user()->clientDetails->address : '',
-            //         'store' => [
-            //             'name' => isset(auth('client')->user()->store->name) ? auth('client')->user()->store->name : '',
-            //             'type' => isset(auth('client')->user()->store->type) ? (auth('client')->user()->store->type == 1 ? 'Retailer' : 'Distributors') : '',
-            //             'address' => isset(auth('client')->user()->store->address) ? auth('client')->user()->store->address : '',
-            //             'description' => isset(auth('client')->user()->store->description) ? auth('client')->user()->store->description : '',
-            //             'city' => isset(auth('client')->user()->store->city) ? auth('client')->user()->store->city : '',
-            //             'state' => isset(auth('client')->user()->store->state) ? auth('client')->user()->store->state->name : ''
-            //         ]
+            //         'otp' => '000000',
+            //         'token' => $token
             //     ]
             // ], 200);
+            
+
+            return response()->json([
+                'status_code' => 200,                
+                'msg'   => '',
+                'status'   => true,
+                'data'  => [
+                    'token' => $token,
+                    'first_name' => auth('client')->user()->first_name,
+                    'last_name' => auth('client')->user()->last_name,
+                    'email' => auth('client')->user()->email,
+                    'phone' => auth('client')->user()->phone,
+                    'is_store_setup' => auth('client')->user()->is_store_setup,
+                    'address' => isset(auth('client')->user()->clientDetails->address) ? auth('client')->user()->clientDetails->address : '',
+                    'store' => [
+                        'name' => isset(auth('client')->user()->store->name) ? auth('client')->user()->store->name : '',
+                        'type' => isset(auth('client')->user()->store->type) ? (auth('client')->user()->store->type == 1 ? 'Retailer' : 'Distributors') : '',
+                        'address' => isset(auth('client')->user()->store->address) ? auth('client')->user()->store->address : '',
+                        'description' => isset(auth('client')->user()->store->description) ? auth('client')->user()->store->description : '',
+                        'city' => isset(auth('client')->user()->store->city) ? auth('client')->user()->store->city : '',
+                        'state' => isset(auth('client')->user()->store->state) ? auth('client')->user()->store->state->name : ''
+                    ]
+                ]
+            ], 200);
 
         }        
 
