@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\CityController;
 use App\Http\Controllers\Admin\ClientController;
 use Illuminate\Support\Facades\Route;
@@ -99,6 +100,14 @@ Route::middleware(['auth','role:admin|employee'])->name('admin.')->prefix('admin
     Route::post('/cities', [CityController::class, 'store'])->name('cities.store');
     Route::put('/cities/{city}', [CityController::class, 'update'])->name('cities.update');
     Route::delete('cities/{city}', [CityController::class, 'destroy'])->name('cities.destroy');
+
+    Route::delete('categories/destroyMultiple', [CategoryController::class, 'destroyMultiple'])->name('categories.destroyMultiple');
+    Route::get('/categories/{category}/details', [CategoryController::class, 'show'])->name('categories.show');
+    Route::get('/categories/table', [CategoryController::class, 'table'])->name('categories.table');
+    Route::get('/categories', [CategoryController::class, 'index'])->name('categories.index');    
+    Route::post('/categories', [CategoryController::class, 'store'])->name('categories.store');
+    Route::put('/categories/{category}', [CategoryController::class, 'update'])->name('categories.update');
+    Route::delete('categories/{category}', [CategoryController::class, 'destroy'])->name('categories.destroy');
 
     Route::delete('designations/destroyMultiple', [DesignationController::class, 'destroyMultiple'])->name('designations.destroyMultiple');
     Route::get('/designations/{designation}/details', [DesignationController::class, 'show'])->name('designations.show');
