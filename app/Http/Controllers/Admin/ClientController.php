@@ -174,14 +174,14 @@ class ClientController extends Controller
         $searchValue = $search_arr['value']; // Search value
 
          // Total records
-        $totalRecords = User::select('count(*) as allcount')->whereHas('roles', function($q){$q->whereNotIn('roles.name', ['admin','employee']);})->count();
-        $totalRecordswithFilter = User::select('count(*) as allcount')->whereHas('roles', function($q){$q->whereNotIn('roles.name', ['admin','employee']);})->where('name', 'like', '%' .$searchValue . '%')->count();
+         $totalRecords = Client::select('count(*) as allcount')->count();
+         $totalRecordswithFilter = Client::select('count(*) as allcount')->where('first_name', 'like', '%' .$searchValue . '%')->orWhere('last_name', 'like', '%' .$searchValue . '%')->count();
 
         // Fetch records
-        $records = User::orderBy($columnName,$columnSortOrder)
-        ->where('users.name', 'like', '%' .$searchValue . '%')
-        ->whereHas('roles', function($q){$q->whereNotIn('roles.name', ['admin','employee']);})
-        ->select('users.*')
+        $records = Client::orderBy($columnName,$columnSortOrder)
+        ->where('clients.first_name', 'like', '%' .$searchValue . '%')        
+        ->orWhere('clients.last_name', 'like', '%' .$searchValue . '%')        
+        ->select('clients.*')
         ->skip($start)
         ->take($rowperpage)
         ->get();
@@ -189,26 +189,23 @@ class ClientController extends Controller
         $data_arr = array();
 
         foreach($records as $record){
-            if (!$record->getRoleNames()->contains('admin', 'employee')) {
-                $id = $record->id;
-                $name = $record->name;
-                $email = $record->email;
-                $mobile = $record->clientDetails->mobile;
-                $status = ($record->status == 0) ? '<span class="badge badge-light-success">Active</span>' : '<span class="badge badge-light-danger">Blocked</span>';                                
-                $created_at = $record->created_at->diffForHumans();                
-
-                $data_arr[] = array(
-                    "id" => $id,
-                    "name" => $name,
-                    "email" => $email,
-                    "mobile" => $mobile,
-                    "status" => $status,                                        
-                    "created_at" => $created_at                    
-                  );
-            }                        
-    
             
-         }
+            $id = $record->id;
+            $first_name = $record->first_name;            
+            $last_name = $record->last_name;            
+            $email = $record->email;
+            $phone = $record->phone;            
+            $created_at = $record->created_at->diffForHumans();                
+
+            $data_arr[] = array(
+                "id" => $id,
+                "first_name" => $first_name,
+                "last_name" => $last_name,
+                "email" => $email,
+                "phone" => $phone,                                       
+                "created_at" => $created_at                    
+            );                        
+        }
     
          $response = array(
             //"draw" => intval($draw),

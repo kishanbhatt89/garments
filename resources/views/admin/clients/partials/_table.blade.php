@@ -9,10 +9,10 @@
                     <input class="form-check-input" type="checkbox" data-kt-check="true" data-kt-check-target="#kt_datatable_module .form-check-input" value="1"/>
                 </div>
             </th>
-            <th>Name</th>
+            <th>First Name</th>
+            <th>Last Name</th>
             <th>Email</th>
-            <th>Mobile</th>
-            <th>Status</th>
+            <th>Mobile</th>            
             <th>Created At</th>                                            
             <th class="text-end">Actions</th>
 

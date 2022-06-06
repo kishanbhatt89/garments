@@ -28,10 +28,10 @@ let KTDatatablesServerSide = function () {
 
             columns: [
                 { data: 'id' },
-                { data: 'name' },
+                { data: 'first_name' },
+                { data: 'last_name' },
                 { data: 'email' },  
-                { data: 'mobile' },              
-                { data: 'status' },              
+                { data: 'phone' },                                         
                 { data: 'created_at' },                
                 { data: null },
             ],
@@ -52,7 +52,7 @@ let KTDatatablesServerSide = function () {
                     render: function (data, type, row) {
                         return data;
                     }
-                },
+                },                
                 {
                     targets: 2,
                     render: function (data, type, row) {
@@ -68,13 +68,13 @@ let KTDatatablesServerSide = function () {
                 {
                     targets: 4,
                     render: function (data, type, row) {
-                        return `${data}`;                                                
+                        return data;
                     }
                 },
                 {
                     targets: 5,
-                    render: function (data, type, row) {                        
-                        return data;
+                    render: function (data, type, row) {
+                        return `${data}`;                                                
                     }
                 },                                
                 {
