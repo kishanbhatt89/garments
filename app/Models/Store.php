@@ -21,4 +21,9 @@ class Store extends Model
         return $this->belongsTo(State::class);
     }
 
+    public function type()
+    {
+        return $this->hasOne(Type::class);
+    }
+
 }

@@ -10,7 +10,7 @@ use App\Http\Controllers\Admin\GstProfileController;
 use App\Http\Controllers\Admin\PermissionController;
 use App\Http\Controllers\Admin\PlanController;
 use App\Http\Controllers\Admin\RoleController;
-use App\Http\Controllers\Admin\SettingController;
+use App\Http\Controllers\Admin\TypeController;
 use App\Http\Controllers\Admin\StateController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
@@ -108,6 +108,14 @@ Route::middleware(['auth','role:admin|employee'])->name('admin.')->prefix('admin
     Route::post('/categories', [CategoryController::class, 'store'])->name('categories.store');
     Route::put('/categories/{category}', [CategoryController::class, 'update'])->name('categories.update');
     Route::delete('categories/{category}', [CategoryController::class, 'destroy'])->name('categories.destroy');
+
+    Route::delete('types/destroyMultiple', [TypeController::class, 'destroyMultiple'])->name('types.destroyMultiple');
+    Route::get('/types/{type}/details', [TypeController::class, 'show'])->name('types.show');
+    Route::get('/types/table', [TypeController::class, 'table'])->name('types.table');
+    Route::get('/types', [TypeController::class, 'index'])->name('types.index');    
+    Route::post('/types', [TypeController::class, 'store'])->name('types.store');
+    Route::put('/types/{type}', [TypeController::class, 'update'])->name('types.update');
+    Route::delete('types/{type}', [TypeController::class, 'destroy'])->name('types.destroy');
 
     Route::delete('designations/destroyMultiple', [DesignationController::class, 'destroyMultiple'])->name('designations.destroyMultiple');
     Route::get('/designations/{designation}/details', [DesignationController::class, 'show'])->name('designations.show');
