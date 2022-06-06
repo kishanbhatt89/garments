@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\v1\AuthController as AuthController;
 use App\Http\Controllers\Api\v1\Client\AuthController as ClientAuthController;
 use App\Http\Controllers\Api\v1\Client\StateController as ClientStateController;
 use App\Http\Controllers\Api\v1\Client\StoreController;
+use App\Http\Controllers\Api\v1\Client\TypeController;
 use App\Http\Controllers\Api\v1\Client\VerficationController as ClientVerificationController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -56,6 +57,7 @@ Route::group(['prefix' => 'v1/client','middleware' => ['assign.guard:client']],f
     // Route::delete('store/{store}/delete', [StoreController::class, 'destroy'])->middleware(['jwt.auth','is_client_sms_verified']);
 
     Route::get('states', [ClientStateController::class, 'index'])->middleware(['jwt.auth']);
+    Route::get('types', [TypeController::class, 'index'])->middleware(['jwt.auth']);
 
 });
 
