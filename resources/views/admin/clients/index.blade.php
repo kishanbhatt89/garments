@@ -44,7 +44,7 @@
         
     </div>
 
-    @include('admin.clients.partials._add')
+    <!-- ADD File -->
 
     <div class="modal fade" id="kt_modal_edit" tabindex="-1" aria-hidden="true" aria-label="Close">
     </div>

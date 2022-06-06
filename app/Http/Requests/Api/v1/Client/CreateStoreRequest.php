@@ -27,7 +27,7 @@ class CreateStoreRequest extends FormRequest
     {
         return [
             'name' => 'required|string|unique:stores',
-            'type' => 'required|integer',
+            'type' => 'required|integer|exists:types,id',
             'description' => 'nullable|string',
             'address' => 'required|string',
             'city' => 'required|string',

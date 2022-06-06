@@ -30,9 +30,10 @@ class StoreController extends Controller
 
         auth('client')->user()->save();
         
-        $data = $request->except('state');
+        $data = $request->except(['state','type']);
         
         $data['state_id'] = $request->state;
+        $data['type_id'] = $request->type;
 
         $store = auth('client')->user()->store()->create($data);
 

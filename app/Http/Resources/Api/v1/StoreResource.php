@@ -20,7 +20,7 @@ class StoreResource extends JsonResource
             'status' => true,
             'data' => [                
                 'name' => $this->name,
-                'type' => $this->type == 1 ? 'Retailer' : 'Distributor',
+                'type' => $this->type->name,
                 'description' => $this->description,
                 'address' => $this->address,
                 'city' => $this->city,

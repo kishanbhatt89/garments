@@ -22,5 +22,6 @@ class DatabaseSeeder extends Seeder
         $this->call(StateSeeder::class);
         $this->call(CitySeeder::class);
         $this->call(DesignationSeeder::class);
+        $this->call(TypeSeeder::class);
     }
 }

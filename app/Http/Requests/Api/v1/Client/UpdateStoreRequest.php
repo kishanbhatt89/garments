@@ -27,9 +27,14 @@ class UpdateStoreRequest extends FormRequest
     {
         return [
             'name' => 'sometimes|unique:stores,name,'.$this->id,
-            'address' => 'sometimes',
-            'email' => 'sometimes|email|unique:stores,email,'.$this->id,
-            'phone' => 'sometimes',
+            'type' => 'required|integer|exists:types,id',
+            'description' => 'nullable|string',
+            'address' => 'required|string',
+            'city' => 'required|string',
+            'state' => 'required|integer|exists:states,id',
+            'zipcode' => 'required|string',
+            'gst' => 'nullable|string',                        
+            'phone' => 'sometimes'
         ];
     }
 

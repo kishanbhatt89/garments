@@ -51,43 +51,7 @@
                         
                     </div>                                     
                     
-                    <div class="fv-row mb-7">
-                        
-                        <label class="fs-5 fw-bolder form-label mb-2">
-                            <span class="required">State</span>
-                        </label>
-
-                        <select class="form-select form-control form-select-solid" data-allow-clear="true" name="states_id" id="client_states_id" data-control="select2" data-placeholder="Select a state">
-                            <option></option>
-                            @foreach ($states as $state)
-                                <option value="{{ $state->id }}" @if($user->state->id == $state->id) selected @endif>{{ $state->name }}</option>    
-                            @endforeach                                                    
-                        </select>                                            
-                        
-                        <span class="invalid-feedback d-none client_state-error" role="alert">
-                            <strong></strong>
-                        </span>
-                        
-                    </div>
-
-                    <div class="fv-row mb-7">
-                        
-                        <label class="fs-5 fw-bolder form-label mb-2">
-                            <span class="required">City</span>
-                        </label>
-
-                        <select class="form-select form-control form-select-solid" data-allow-clear="true" name="cities_id" id="client_cities_id" data-control="select2" data-placeholder="Select a city">
-                            <option></option>
-                            @foreach ($cities as $city)
-                                <option value="{{ $city->id }}" @if($user->city->id == $city->id) selected @endif>{{ $city->name }}</option>    
-                            @endforeach                                                    
-                        </select>                                            
-                        
-                        <span class="invalid-feedback d-none client_city-error" role="alert">
-                            <strong></strong>
-                        </span>
-                        
-                    </div>            
+                                
                     
                     <div class="fv-row mb-7">
                         
