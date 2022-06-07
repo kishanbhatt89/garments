@@ -22,6 +22,7 @@ return new class extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->timestamp('sms_verified_at')->nullable();
             $table->string('password');  
+            $table->boolean('is_active')->default(true);
             $table->boolean('is_store_setup')->default(false);          
             $table->rememberToken();
             $table->timestamps();

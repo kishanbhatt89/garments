@@ -20,53 +20,43 @@
 
                                 <tr>
                                     <td>Name</td>
-                                    <td>{{ $user->name ?? '' }}</td>                                    
+                                    <td>{{ ($client->first_name || $client->last_name) ? $client->first_name.' '.$client->last_name  : '' }}</td>                                    
                                 </tr>
                                 
                                 <tr>
                                     <td>Email</td>
-                                    <td>{{ $user->email ?? '' }}</td>                                    
+                                    <td>{{ $client->email ?? '' }}</td>                                    
                                 </tr>
 
                                 <tr>
                                     <td>Active/Block</td>
                                     <td>
-                                        @if ($user->is_active == 1)
+                                        @if ($client->is_active == 1)
                                             <span class="badge badge-light-success">Active</span>
                                         @else
                                             <span class="badge badge-light-danger">Block</span>
                                         @endif
                                     <td>                                    
-                                </tr>
+                                </tr>                                
 
                                 <tr>
-                                    <td>State</td>
-                                    <td>{{ $user->state->name ?? '' }}</td>                                    
-                                </tr>
-
-                                <tr>
-                                    <td>City</td>
-                                    <td>{{ $user->city->name ?? '' }}</td>                                    
-                                </tr>
-
-                                <tr>
-                                    <td>Mobile</td>
-                                    <td>{{ $user->clientDetails->mobile ?? '' }}</td>                                    
+                                    <td>Phone</td>
+                                    <td>{{ $client->phone ?? '' }}</td>                                    
                                 </tr>
 
                                 <tr>
                                     <td>Address</td>
-                                    <td>{{ $user->clientDetails->address ?? '' }}</td>                                    
+                                    <td>{{ $client->clientDetails->address ?? '' }}</td>                                    
                                 </tr>
 
                                 <tr>
                                     <td>Created At</td>
-                                    <td>{{ $user->created_at->diffForHumans() ?? '' }}</td>                                    
+                                    <td>{{ $client->created_at->diffForHumans() ?? '' }}</td>                                    
                                 </tr>
 
                                 <tr>
                                     <td>Updated At</td>
-                                    <td>{{ $user->updated_at->diffForHumans() ?? '' }}</td>                                    
+                                    <td>{{ $client->updated_at->diffForHumans() ?? '' }}</td>                                    
                                 </tr>
 
                                 <tr>

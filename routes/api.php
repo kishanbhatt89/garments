@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\StateController;
 use App\Http\Controllers\Api\v1\AuthController as AuthController;
 use App\Http\Controllers\Api\v1\Client\AuthController as ClientAuthController;
+use App\Http\Controllers\Api\v1\Client\CategoryController;
 use App\Http\Controllers\Api\v1\Client\StateController as ClientStateController;
 use App\Http\Controllers\Api\v1\Client\StoreController;
 use App\Http\Controllers\Api\v1\Client\TypeController;
@@ -50,7 +51,7 @@ Route::group(['prefix' => 'v1/client','middleware' => ['assign.guard:client']],f
     Route::post('forgot-password', [ClientVerificationController::class, 'forgotPassword'])->name('client.forgot-password');
 
     Route::post('login', [ClientAuthController::class, 'login']);
-    Route::post('logout', [ClientAuthController::class, 'logout'])->middleware(['jwt.auth']);
+    Route::post('logout', [ClientAuthController::class, 'logout'])->middleware(['jwt.auth',]);
 
     Route::post('store/save', [StoreController::class, 'store'])->middleware(['jwt.auth', 'is_client_sms_verified']);
     // Route::patch('store/{store}/update', [StoreController::class, 'update'])->middleware(['jwt.auth','is_client_sms_verified']);
@@ -58,6 +59,7 @@ Route::group(['prefix' => 'v1/client','middleware' => ['assign.guard:client']],f
 
     Route::get('states', [ClientStateController::class, 'index'])->middleware(['jwt.auth']);
     Route::get('types', [TypeController::class, 'index'])->middleware(['jwt.auth']);
+    Route::get('categories', [CategoryController::class, 'index'])->middleware(['jwt.auth']);
 
 });
 

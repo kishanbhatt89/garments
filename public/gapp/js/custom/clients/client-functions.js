@@ -1,19 +1,23 @@
-function edit(id)
+function changeStatus(id)
 {
     
     $.ajax({
 
-        url: APP_URL+"/admin/clients/"+id+"/details",
+        url: APP_URL+"/admin/clients/"+id+"/updateStatus",
         type: 'GET',
         data: {id:id},
         dataType: 'json',
         //processData: false,
         
         success: function(res) {            
-           let data = res.data; 
            
-            $('#kt_modal_edit').html(data);
-            $('#kt_modal_edit').modal('show');              
+           
+           toastr.success(res.msg);
+
+           $('#kt_datatable_module').DataTable().ajax.reload();            
+
+            location.reload();
+            
         }
 
     });

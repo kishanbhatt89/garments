@@ -88,8 +88,7 @@ class AuthController extends Controller
             //         'token' => $token
             //     ]
             // ], 200);
-            
-
+                        
             return response()->json([
                 'status_code' => 200,                
                 'msg'   => '',
@@ -104,7 +103,7 @@ class AuthController extends Controller
                     'address' => isset(auth('client')->user()->clientDetails->address) ? auth('client')->user()->clientDetails->address : '',
                     'store' => [
                         'name' => isset(auth('client')->user()->store->name) ? auth('client')->user()->store->name : '',
-                        //'type' => isset(auth('client')->user()->store->type) ? (auth('client')->user()->store->type == 1 ? 'Retailer' : 'Distributors') : '',
+                        'type' => isset(auth('client')->user()->store->types->name) ? (auth('client')->user()->store->types->name) : '',
                         'address' => isset(auth('client')->user()->store->address) ? auth('client')->user()->store->address : '',
                         'description' => isset(auth('client')->user()->store->description) ? auth('client')->user()->store->description : '',
                         'city' => isset(auth('client')->user()->store->city) ? auth('client')->user()->store->city : '',

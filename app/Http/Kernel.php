@@ -70,5 +70,6 @@ class Kernel extends HttpKernel
         'assign.guard' => \App\Http\Middleware\AssignGuard::class,
         'is_client_email_verified' => \App\Http\Middleware\ClientEmailVerified::class,
         'is_client_sms_verified' => \App\Http\Middleware\ClientSmsVerified::class,
+        'is_client_active' => \App\Http\Middleware\ClientIsActive::class
     ];
 }

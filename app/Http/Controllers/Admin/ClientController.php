@@ -194,7 +194,8 @@ class ClientController extends Controller
             $first_name = $record->first_name;            
             $last_name = $record->last_name;            
             $email = $record->email;
-            $phone = $record->phone;            
+            $phone = $record->phone;  
+            $status = ($record->is_active == 1) ? 'Active' : 'Block';          
             $created_at = $record->created_at->diffForHumans();                
 
             $data_arr[] = array(
@@ -202,7 +203,8 @@ class ClientController extends Controller
                 "first_name" => $first_name,
                 "last_name" => $last_name,
                 "email" => $email,
-                "phone" => $phone,                                       
+                "phone" => $phone,       
+                "is_active" => $status,                                
                 "created_at" => $created_at                    
             );                        
         }
@@ -227,9 +229,22 @@ class ClientController extends Controller
         //return response()->json($users);
     }
 
-    public function details(User $user)
+    public function details($id)
     {
-        return view('admin.clients.partials._details', compact('user'));
+        $client = Client::find($id);
+        return view('admin.clients.partials._details', compact('client'));
+    }
+
+    public function updateStatus($id)
+    {
+        $client = Client::where('id', $id)->first();
+        $client->is_active = !$client->is_active;
+
+        if ($client->save()) {
+            return response()->json(['msg'=> 'Client status updated successfully!'], 200);
+        }
+
+        return response()->json(['msg'=> 'Error in updating client status'], 400);
     }
 
 }

@@ -63,6 +63,7 @@ Route::middleware(['auth','role:admin|employee'])->name('admin.')->prefix('admin
     Route::get('client/details/{user}', [ClientController::class, 'details'])->name('clients.details');
     Route::delete('clients/destroyMultiple', [ClientController::class, 'destroyMultiple'])->name('clients.destroyMultiple');
     Route::get('/clients/{user}/details', [ClientController::class, 'show'])->name('clients.show');
+    Route::get('/clients/{user}/updateStatus', [ClientController::class, 'updateStatus'])->name('clients.updateStatus');
     Route::get('/clients/table', [ClientController::class, 'table'])->name('clients.table');
     Route::get('/clients', [ClientController::class, 'index'])->name('clients.index');    
     Route::post('/clients', [ClientController::class, 'store'])->name('clients.store');

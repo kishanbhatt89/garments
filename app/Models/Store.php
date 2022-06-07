@@ -21,9 +21,9 @@ class Store extends Model
         return $this->belongsTo(State::class);
     }
 
-    public function type()
+    public function types()
     {
-        return $this->belongsTo(Type::class);
+        return $this->belongsTo(Type::class,'type_id');
     }
 
 }

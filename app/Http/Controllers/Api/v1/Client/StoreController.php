@@ -33,10 +33,10 @@ class StoreController extends Controller
         $data = $request->except(['state','type']);
         
         $data['state_id'] = $request->state;
-        $data['type_id'] = $request->type;
+        $data['type_id'] = intval($request->type);
 
         $store = auth('client')->user()->store()->create($data);
-
+        
         if ($store) {
             return new StoreResource($store);
         } else {
