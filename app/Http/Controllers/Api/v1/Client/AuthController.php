@@ -57,6 +57,15 @@ class AuthController extends Controller
         
         if ($client) {            
 
+            // if ($client->is_active == 0) {
+            //     return response()->json([
+            //         'status_code' => 200,
+            //         'msg'   => 'Your account is blocked please contact administrator',
+            //         'status'   => false,                    
+            //         'data'  => (object) []
+            //     ], 200);
+            // }
+
             $credentials = array_merge($request->only('password'), ['email' => $client->email]);
             
             if (!$token = auth()->guard('client')->attempt($credentials)) {
@@ -95,7 +104,7 @@ class AuthController extends Controller
                     'address' => isset(auth('client')->user()->clientDetails->address) ? auth('client')->user()->clientDetails->address : '',
                     'store' => [
                         'name' => isset(auth('client')->user()->store->name) ? auth('client')->user()->store->name : '',
-                        'type' => isset(auth('client')->user()->store->type) ? (auth('client')->user()->store->type == 1 ? 'Retailer' : 'Distributors') : '',
+                        //'type' => isset(auth('client')->user()->store->type) ? (auth('client')->user()->store->type == 1 ? 'Retailer' : 'Distributors') : '',
                         'address' => isset(auth('client')->user()->store->address) ? auth('client')->user()->store->address : '',
                         'description' => isset(auth('client')->user()->store->description) ? auth('client')->user()->store->description : '',
                         'city' => isset(auth('client')->user()->store->city) ? auth('client')->user()->store->city : '',
