@@ -6,8 +6,13 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\v1\Client\LoginRequest;
 use App\Http\Requests\Api\v1\Client\LogoutRequest;
 use App\Http\Requests\Api\v1\Client\RegisterRequest;
+use App\Http\Requests\Api\v1\Client\SessionRequest;
 use App\Models\Client;
+use App\Models\ClientToken;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Jenssegers\Agent\Agent;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AuthController extends Controller
 {
@@ -78,6 +83,31 @@ class AuthController extends Controller
                 ], 200);
     
             }
+
+            // $client->last_login_at = now();
+            // $client->save();
+
+            // $tokensCount = ClientToken::where('client_id', $client->id)->count();
+
+            // if ($tokensCount == 3) {
+
+            //     ClientToken::inRandomOrder()->first()->delete();
+
+            //     $agent = new Agent();
+
+            //     $device_type = '';
+
+            //     if ($agent->isMobile()): $device_type = 'Mobile'; endif;
+            //     if ($agent->isDesktop()): $device_type = 'Desktop'; endif;
+            //     if ($agent->isTablet()): $device_type = 'Tablet'; endif;
+
+            //     $client->tokens()->create([
+            //         'token' => $token,
+            //         'device' => $agent->device(),
+            //         'device_type' => $device_type
+            //     ]);
+            // }            
+            
 
             // return response()->json([
             //     'status_code' => 200,                
@@ -161,10 +191,85 @@ class AuthController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function refresh()
+    public function refresh(Request $request)
     {
-        return $this->respondWithToken(auth('client')->refresh());
+        //return $this->respondWithToken(auth('client')->refresh());
+
+        if($request->bearerToken()) {
+
+            $client = JWTAuth::parseToken()->authenticate();
+
+            if ($client) {
+                return response()->json([
+                    'status_code' => 200,
+                    'msg'   => '',
+                    'status'   => true,                    
+                    'data'  => [
+                        'token' => auth('client')->refresh()
+                    ]
+                ], 200);
+            }
+
+            return response()->json([
+                'status_code' => 200,
+                'msg'   => 'Invalid Token.',
+                'status'   => false,                    
+                'data'  => (object) []
+            ], 200);
+            
+
+        } else {
+            
+            return response()->json([
+                'status_code' => 200,
+                'msg'   => 'Token not found.',
+                'status'   => false,                    
+                'data'  => (object) []
+            ], 200);
+
+        }
+
+        
     }
 
+    public function session(Request $request)
+    {
+        if($request->bearerToken()) {
+
+            $client = JWTAuth::parseToken()->authenticate();
+
+            return response()->json([
+                'status_code' => 200,                
+                'msg'   => '',
+                'status'   => true,
+                'data'  => [                
+                    'first_name' => $client->first_name,
+                    'last_name' => $client->last_name,
+                    'email' => $client->email,
+                    'phone' => $client->phone,
+                    'is_store_setup' => $client->is_store_setup,
+                    'address' => isset($client->clientDetails->address) ? $client->clientDetails->address : '',
+                    'store' => [
+                        'name' => isset($client->store->name) ? $client->store->name : '',
+                        'type' => isset($client->store->types->name) ? ($client->store->types->name) : '',
+                        'address' => isset($client->store->address) ? $client->store->address : '',
+                        'description' => isset($client->store->description) ? $client->store->description : '',
+                        'city' => isset($client->store->city) ? $client->store->city : '',
+                        'state' => isset($client->store->state) ? $client->store->state->name : ''
+                    ]
+                ]
+            ], 200);
+
+        } else {
+            return response()->json([
+                'status_code' => 200,
+                'msg'   => 'Invalid Token.',
+                'status'   => false,                    
+                'data'  => (object) []
+            ], 200);
+        }
+
+        
+    }
 
 }

@@ -61,11 +61,17 @@ Route::group(['prefix' => 'v1/client','middleware' => ['assign.guard:client']],f
     Route::get('types', [TypeController::class, 'index'])->middleware(['jwt.auth']);
     Route::get('categories', [CategoryController::class, 'index'])->middleware(['jwt.auth']);
 
-});
+    Route::get('session', [ClientAuthController::class, 'session'])->middleware(['jwt.auth']);
+    Route::get('refresh', [ClientAuthController::class, 'refresh'])->middleware(['jwt.auth']);
 
-Route::group(['prefix' => 'v1/customer','middleware' => ['assign.guard:customer','jwt.auth']],function ()
+});
+use Jenssegers\Agent\Agent;
+
+Route::group(['prefix' => 'v1/customer','middleware' => []],function ()
 {
 	Route::get('/demo', function(){
+        // $agent = new Agent();
+        // dd($agent,$agent->isMobile(),$agent->device());
         dd(Auth::guard(), 'Customer');
     });		
 });

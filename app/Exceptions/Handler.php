@@ -59,7 +59,7 @@ class Handler extends ExceptionHandler
                     'status_code' => 200,                
                     'msg'   => 'Record not found.',
                     'status'   => false,
-                    'data'  => []
+                    'data'  => (object) []
                 ], 200);
             }
                         
@@ -71,7 +71,7 @@ class Handler extends ExceptionHandler
                     'status_code' => 200,                
                     'msg'   => 'Unauthorized',
                     'status'   => false,
-                    'data'  => []
+                    'data'  => (object) []
                 ], 200);
             }
         });
@@ -80,9 +80,9 @@ class Handler extends ExceptionHandler
             if ($e instanceof UnauthorizedHttpException && $request->wantsJson()) {
                 return response()->json([
                     'status_code' => 200,                
-                    'msg'   => 'Token not found.',
+                    'msg'   => 'Invalid token or token not found.',
                     'status'   => false,
-                    'data'  => []
+                    'data'  => (object) []
                 ], 200);
             }
         });
@@ -93,7 +93,7 @@ class Handler extends ExceptionHandler
                     'status_code' => 200,                
                     'msg'   => 'Invalid token',
                     'status'   => false,
-                    'data'  => []
+                    'data'  => (object) []
                 ], 200);
             }
         });
