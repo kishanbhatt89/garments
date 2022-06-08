@@ -17,6 +17,6 @@ class CategoryController extends Controller
     public function index()
     {
         $categories = Category::select('id','name','slug')->where('parent_id',0)->get();        
-        return new CategoryResource($categories);
+        return (new CategoryResource($categories))->response()->setStatusCode(200);
     }
 }

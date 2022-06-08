@@ -17,6 +17,6 @@ class TypeController extends Controller
     public function index()
     {
         $types = Type::select('id','name')->get();        
-        return new TypeResource($types);
+        return (new TypeResource($types))->response()->setStatusCode(200);
     }
 }

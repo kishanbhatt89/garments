@@ -14,8 +14,7 @@ class CategoryResource extends ResourceCollection
      */
     public function toArray($request)
     {
-        return [
-            'status_code' => 200,
+        return [            
             'msg' => '',
             'status' => true,
             'data' => $this->collection->transform(function($page){

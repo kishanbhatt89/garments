@@ -56,57 +56,52 @@ class Handler extends ExceptionHandler
         $this->renderable(function (NotFoundHttpException $e, $request) {
             
             if ($e instanceof NotFoundHttpException && $request->wantsJson()) {
-                return response()->json([
-                    'status_code' => 200,                
+                return response()->json([                    
                     'msg'   => 'Record not found.',
                     'status'   => false,
                     'data'  => (object) []
-                ], 200);
+                ], 404);
             }
                         
         });
 
         $this->renderable(function (AccessDeniedHttpException $e, $request) {
             if ($e instanceof AccessDeniedHttpException && $request->wantsJson()) {
-                return response()->json([
-                    'status_code' => 200,                
+                return response()->json([                    
                     'msg'   => 'Unauthorized',
                     'status'   => false,
                     'data'  => (object) []
-                ], 200);
+                ], 401);
             }
         });
 
         $this->renderable(function (UnauthorizedHttpException $e, $request) {
             if ($e instanceof UnauthorizedHttpException && $request->wantsJson()) {
-                return response()->json([
-                    'status_code' => 200,                
+                return response()->json([                           
                     'msg'   => 'Invalid token or token not found.',
                     'status'   => false,
                     'data'  => (object) []
-                ], 200);
+                ], 401);
             }
         });
 
         $this->renderable(function (TokenInvalidException $e, $request) {
             if ($e instanceof TokenInvalidException && $request->wantsJson()) {                
-                return response()->json([
-                    'status_code' => 200,                
+                return response()->json([                              
                     'msg'   => 'Invalid token',
                     'status'   => false,
                     'data'  => (object) []
-                ], 200);
+                ], 401);
             }
         });
 
         $this->renderable(function (TokenBlacklistedException $e, $request) {
             if ($e instanceof TokenBlacklistedException && $request->wantsJson()) {                
-                return response()->json([
-                    'status_code' => 200,                
+                return response()->json([                                 
                     'msg'   => 'Token expired',
                     'status'   => false,
                     'data'  => (object) []
-                ], 200);
+                ], 401);
             }
         });        
         

@@ -66,12 +66,11 @@ class VerficationController extends Controller
 
         if (!$client) 
         {
-            return response()->json([
-                'status_code' => 200,                
+            return response()->json([                
                 'msg'   => 'Invalid token',
                 'status'   => false,
                 'data'  => (object) []
-            ], 200);
+            ], 401);
         }        
 
         if ($otp == '000000') 
@@ -80,8 +79,7 @@ class VerficationController extends Controller
             $client->sms_verified_at = now();
             $client->save();
 
-            return response()->json([
-                'status_code' => 200,                
+            return response()->json([                                
                 'msg'   => 'OTP verified successfully.',
                 'status'   => true,
                 'data'  => [
@@ -94,12 +92,11 @@ class VerficationController extends Controller
 
         } 
 
-        return response()->json([
-            'status_code' => 200,                
+        return response()->json([                         
             'msg'   => 'Invalid otp',
             'status'   => false,
             'data'  => (object) []
-        ], 200);
+        ], 400);
     }
 
     public function resetPasswordOtpVerfiy(OtpVerifyRequest $request)
@@ -111,19 +108,17 @@ class VerficationController extends Controller
 
         if (!$client) 
         {
-            return response()->json([
-                'status_code' => 200,                
+            return response()->json([                              
                 'msg'   => 'Invalid token',
                 'status'   => false,
                 'data'  => (object) []
-            ], 200);
+            ], 401);
         }        
 
         if ($otp == '000000') 
         {                        
 
-            return response()->json([
-                'status_code' => 200,                
+            return response()->json([                               
                 'msg'   => 'OTP verified successfully.',
                 'status'   => true,
                 'data'  => [
@@ -133,12 +128,11 @@ class VerficationController extends Controller
 
         } 
 
-        return response()->json([
-            'status_code' => 200,                
+        return response()->json([            
             'msg'   => 'Invalid otp',
             'status'   => false,
             'data'  => (object) []
-        ], 200);
+        ], 400);
     }
 
     public function resetPassword(ResetPasswordRequest $request)
@@ -150,19 +144,18 @@ class VerficationController extends Controller
 
         if (!$client) 
         {
-            return response()->json([
-                'status_code' => 200,                
+            return response()->json([                               
                 'msg'   => 'Invalid token',
                 'status'   => false,
                 'data'  => (object) []
-            ], 200);
+            ], 401);
         }        
 
         $client->password = bcrypt($password);
+        $client->last_password_change_at = now();
         $client->save();
 
-        return response()->json([
-            'status_code' => 200,                
+        return response()->json([                       
             'msg'   => 'Password changed successfully.',
             'status'   => true,
             'data'  => (object) []
@@ -174,20 +167,18 @@ class VerficationController extends Controller
         $client = Client::where('phone', $request->phone)->first();
 
         if (!$client) {
-            return response()->json([
-                'status_code' => 200,                
+            return response()->json([                              
                 'msg'   => 'Invalid phone number',
                 'status'   => false,
                 'data'  => (object) []
-            ], 200);
+            ], 400);
         }
 
         Auth::login($client);
 
         $token = auth('client')->refresh();
 
-        return response()->json([
-            'status_code' => 200,
+        return response()->json([            
             'msg' => '',
             'status' => true,
             'data' => [

@@ -14,8 +14,7 @@ class StoreResource extends JsonResource
      */
     public function toArray($request)
     {        
-        return [
-            'status_code' => 200,
+        return [            
             'msg' => 'Store created successfully!',
             'status' => true,
             'data' => [                

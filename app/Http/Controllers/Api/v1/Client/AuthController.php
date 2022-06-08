@@ -34,26 +34,24 @@ class AuthController extends Controller
 
             $token = auth()->guard('client')->attempt(request(['email', 'password']));
 
-            return response()->json([
-                'status_code' => 200,
+            return response()->json([                
                 'msg' => 'Registered successfully. OTP has been sent to your registered phone number.',
                 'status' => true,
                 'data' => [
                     'otp' => '000000',
                     'token' => $token
                 ]
-            ], 200);
+            ], 201);
 
         }
 
         // Send SMS Verification Code
 
-        return response()->json([
-            'status_code' => 200,
+        return response()->json([            
             'msg' => 'Error registering client',
             'status' => false,
             'data' => []
-        ], 200);
+        ], 400);
     }
 
     public function login(LoginRequest $request)
@@ -75,12 +73,11 @@ class AuthController extends Controller
             
             if (!$token = auth()->guard('client')->attempt($credentials)) {
 
-                return response()->json([
-                    'status_code' => 200,
+                return response()->json([                    
                     'msg'   => 'Invalid credentials',
                     'status'   => false,                    
                     'data'  => (object) []
-                ], 200);
+                ], 404);
     
             }
 
@@ -119,8 +116,7 @@ class AuthController extends Controller
             //     ]
             // ], 200);
                         
-            return response()->json([
-                'status_code' => 200,                
+            return response()->json([                             
                 'msg'   => '',
                 'status'   => true,
                 'data'  => [
@@ -144,12 +140,11 @@ class AuthController extends Controller
 
         }        
 
-        return response()->json([
-            'status_code' => 200,
+        return response()->json([            
             'msg'   => 'Invalid credentials',
             'status'   => false,                    
             'data'  => (object) []
-        ], 200);
+        ], 404);
     }
 
     /**
@@ -175,15 +170,24 @@ class AuthController extends Controller
      */
     public function logout(LogoutRequest $request)
     {        
-        if (!$request->bearerToken() || !auth('client')->check()) {
+        // if (!$request->bearerToken() || !auth('client')->check()) {
 
-            return response()->json(['message' => 'Token not found'], 200);
+        //     return response()->json([            
+        //         'msg'   => 'Invalid credentials',
+        //         'status'   => false,                    
+        //         'data'  => (object) []
+        //     ], 404);
+        //     return response()->json(['message' => 'Token not found'], 200);
 
-        }
+        // }
 
         auth('client')->logout();
 
-        return response()->json(['message' => 'Successfully logged out'], 200);
+        return response()->json([            
+            'msg'   => 'Logged Out',
+            'status'   => true,                    
+            'data'  => (object) []
+        ], 200);
     }
 
     /**
@@ -200,8 +204,7 @@ class AuthController extends Controller
             $client = JWTAuth::parseToken()->authenticate();
 
             if ($client) {
-                return response()->json([
-                    'status_code' => 200,
+                return response()->json([                    
                     'msg'   => '',
                     'status'   => true,                    
                     'data'  => [
@@ -210,22 +213,20 @@ class AuthController extends Controller
                 ], 200);
             }
 
-            return response()->json([
-                'status_code' => 200,
+            return response()->json([                
                 'msg'   => 'Invalid Token.',
                 'status'   => false,                    
                 'data'  => (object) []
-            ], 200);
+            ], 401);
             
 
         } else {
             
-            return response()->json([
-                'status_code' => 200,
+            return response()->json([                
                 'msg'   => 'Token not found.',
                 'status'   => false,                    
                 'data'  => (object) []
-            ], 200);
+            ], 400);
 
         }
 
@@ -238,8 +239,7 @@ class AuthController extends Controller
 
             $client = JWTAuth::parseToken()->authenticate();
 
-            return response()->json([
-                'status_code' => 200,                
+            return response()->json([                
                 'msg'   => '',
                 'status'   => true,
                 'data'  => [                
@@ -261,12 +261,11 @@ class AuthController extends Controller
             ], 200);
 
         } else {
-            return response()->json([
-                'status_code' => 200,
+            return response()->json([                
                 'msg'   => 'Invalid Token.',
                 'status'   => false,                    
                 'data'  => (object) []
-            ], 200);
+            ], 401);
         }
 
         
@@ -277,20 +276,18 @@ class AuthController extends Controller
         $client = JWTAuth::parseToken()->authenticate();
         
         if (auth('client')->invalidate(true)){
-            return response()->json([
-                'status_code' => 200,
+            return response()->json([                
                 'msg'   => 'Token invalidated.',
                 'status'   => true,
                 'data'  => (object) []
             ], 200);
         }
 
-        return response()->json([
-            'status_code' => 200,
+        return response()->json([            
             'msg'   => 'Invalid Token.',
             'status'   => false,                    
             'data'  => (object) []
-        ], 200);
+        ], 401);
     }
 
 }

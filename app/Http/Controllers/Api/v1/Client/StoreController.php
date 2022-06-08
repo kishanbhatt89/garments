@@ -21,7 +21,7 @@ class StoreController extends Controller
 
     public function show(Store $store)
     {                                    
-        return new StoreResource($store);        
+        return (new StoreResource($store))->response()->setStatusCode(200);        
     }
     
     public function store(CreateStoreRequest $request)
@@ -40,12 +40,11 @@ class StoreController extends Controller
         if ($store) {
             return new StoreResource($store);
         } else {
-            return response()->json([
-                'status_code' => 200,
+            return response()->json([                
                 'msg'   => 'Error in setting up store',
                 'status'   => false,                    
                 'data'  => (object) []
-            ], 200);
+            ], 400);
         }
 
     }

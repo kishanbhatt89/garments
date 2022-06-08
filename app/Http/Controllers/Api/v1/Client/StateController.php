@@ -18,6 +18,6 @@ class StateController extends Controller
     public function index()
     {
         $states = State::select('id','name')->get();        
-        return new StateResource($states);
+        return (new StateResource($states))->response()->setStatusCode(200);
     }
 }
