@@ -8,6 +8,7 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Throwable;
+use Tymon\JWTAuth\Exceptions\TokenBlacklistedException;
 use Tymon\JWTAuth\Exceptions\TokenInvalidException;
 
 class Handler extends ExceptionHandler
@@ -97,6 +98,17 @@ class Handler extends ExceptionHandler
                 ], 200);
             }
         });
+
+        $this->renderable(function (TokenBlacklistedException $e, $request) {
+            if ($e instanceof TokenBlacklistedException && $request->wantsJson()) {                
+                return response()->json([
+                    'status_code' => 200,                
+                    'msg'   => 'Token expired',
+                    'status'   => false,
+                    'data'  => (object) []
+                ], 200);
+            }
+        });        
         
         
     }

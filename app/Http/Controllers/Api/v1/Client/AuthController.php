@@ -272,4 +272,25 @@ class AuthController extends Controller
         
     }
 
+    public function invalidate(Request $request)
+    {
+        $client = JWTAuth::parseToken()->authenticate();
+        
+        if (auth('client')->invalidate(true)){
+            return response()->json([
+                'status_code' => 200,
+                'msg'   => 'Token invalidated.',
+                'status'   => true,
+                'data'  => (object) []
+            ], 200);
+        }
+
+        return response()->json([
+            'status_code' => 200,
+            'msg'   => 'Invalid Token.',
+            'status'   => false,                    
+            'data'  => (object) []
+        ], 200);
+    }
+
 }
