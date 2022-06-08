@@ -11,7 +11,7 @@ class CategoryController extends Controller
 {
     public function __construct() 
     {
-        $this->middleware(['auth:client','jwt.auth','is_client_active']);
+        $this->middleware(['jwt.auth','is_client_active']);
     }
 
     public function index()

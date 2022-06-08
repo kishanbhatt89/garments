@@ -12,7 +12,7 @@ class StateController extends Controller
 
     public function __construct() 
     {
-        $this->middleware(['auth:client','jwt.auth']);
+        $this->middleware(['jwt.auth']);
     }
 
     public function index()
