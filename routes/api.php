@@ -64,7 +64,7 @@ Route::group(['prefix' => 'v1/client','middleware' => ['assign.guard:client']],f
     Route::get('categories', [CategoryController::class, 'index'])->middleware(['jwt.auth']);
 
     Route::get('session', [ClientAuthController::class, 'session'])->middleware(['jwt.auth']);
-    Route::get('refresh', [ClientAuthController::class, 'refresh'])->middleware(['jwt.auth']);
+    Route::get('refresh', [ClientAuthController::class, 'refresh']);
 
     Route::get('invalidate/token', [ClientAuthController::class, 'invalidate'])->middleware(['jwt.auth']);    
 

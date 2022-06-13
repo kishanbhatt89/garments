@@ -195,20 +195,20 @@ class AuthController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
+    
     public function refresh(Request $request)
     {
-        //return $this->respondWithToken(auth('client')->refresh());
-
         if($request->bearerToken()) {
 
-            $client = JWTAuth::parseToken()->authenticate();
+            $current_token  = JWTAuth::getToken();
+            $token          = JWTAuth::refresh($current_token);            
 
-            if ($client) {
+            if ($token) {
                 return response()->json([                    
                     'msg'   => '',
                     'status'   => true,                    
                     'data'  => [
-                        'token' => auth('client')->refresh()
+                        'token' => $token
                     ]
                 ], 200);
             }
@@ -229,9 +229,9 @@ class AuthController extends Controller
             ], 400);
 
         }
-
         
     }
+    
 
     public function session(Request $request)
     {
