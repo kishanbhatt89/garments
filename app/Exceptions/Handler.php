@@ -9,6 +9,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Throwable;
 use Tymon\JWTAuth\Exceptions\TokenBlacklistedException;
+use Tymon\JWTAuth\Exceptions\TokenExpiredException;
 use Tymon\JWTAuth\Exceptions\TokenInvalidException;
 
 class Handler extends ExceptionHandler
@@ -60,12 +61,13 @@ class Handler extends ExceptionHandler
                     'msg'   => 'Record not found.',
                     'status'   => false,
                     'data'  => (object) []
-                ], 404);
+                ], 200);
             }
                         
         });
 
         $this->renderable(function (AccessDeniedHttpException $e, $request) {
+
             if ($e instanceof AccessDeniedHttpException && $request->wantsJson()) {
                 return response()->json([                    
                     'msg'   => 'Unauthorized',
@@ -73,9 +75,11 @@ class Handler extends ExceptionHandler
                     'data'  => (object) []
                 ], 401);
             }
+
         });
 
         $this->renderable(function (UnauthorizedHttpException $e, $request) {
+
             if ($e instanceof UnauthorizedHttpException && $request->wantsJson()) {
                 return response()->json([                           
                     'msg'   => 'Invalid token or token not found.',
@@ -83,12 +87,13 @@ class Handler extends ExceptionHandler
                     'data'  => (object) []
                 ], 401);
             }
+
         });
 
         $this->renderable(function (TokenInvalidException $e, $request) {
             if ($e instanceof TokenInvalidException && $request->wantsJson()) {                
                 return response()->json([                              
-                    'msg'   => 'Invalid token',
+                    'msg'   => 'Invalid token or token not found.',
                     'status'   => false,
                     'data'  => (object) []
                 ], 401);
@@ -104,6 +109,16 @@ class Handler extends ExceptionHandler
                 ], 401);
             }
         });        
+        
+        $this->renderable(function (TokenExpiredException $e, $request) {
+            if ($e instanceof TokenExpiredException && $request->wantsJson()) {                
+                return response()->json([                                 
+                    'msg'   => 'Token expired',
+                    'status'   => false,
+                    'data'  => (object) []
+                ], 401);
+            }
+        });
         
         
     }

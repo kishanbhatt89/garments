@@ -14,18 +14,20 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 class StoreController extends Controller
 {
 
-    public function __construct() 
-    {
-        $this->middleware(['jwt.auth']);
+    public function __construct() {
+
+        $this->middleware(['jwt.auth','is_client_active']);
+
     }    
 
-    public function show(Store $store)
-    {                                    
+    public function show(Store $store) {                                    
+
         return (new StoreResource($store))->response()->setStatusCode(200);        
+
     }
     
-    public function store(CreateStoreRequest $request)
-    {
+    public function store(CreateStoreRequest $request) {
+
         auth('client')->user()->is_store_setup = true;
 
         auth('client')->user()->save();
@@ -38,44 +40,19 @@ class StoreController extends Controller
         $store = auth('client')->user()->store()->create($data);
         
         if ($store) {
-            return new StoreResource($store);
+
+            return (new StoreResource($store))->response()->setStatusCode(200);
+
         } else {
+
             return response()->json([                
                 'msg'   => 'Error in setting up store',
                 'status'   => false,                    
                 'data'  => (object) []
-            ], 400);
+            ], 200);
+
         }
 
     }
-        
-    // public function update(UpdateStoreRequest $request, $id)
-    // {                                
-    //     $store = Store::find($id);
-
-    //     if (!$store) {
-    //         return response()->json(['msg'=> 'Store not found.'], 200);
-    //     }
-        
-    //     if ($store->update($request->all())) {
-    //         return new StoreResource($store);
-    //     } else {
-    //         return response()->json(['msg'=> 'Something went wrong'], 200);
-    //     }                
-    // }
-    
-    // public function destroy($id)
-    // {        
-    //     $store = Store::find($id);
-
-    //     if (!$store) {
-    //         return response()->json(['msg'=> 'Store not found.'], 200);
-    //     }
-        
-    //     if ($store->delete()) {
-    //         return response()->json(['msg'=> 'Store deleted successfully.'], 200);
-    //     } else {
-    //         return response()->json(['msg'=> 'Something went wrong'], 200);
-    //     }        
-    // }
+            
 }

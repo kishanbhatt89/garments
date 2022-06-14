@@ -13,6 +13,8 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 
 class VerficationController extends Controller
 {
+
+    /*
     public function emailVerify($client_id, Request $request) 
     {
         if (!$request->hasValidSignature()) 
@@ -29,7 +31,9 @@ class VerficationController extends Controller
     
         return response()->json(['msg' => 'Email verified successfully.'], 200);
     }
+    */
     
+    /*
     public function emailResend() 
     {
         
@@ -42,6 +46,7 @@ class VerficationController extends Controller
     
         return response()->json(["msg" => "Email verification link sent on your email id"], 200);
     }
+    */
 
     /*
     public function smsVerify($client_id, Request $request)
@@ -59,31 +64,41 @@ class VerficationController extends Controller
 
     public function otpVerfiy(OtpVerifyRequest $request)
     {
-        $otp = $request->otp;
-        $token = $request->token;
+        $otp = $request->otp;        
+
+        if (!$request->bearerToken()) {
+
+            return response()->json([                
+                'msg'   => 'Invalid token or token not found.',
+                'status'   => false,
+                'data'  => (object) []
+            ], 200);
+
+        }
 
         $client = JWTAuth::parseToken()->authenticate();        
 
-        if (!$client) 
-        {
+        if (!$client) {
+
             return response()->json([                
-                'msg'   => 'Invalid token',
+                'msg'   => 'Invalid token or token not found.',
                 'status'   => false,
                 'data'  => (object) []
-            ], 401);
+            ], 200);
+
         }        
 
-        if ($otp == '000000') 
-        {            
+        if ($otp == '000000') {            
 
             $client->sms_verified_at = now();
+
             $client->save();
 
             return response()->json([                                
                 'msg'   => 'OTP verified successfully.',
                 'status'   => true,
                 'data'  => [
-                    'token' => $token,
+                    //'token' => JWTAuth::getToken(),
                     'client' => $client, 
                     'clientDetails' => $client->clientDetails,
                     'store' => $client->store,
@@ -96,33 +111,42 @@ class VerficationController extends Controller
             'msg'   => 'Invalid otp',
             'status'   => false,
             'data'  => (object) []
-        ], 400);
+        ], 200);
     }
 
-    public function resetPasswordOtpVerfiy(OtpVerifyRequest $request)
-    {
+    public function resetPasswordOtpVerfiy(OtpVerifyRequest $request) {
+
         $otp = $request->otp;
-        $token = $request->token;
 
-        $client = JWTAuth::parseToken()->authenticate();        
+        $client = JWTAuth::parseToken()->authenticate();       
 
-        if (!$client) 
-        {
-            return response()->json([                              
-                'msg'   => 'Invalid token',
+        if (!$request->bearerToken()) {
+
+            return response()->json([                
+                'msg'   => 'Invalid token or token not found.',
                 'status'   => false,
                 'data'  => (object) []
-            ], 401);
+            ], 200);
+
+        } 
+
+        if (!$client) {
+
+            return response()->json([                              
+                'msg'   => 'Invalid token or token not found.',
+                'status'   => false,
+                'data'  => (object) []
+            ], 200);
+
         }        
 
-        if ($otp == '000000') 
-        {                        
+        if ($otp == '000000') {                        
 
             return response()->json([                               
                 'msg'   => 'OTP verified successfully.',
                 'status'   => true,
                 'data'  => [
-                    'token' => $token                    
+                    'token' => JWTAuth::getToken()                    
                 ]
             ], 200);
 
@@ -132,23 +156,22 @@ class VerficationController extends Controller
             'msg'   => 'Invalid otp',
             'status'   => false,
             'data'  => (object) []
-        ], 400);
+        ], 200);
     }
 
-    public function resetPassword(ResetPasswordRequest $request)
-    {
-        $password = $request->password;
-        $token = $request->token;
+    public function resetPassword(ResetPasswordRequest $request) {
+
+        $password = $request->password;        
 
         $client = JWTAuth::parseToken()->authenticate();        
 
-        if (!$client) 
-        {
+        if (!$client) {
+
             return response()->json([                               
-                'msg'   => 'Invalid token',
+                'msg'   => 'Invalid token or token not found.',
                 'status'   => false,
                 'data'  => (object) []
-            ], 401);
+            ], 200);
         }        
 
         $client->password = bcrypt($password);
@@ -160,20 +183,13 @@ class VerficationController extends Controller
             'status'   => true,
             'data'  => (object) []
         ], 200);
+
     }
 
-    public function forgotPassword(ForgotPasswordRequest $request)
-    {
-        $client = Client::where('phone', $request->phone)->first();
-
-        if (!$client) {
-            return response()->json([                              
-                'msg'   => 'Invalid phone number',
-                'status'   => false,
-                'data'  => (object) []
-            ], 400);
-        }
-
+    public function forgotPassword(ForgotPasswordRequest $request) {
+        
+        $client = Client::where('phone', $request->phone)->first();        
+        
         Auth::login($client);
 
         $token = auth('client')->refresh();

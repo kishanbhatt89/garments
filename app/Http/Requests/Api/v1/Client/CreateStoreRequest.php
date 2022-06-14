@@ -43,7 +43,7 @@ class CreateStoreRequest extends FormRequest
             'msg'   => 'Validation errors',
             'status'   => false,            
             'data'      => $validator->errors()
-        ], 400));
+        ], 200));
     }
 
 }

@@ -26,8 +26,7 @@ class ResetPasswordRequest extends FormRequest
     public function rules()
     {
         return [
-            'password' => 'required|string|min:6',
-            'token' => 'required'
+            'password' => 'required|string|min:6'            
         ];
     }
 
@@ -37,7 +36,7 @@ class ResetPasswordRequest extends FormRequest
             'msg'   => 'Validation errors',
             'status'   => false,            
             'data'      => $validator->errors()
-        ], 400));
+        ], 200));
     }
 
 }

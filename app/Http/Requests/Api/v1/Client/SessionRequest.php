@@ -6,7 +6,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Contracts\Validation\Validator; 
 
-class LogoutRequest extends FormRequest
+class SessionRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -26,7 +26,7 @@ class LogoutRequest extends FormRequest
     public function rules()
     {
         return [
-            '_token' => 'sometimes'
+            'token' => 'required',            
         ];
     }
 
@@ -35,8 +35,7 @@ class LogoutRequest extends FormRequest
         throw new HttpResponseException(response()->json([            
             'msg'   => 'Validation errors',
             'status'   => false,            
-            'data'      => $validator->errors()            
+            'data'      => $validator->errors()
         ], 200));
     }
-
 }

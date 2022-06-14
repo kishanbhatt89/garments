@@ -26,8 +26,7 @@ class OtpVerifyRequest extends FormRequest
     public function rules()
     {
         return [
-            'otp' => 'required',
-            'token' => 'required'        
+            'otp' => 'required'            
         ];
     }
 
@@ -37,7 +36,7 @@ class OtpVerifyRequest extends FormRequest
             'msg'   => 'Validation errors',
             'status'   => false,            
             'data'      => $validator->errors()
-        ], 400));
+        ], 200));
     }
 
 }

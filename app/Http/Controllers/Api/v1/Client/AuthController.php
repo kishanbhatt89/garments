@@ -17,8 +17,8 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 class AuthController extends Controller
 {
     
-    public function register(RegisterRequest $request)
-    {
+    public function register(RegisterRequest $request) {
+
         $client = new Client();
 
         $client->first_name = $request->first_name;
@@ -27,8 +27,7 @@ class AuthController extends Controller
         $client->phone = $request->phone;
         $client->password = bcrypt($request->password);                        
 
-        if ($client->save()) 
-        {
+        if ($client->save()) {
 
             $client->sendEmailVerificationNotification();
 
@@ -41,145 +40,127 @@ class AuthController extends Controller
                     'otp' => '000000',
                     'token' => $token
                 ]
-            ], 201);
+            ], 200);
 
         }
 
         // Send SMS Verification Code
 
         return response()->json([            
-            'msg' => 'Error registering client',
+            'msg' => 'Error registering client.',
             'status' => false,
-            'data' => []
-        ], 400);
+            'data' => (object)[]
+        ], 200);
+
     }
 
-    public function login(LoginRequest $request)
-    {
+    public function login(LoginRequest $request) {
+
         $client = Client::where('phone', $request->phone)->first(); 
+
+        if (!$client) {
+            return response()->json([                
+                'msg' => 'Invalid credentials.',
+                'status' => false,
+                'data' => (object)[]
+            ], 200);
+        }
         
-        if ($client) {            
-
-            // if ($client->is_active == 0) {
-            //     return response()->json([
-            //         'status_code' => 200,
-            //         'msg'   => 'Your account is blocked please contact administrator',
-            //         'status'   => false,                    
-            //         'data'  => (object) []
-            //     ], 200);
-            // }
-
-            $credentials = array_merge($request->only('password'), ['email' => $client->email]);
+        $credentials = array_merge($request->only('password'), ['email' => $client->email]);
             
-            if (!$token = auth()->guard('client')->attempt($credentials)) {
+        if (!$token = auth()->guard('client')->attempt($credentials)) {
 
-                return response()->json([                    
-                    'msg'   => 'Invalid credentials',
-                    'status'   => false,                    
-                    'data'  => (object) []
-                ], 404);
-    
-            }
-
-            // $client->last_login_at = now();
-            // $client->save();
-
-            // $tokensCount = ClientToken::where('client_id', $client->id)->count();
-
-            // if ($tokensCount == 3) {
-
-            //     ClientToken::inRandomOrder()->first()->delete();
-
-            //     $agent = new Agent();
-
-            //     $device_type = '';
-
-            //     if ($agent->isMobile()): $device_type = 'Mobile'; endif;
-            //     if ($agent->isDesktop()): $device_type = 'Desktop'; endif;
-            //     if ($agent->isTablet()): $device_type = 'Tablet'; endif;
-
-            //     $client->tokens()->create([
-            //         'token' => $token,
-            //         'device' => $agent->device(),
-            //         'device_type' => $device_type
-            //     ]);
-            // }            
-            
-
-            // return response()->json([
-            //     'status_code' => 200,                
-            //     'msg'   => '',
-            //     'status'   => true,
-            //     'data'  => [
-            //         'otp' => '000000',
-            //         'token' => $token
-            //     ]
-            // ], 200);
-                        
-            return response()->json([                             
-                'msg'   => '',
-                'status'   => true,
-                'data'  => [
-                    'token' => $token,
-                    'first_name' => auth('client')->user()->first_name,
-                    'last_name' => auth('client')->user()->last_name,
-                    'email' => auth('client')->user()->email,
-                    'phone' => auth('client')->user()->phone,
-                    'is_store_setup' => auth('client')->user()->is_store_setup,
-                    'address' => isset(auth('client')->user()->clientDetails->address) ? auth('client')->user()->clientDetails->address : '',
-                    'store' => [
-                        'name' => isset(auth('client')->user()->store->name) ? auth('client')->user()->store->name : '',
-                        'type' => isset(auth('client')->user()->store->types->name) ? (auth('client')->user()->store->types->name) : '',
-                        'address' => isset(auth('client')->user()->store->address) ? auth('client')->user()->store->address : '',
-                        'description' => isset(auth('client')->user()->store->description) ? auth('client')->user()->store->description : '',
-                        'city' => isset(auth('client')->user()->store->city) ? auth('client')->user()->store->city : '',
-                        'state' => isset(auth('client')->user()->store->state) ? auth('client')->user()->store->state->name : ''
-                    ]
-                ]
+            return response()->json([                    
+                'msg'   => 'Invalid credentials',
+                'status'   => false,                    
+                'data'  => (object) []
             ], 200);
 
-        }        
+        }
 
-        return response()->json([            
-            'msg'   => 'Invalid credentials',
-            'status'   => false,                    
-            'data'  => (object) []
-        ], 404);
+        if ($client->is_active == 0) {
+
+            return response()->json([                
+                'msg' => 'Your account is blocked please contact administrator',
+                'status' => false,
+                'data' => (object)[]
+            ], 200);
+
+        }
+
+        // $client->last_login_at = now();
+        // $client->save();
+
+        // $tokensCount = ClientToken::where('client_id', $client->id)->count();
+
+        // if ($tokensCount == 3) {
+
+        //     ClientToken::inRandomOrder()->first()->delete();
+
+        //     $agent = new Agent();
+
+        //     $device_type = '';
+
+        //     if ($agent->isMobile()): $device_type = 'Mobile'; endif;
+        //     if ($agent->isDesktop()): $device_type = 'Desktop'; endif;
+        //     if ($agent->isTablet()): $device_type = 'Tablet'; endif;
+
+        //     $client->tokens()->create([
+        //         'token' => $token,
+        //         'device' => $agent->device(),
+        //         'device_type' => $device_type
+        //     ]);
+        // }            
+        
+
+        // return response()->json([
+        //     'status_code' => 200,                
+        //     'msg'   => '',
+        //     'status'   => true,
+        //     'data'  => [
+        //         'otp' => '000000',
+        //         'token' => $token
+        //     ]
+        // ], 200);
+                    
+        return response()->json([                             
+            'msg'   => '',
+            'status'   => true,
+            'data'  => [
+                'token' => $token,
+                'first_name' => auth('client')->user()->first_name,
+                'last_name' => auth('client')->user()->last_name,
+                'email' => auth('client')->user()->email,
+                'phone' => auth('client')->user()->phone,
+                'is_store_setup' => auth('client')->user()->is_store_setup,
+                'address' => isset(auth('client')->user()->clientDetails->address) ? auth('client')->user()->clientDetails->address : '',
+                'store' => [
+                    'name' => isset(auth('client')->user()->store->name) ? auth('client')->user()->store->name : '',
+                    'type' => isset(auth('client')->user()->store->types->name) ? (auth('client')->user()->store->types->name) : '',
+                    'address' => isset(auth('client')->user()->store->address) ? auth('client')->user()->store->address : '',
+                    'zipcode' => isset(auth('client')->user()->store->zipcode) ? auth('client')->user()->store->zipcode : '',
+                    'description' => isset(auth('client')->user()->store->description) ? auth('client')->user()->store->description : '',
+                    'city' => isset(auth('client')->user()->store->city) ? auth('client')->user()->store->city : '',
+                    'state' => isset(auth('client')->user()->store->state) ? auth('client')->user()->store->state->name : ''
+                ]
+            ]
+        ], 200);        
+        
     }
 
-    /**
-     * Get the token array structure.
-     *
-     * @param  string $token
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
-    protected function respondWithToken($token)
-    {
-        return response()->json([
-            'access_token' => $token,
-            'token_type' => 'bearer',
-            'expires_in' => auth()->guard('client')->factory()->getTTL() * 60
-        ]);
-    }
+    public function logout(Request $request) {        
 
-    /**
-     * Log the user out (Invalidate the token).
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function logout(LogoutRequest $request)
-    {        
-        // if (!$request->bearerToken() || !auth('client')->check()) {
+        if (!$request->bearerToken() || !auth('client')->check()) {
 
-        //     return response()->json([            
-        //         'msg'   => 'Invalid credentials',
-        //         'status'   => false,                    
-        //         'data'  => (object) []
-        //     ], 404);
-        //     return response()->json(['message' => 'Token not found'], 200);
+            return response()->json([            
+                'msg'   => 'Invalid token or token not found.',
+                'status'   => false,                    
+                'data'  => (object) []
+            ], 200);            
 
-        // }
+        }
+
+        JWTAuth::parseToken()->invalidate(true);
 
         auth('client')->logout();
 
@@ -189,21 +170,17 @@ class AuthController extends Controller
             'data'  => (object) []
         ], 200);
     }
-
-    /**
-     * Refresh a token.
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
     
-    public function refresh(Request $request)
-    {
+    public function refresh(Request $request) {
+
         if($request->bearerToken()) {
 
             $current_token  = JWTAuth::getToken();
+
             $token          = JWTAuth::refresh($current_token);            
 
             if ($token) {
+
                 return response()->json([                    
                     'msg'   => '',
                     'status'   => true,                    
@@ -211,30 +188,31 @@ class AuthController extends Controller
                         'token' => $token
                     ]
                 ], 200);
+
             }
 
             return response()->json([                
-                'msg'   => 'Invalid Token.',
+                'msg'   => 'Invalid token or token not found.',
                 'status'   => false,                    
                 'data'  => (object) []
-            ], 401);
+            ], 200);
             
 
         } else {
             
             return response()->json([                
-                'msg'   => 'Token not found.',
+                'msg'   => 'Invalid token or token not found.',
                 'status'   => false,                    
                 'data'  => (object) []
-            ], 400);
+            ], 200);
 
         }
         
     }
     
 
-    public function session(Request $request)
-    {
+    public function session(Request $request) {
+        
         if($request->bearerToken()) {
 
             $client = JWTAuth::parseToken()->authenticate();
@@ -255,39 +233,45 @@ class AuthController extends Controller
                         'address' => isset($client->store->address) ? $client->store->address : '',
                         'description' => isset($client->store->description) ? $client->store->description : '',
                         'city' => isset($client->store->city) ? $client->store->city : '',
+                        'zipcode' => isset($client->store->zipcode) ? $client->store->zipcode : '',
                         'state' => isset($client->store->state) ? $client->store->state->name : ''
                     ]
                 ]
             ], 200);
 
         } else {
+
             return response()->json([                
-                'msg'   => 'Invalid Token.',
+                'msg'   => 'Invalid token or token not found.',
                 'status'   => false,                    
                 'data'  => (object) []
-            ], 401);
+            ], 200);
+
         }
 
         
     }
 
-    public function invalidate(Request $request)
-    {
+    public function invalidate(Request $request) {
+
         $client = JWTAuth::parseToken()->authenticate();
         
-        if (auth('client')->invalidate(true)){
+        if (auth('client')->invalidate(true)) {
+
             return response()->json([                
                 'msg'   => 'Token invalidated.',
                 'status'   => true,
                 'data'  => (object) []
             ], 200);
+
         }
 
         return response()->json([            
-            'msg'   => 'Invalid Token.',
+            'msg'   => 'Invalid token or token not found.',
             'status'   => false,                    
             'data'  => (object) []
-        ], 401);
+        ], 200);
+
     }
 
 }

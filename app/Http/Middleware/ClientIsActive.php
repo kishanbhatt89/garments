@@ -18,7 +18,11 @@ class ClientIsActive
     {
         if (auth('client')->user()->is_active == 0) {            
 
-            return response()->json(['msg' => 'Your account is blocked please contact administrator']);            
+            return response()->json([                
+                'msg' => 'Your account is blocked please contact administrator.',
+                'status' => false,
+                'data' => (object)[]
+            ], 402);                        
 
         }
    

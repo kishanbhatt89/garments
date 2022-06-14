@@ -20,7 +20,11 @@ class ClientEmailVerified
 
             auth('client')->logout();
 
-            return response()->json(['msg' => 'You need to confirm your account. We have sent you an activation code, please check your email.']);            
+            return response()->json([                
+                'msg' => 'You need to confirm your account. We have sent you an activation code, please check your email.',
+                'status' => false,
+                'data' => (object)[]
+            ], 200);            
 
         }
    

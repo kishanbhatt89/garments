@@ -20,7 +20,11 @@ class ClientSmsVerified
 
             auth('client')->logout();
 
-            return response()->json(['msg' => 'You need to confirm your account. We have sent you an otp, please check your sms.']);            
+            return response()->json([                
+                'msg' => 'You need to confirm your account. We have sent you an otp, please check your sms.',
+                'status' => false,
+                'data' => (object)[]
+            ], 200);                        
 
         }
 

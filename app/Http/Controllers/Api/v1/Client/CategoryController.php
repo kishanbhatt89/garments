@@ -9,14 +9,25 @@ use Illuminate\Http\Request;
 
 class CategoryController extends Controller
 {
-    public function __construct() 
-    {
+    public function __construct() {
+
         $this->middleware(['jwt.auth','is_client_active']);
+
     }
 
-    public function index()
-    {
+    public function index() {
+
         $categories = Category::select('id','name','slug')->where('parent_id',0)->get();        
+        
+        if ($categories->isEmpty()) {
+            return [            
+                'msg' => '',
+                'status' => true,
+                'data' => (object)[]                
+            ];
+        }
+        
         return (new CategoryResource($categories))->response()->setStatusCode(200);
+
     }
 }
