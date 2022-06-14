@@ -88,6 +88,14 @@ class AuthController extends Controller
 
         }
 
+        if ($client->sms_verified_at == null) {
+            return response()->json([                
+                'msg' => 'You need to confirm your account. We have sent you an otp, please check your sms.',
+                'status' => false,
+                'data' => (object)[]
+            ], 200);
+        }
+
         // $client->last_login_at = now();
         // $client->save();
 
