@@ -188,7 +188,17 @@ class VerficationController extends Controller
 
     public function forgotPassword(ForgotPasswordRequest $request) {
         
-        $client = Client::where('phone', $request->phone)->first();        
+        $client = Client::where('phone', $request->phone)->first(); 
+        
+        if (!$client) {
+            
+            return response()->json([
+                'msg'   => 'Phone number not found.',
+                'status'   => false,
+                'data'  => (object) []
+            ], 200);        
+
+        }
         
         Auth::login($client);
 
