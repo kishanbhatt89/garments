@@ -84,7 +84,7 @@ class AuthController extends Controller
                 'msg' => 'Your account is blocked please contact administrator',
                 'status' => false,
                 'data' => (object)[]
-            ], 200);
+            ], 402);
 
         }
 
