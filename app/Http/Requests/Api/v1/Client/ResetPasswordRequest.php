@@ -35,7 +35,7 @@ class ResetPasswordRequest extends FormRequest
         throw new HttpResponseException(response()->json([            
             'msg'   => 'Validation errors',
             'status'   => false,            
-            'data'      => $validator->errors()
+            'data'      => $validator->messages()->all()
         ], 200));
     }
 

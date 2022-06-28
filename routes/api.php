@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\StateController;
 use App\Http\Controllers\Api\v1\AuthController as AuthController;
 use App\Http\Controllers\Api\v1\Client\AuthController as ClientAuthController;
 use App\Http\Controllers\Api\v1\Client\CategoryController;
+use App\Http\Controllers\Api\v1\Client\ProductController;
 use App\Http\Controllers\Api\v1\Client\StateController as ClientStateController;
 use App\Http\Controllers\Api\v1\Client\StoreController;
 use App\Http\Controllers\Api\v1\Client\TypeController;
@@ -67,6 +68,9 @@ Route::group(['prefix' => 'v1/client','middleware' => ['assign.guard:client']],f
     Route::get('refresh', [ClientAuthController::class, 'refresh']);
 
     Route::get('invalidate/token', [ClientAuthController::class, 'invalidate'])->middleware(['jwt.auth']);    
+
+    Route::post('product', [ProductController::class, 'store'])->middleware(['jwt.auth']);
+    Route::post('product/image', [ProductController::class, 'imageUpload'])->middleware(['jwt.auth']);
 
 });
 use Jenssegers\Agent\Agent;
