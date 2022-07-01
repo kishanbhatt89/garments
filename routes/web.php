@@ -103,6 +103,7 @@ Route::middleware(['auth','role:admin|employee'])->name('admin.')->prefix('admin
     Route::delete('cities/{city}', [CityController::class, 'destroy'])->name('cities.destroy');
 
     Route::delete('categories/destroyMultiple', [CategoryController::class, 'destroyMultiple'])->name('categories.destroyMultiple');
+    Route::get('/categories/add', [CategoryController::class, 'add'])->name('categories.add');
     Route::get('/categories/{category}/details', [CategoryController::class, 'show'])->name('categories.show');
     Route::get('/categories/table', [CategoryController::class, 'table'])->name('categories.table');
     Route::get('/categories', [CategoryController::class, 'index'])->name('categories.index');    

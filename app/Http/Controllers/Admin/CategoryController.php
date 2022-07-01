@@ -24,6 +24,12 @@ class CategoryController extends Controller
         return view('admin.categories.index', compact('categories'));
     }
 
+    public function add()
+    {
+        $categories = Category::all();
+        return view('admin.categories.add', compact('categories'));
+    }
+
     public function show(Request $request)
     {
         $category = Category::where('id',$request->get('id'))->first();            
@@ -38,22 +44,42 @@ class CategoryController extends Controller
     public function store(Request $request)
     {
 
-        $validator = Validator::make($request->all(), [
+        $request->validate([
             'name' => 'required|unique:categories,name',
             'slug' => 'required|unique:categories,slug',
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg',
             'parent_id' => 'nullable|integer',
         ]);
 
-        if ($validator->fails()) {
-            return response()->json(['data'=> $validator->errors()], 400);    
-        }
-        
-        if (Category::create(['name' => $request->name, 'parent_id' => ($request->parent_id ? $request->parent_id : 0), 'slug' => $request->slug]))
-        {
-            return response()->json(['msg'=> 'Category added successfully!'], 200);    
+        $uploadFolder = 'categories';
+
+        $image = $request->file('image');
+
+        $image_uploaded_path = $image->store($uploadFolder, 'public');
+
+        $category = new Category();
+
+        $category->name = $request->name;
+        $category->parent_id = $request->parent_id ? $request->parent_id : 0;
+        $category->slug = $request->slug;        
+        $category->image = basename($image_uploaded_path);
+
+        if ($category->save()) {
+            return redirect()->back()->with('success', 'Category added successfully!');
         }
 
-        return response()->json(['msg'=> 'Error in adding category'], 200);
+        return redirect()->back()->with('error', 'Error in adding category!');
+
+        // if ($validator->fails()) {
+        //     return response()->json(['data'=> $validator->errors()], 400);    
+        // }
+        
+        // if (Category::create(['name' => $request->name, 'parent_id' => ($request->parent_id ? $request->parent_id : 0), 'slug' => $request->slug]))
+        // {
+        //     return response()->json(['msg'=> 'Category added successfully!'], 200);    
+        // }
+
+        // return response()->json(['msg'=> 'Error in adding category'], 200);
 
     }
 

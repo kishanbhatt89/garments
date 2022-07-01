@@ -16,10 +16,11 @@ return new class extends Migration
         Schema::create('product_variations', function (Blueprint $table) {
             $table->id();
             $table->foreignId('product_id')->nullable()->constrained();
-            $table->string('name')->unique();
+            $table->string('name');
             $table->float('price');
             $table->float('discounted_price');
             $table->string('status');
+            $table->unique(['product_id', 'name']);
             $table->timestamp('last_edited_at')->nullable();
             $table->timestamps();
         });

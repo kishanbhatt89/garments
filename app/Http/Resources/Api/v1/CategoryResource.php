@@ -22,11 +22,13 @@ class CategoryResource extends ResourceCollection
                     'id' => $page->id,
                     'name' => $page->name,
                     'slug' => $page->slug,
+                    'image' => $page->image ? asset('storage/categories/'.$page->image) : '',
                     'children' => $page->childs->map(function($child, $key){
                         return (object)[
                             'id' => $child->id,
                             'name' => $child->name,
-                            'slug' => $child->slug
+                            'slug' => $child->slug,
+                            'image' => $child->image ? asset('storage/categories/'.$child->image) : '',
                         ];                    
                     })
                 ];
