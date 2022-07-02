@@ -35,7 +35,9 @@ class LogoutRequest extends FormRequest
         throw new HttpResponseException(response()->json([            
             'msg'   => 'Validation errors',
             'status'   => false,            
-            'data'      => $validator->messages()->all()
+            'data'      => collect($validator->errors()->getMessages())->map(function($attribute, $key){
+                return $attribute[0];
+            })
         ], 200));
     }
 
