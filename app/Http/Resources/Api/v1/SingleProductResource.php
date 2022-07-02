@@ -14,6 +14,12 @@ class SingleProductResource extends JsonResource
      */
     public function toArray($request)
     {        
+
+        $variants = collect($this->variations)->sortBy('price');
+
+        $price = $variants->first()->price;
+        $discountedPrice = $variants->first()->discounted_price;
+
         return [            
             'msg' => '',
             'status' => true,
@@ -23,15 +29,21 @@ class SingleProductResource extends JsonResource
                 'sku' => $this->sku,
                 'brand' => $this->brand,
                 'client' => $this->client->first_name.' '.$this->client->last_name,
-                'store' => $this->store->name,
-                'image' => $this->image ? asset('storage/products/'.$this->image) : '',
+                'store' => $this->store->name,                
                 'details' => $this->details,
                 'category' => $this->category->name,
                 'subcategory' => $this->subcategory->name,
                 'variation_type' => $this->variation_type,
                 'status' => $this->status,
+                'price' => $price,
+                'discounted_price' => $discountedPrice,
                 'created_at' => $this->created_at->format('Y-m-d H:i:s'),
                 'updated_at' => $this->updated_at->format('Y-m-d H:i:s'),
+                'images' => $this->images->transform(function($image){
+                    return (object)[                            
+                        'image' => $image->image_uploaded_url."/".$image->image,                            
+                    ];
+                }),
                 'colors' => $this->colors->transform(function($color){
                     return (object)[
                         'id' => $color->id,                            

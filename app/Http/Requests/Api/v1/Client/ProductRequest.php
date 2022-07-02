@@ -25,11 +25,9 @@ class ProductRequest extends FormRequest
      */
     public function rules()
     {
-        return [
-            'sku' => 'required|string|max:255|unique:products',
+        return [            
             'name' => 'required|string|max:255',
-            'details' => 'required|string',
-            'brand' => 'required|string',
+            'details' => 'required|string',            
             'category_id' => 'required|exists:categories,id',
             'subcategory_id' => 'required|exists:categories,id',
             'variation_type' => 'required|string|in:single,multiple',

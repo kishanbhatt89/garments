@@ -10,6 +10,7 @@ use App\Http\Resources\Api\v1\ProductResource;
 use App\Http\Resources\Api\v1\SingleProductResource;
 use App\Models\Product;
 use App\Models\ProductColor;
+use App\Models\ProductImage;
 use App\Models\ProductVariation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -61,6 +62,17 @@ class ProductController extends Controller
             ], 200);
         }
 
+        if ($request->sku) {
+            $product = Product::where('sku', $request->sku)->first();
+            if ($product) {
+                return response()->json([                
+                    'msg'   => 'Product with same sku already exists.',
+                    'status'   => false,                    
+                    'data'  => (object) []
+                ], 200);
+            }
+        }
+
         $client_id = auth('client')->user()->id;
         $store_id = auth('client')->user()->store->id;
         
@@ -71,13 +83,13 @@ class ProductController extends Controller
 
             $product->client_id = $client_id;
             $product->store_id = $store_id;
-            $product->sku = $request->sku;
+            $product->sku = $request->sku ? $request->sku : '';
             $product->name = $request->name;
             $product->details = $request->details;
             $product->category_id = $request->category_id;
             $product->subcategory_id = $request->subcategory_id;
             $product->variation_type = $request->variation_type;
-            $product->brand = $request->brand;
+            $product->brand = $request->brand ? $request->brand : '';
             $product->status = $request->status;
 
             if ($product->save()) {
@@ -88,6 +100,20 @@ class ProductController extends Controller
                         $productColor->product_id = $product->id;
                         $productColor->color_code = $color['color_code'];                        
                         $productColor->save();
+                    }
+                }
+
+                $variations = $request->variations;
+
+                if (!empty($variations)) {
+                    foreach ($variations as $variation) {
+                        $productVariation = new ProductVariation();
+                        $productVariation->product_id = $product->id;
+                        $productVariation->name = $variation['name'];
+                        $productVariation->price = $variation['price'];
+                        $productVariation->discounted_price = $variation['discounted_price'];
+                        $productVariation->status = 'active';
+                        $productVariation->save();
                     }
                 }
 
@@ -168,38 +194,55 @@ class ProductController extends Controller
 
     }
 
-    public function imageUpload(ProductImageRequest $request) {
+    public function imageUpload(ProductImageRequest $request) {        
 
         $product = Product::find($request->id);
 
+        if ($product->images->count() > 5) {
+            return response()->json([                
+                'msg'   => 'You can upload maximum 5 images. Please delete some images first.',
+                'status'   => false,                    
+                'data'  => (object) []
+            ], 200);
+        }
+
         $uploadFolder = 'products';
 
-        $image = $request->file('image');
+        $images = $request->file('images');
 
-        $image_uploaded_path = $image->store($uploadFolder, 'public');
+        foreach ($images as $image) {
 
-        $product->image = basename($image_uploaded_path);
-        $product->image_uploaded_url = asset('storage/products/'.$product->image);        
+            $image_uploaded_path = $image->store($uploadFolder, 'public');
+            $imageName = basename($image_uploaded_path);
+            $imageUrl = asset('storage/products/'.$product->image);        
 
-        if ($product->save()) {
+            $productImage = new ProductImage();
 
-            return response()->json([                
-                'msg'   => 'Product image uploaded successfully!',
-                'status'   => true,                    
-                'data'  => [
-                    'product_id' => $product->id,
-                    'image' => $product->image,
-                    'image_url' => $product->image_uploaded_url
-                ]
-            ], 200);
+            $productImage->product_id = $product->id;
+            $productImage->image = $imageName;
+            $productImage->image_uploaded_url = $imageUrl;
+
+            $productImage->save();
+
+            $productResponse[] = [
+                'product_id' => $productImage->product_id,
+                'image' => $productImage->image_uploaded_url.'/'.$productImage->image,                
+            ];
 
         }
 
         return response()->json([                
-            'msg'   => 'Error in uploading product image',
-            'status'   => false,                    
-            'data'  => (object) []
+            'msg'   => 'Product image uploaded successfully!',
+            'status'   => true,                    
+            'data'  => $productResponse
         ], 200);
+        
+
+        // return response()->json([                
+        //     'msg'   => 'Error in uploading product image',
+        //     'status'   => false,                    
+        //     'data'  => (object) []
+        // ], 200);
 
 
     }

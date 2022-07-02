@@ -17,15 +17,13 @@ return new class extends Migration
             $table->id();
             $table->foreignId('client_id')->nullable()->constrained();
             $table->foreignId('store_id')->nullable()->constrained(); 
-            $table->string('sku')->unique();
-            $table->string('name');
-            $table->mediumText('image')->nullable();
-            $table->mediumText('image_uploaded_url')->nullable();
+            $table->string('sku')->nullable();
+            $table->string('name');            
             $table->text('details');
             $table->foreignId('category_id')->nullable()->constrained();
             $table->unsignedBigInteger('subcategory_id');
             $table->string('variation_type');
-            $table->string('brand');
+            $table->string('brand')->nullable();
             $table->string('status');
             $table->timestamp('last_edited_date')->nullable();
             $table->timestamps();

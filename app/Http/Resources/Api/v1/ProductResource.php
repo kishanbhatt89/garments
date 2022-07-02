@@ -13,19 +13,25 @@ class ProductResource extends ResourceCollection
      * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
      */
     public function toArray($request)
-    {        
+    {                
+
         return [            
             'msg' => '',
             'status' => true,
             'data' => $this->collection->transform(function($page){
+
+                $variants = collect($page->variations)->sortBy('price');
+
+                $price = $variants->first()->price;
+                $discountedPrice = $variants->first()->discounted_price;
+
                 return (object)[
                     'id' => $page->id,
                     'name' => $page->name,
                     'sku' => $page->sku,
                     'brand' => $page->brand,
                     'client' => $page->client->first_name.' '.$page->client->last_name,
-                    'store' => $page->store->name,
-                    'image' => $page->image ? asset('storage/products/'.$page->image) : '',
+                    'store' => $page->store->name,                    
                     'details' => $page->details,
                     'category' => $page->category->name,
                     'subcategory' => $page->subcategory->name,
@@ -33,6 +39,13 @@ class ProductResource extends ResourceCollection
                     'status' => $page->status,
                     'created_at' => $page->created_at->format('Y-m-d H:i:s'),
                     'updated_at' => $page->updated_at->format('Y-m-d H:i:s'),
+                    'price' => $price,
+                    'discounted_price' => $discountedPrice,
+                    'images' => $page->images->transform(function($image){
+                        return (object)[                            
+                            'image' => $image->image_uploaded_url."/".$image->image,                            
+                        ];
+                    }),
                     'colors' => $page->colors->transform(function($color){
                         return (object)[
                             'id' => $color->id,                            

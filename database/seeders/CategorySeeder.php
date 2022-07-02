@@ -22,9 +22,27 @@ class CategorySeeder extends Seeder
         ]);
 
         Category::create([
+            'parent_id' => 0,
+            'name' => 'Category 2',
+            'slug' => 'category-2'
+        ]);
+
+        Category::create([
             'parent_id' => 1,
             'name' => 'Sub Category 1',
             'slug' => 'sub-category-1'
+        ]);
+
+        Category::create([
+            'parent_id' => 2,
+            'name' => 'Sub Category 2',
+            'slug' => 'sub-category-2'
+        ]);
+
+        Category::create([
+            'parent_id' => 2,
+            'name' => 'Sub Category 3',
+            'slug' => 'sub-category-3'
         ]);
     }
 }
