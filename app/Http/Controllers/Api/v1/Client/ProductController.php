@@ -5,6 +5,9 @@ namespace App\Http\Controllers\Api\v1\Client;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\v1\Client\ProductImageRequest;
 use App\Http\Requests\Api\v1\Client\ProductRequest;
+use App\Http\Requests\Api\v1\Client\ShowProductRequest;
+use App\Http\Resources\Api\v1\ProductResource;
+use App\Http\Resources\Api\v1\SingleProductResource;
 use App\Models\Product;
 use App\Models\ProductColor;
 use App\Models\ProductVariation;
@@ -17,6 +20,35 @@ class ProductController extends Controller
 
         $this->middleware(['jwt.auth','is_client_active']);
 
+    }
+
+    public function index() {
+        $products = Product::all();
+
+        if ($products->count() > 0) {
+            return (new ProductResource($products))->response()->setStatusCode(200);
+        }
+
+        return [            
+            'msg' => 'No products found.',
+            'status' => false,
+            'data' => (object)[]                
+        ];
+        
+    }
+
+    public function show(ShowProductRequest $request) {
+
+        $product = Product::find($request->id);
+
+        if ($product) {
+            return (new SingleProductResource($product))->response()->setStatusCode(200);
+        }
+        return [            
+            'msg' => 'Product not found.',
+            'status' => false,
+            'data' => (object)[]                
+        ];
     }
 
     public function store(ProductRequest $request) {

@@ -12,11 +12,27 @@ class Product extends Model
     protected $guarded = [];
 
     public function variations() {
-        $this->hasMany(ProductVariation::class);
+        return $this->hasMany(ProductVariation::class);
     }
 
     public function colors() {
-        $this->hasMany(ProductColor::class);
+        return $this->hasMany(ProductColor::class);
+    }
+
+    public function client() {
+        return $this->belongsTo(Client::class);
+    }
+
+    public function store() {
+        return $this->belongsTo(Store::class);
+    }
+
+    public function category() {
+        return $this->belongsTo(Category::class);
+    }
+
+    public function subcategory() {
+        return $this->belongsTo(Category::class, 'subcategory_id', 'id');
     }
 
 }
