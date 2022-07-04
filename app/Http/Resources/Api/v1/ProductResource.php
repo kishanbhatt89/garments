@@ -20,10 +20,16 @@ class ProductResource extends ResourceCollection
             'status' => true,
             'data' => $this->collection->transform(function($page){
 
-                $variants = collect($page->variations)->sortBy('price');
+                $price = 0.0;
+                $discountedPrice = 0.0;
 
-                $price = $variants->first()->price;
-                $discountedPrice = $variants->first()->discounted_price;
+                if ($page->variations) {
+                    $variants = collect($page->variations)->sortBy('price');
+                    if ($variants) {
+                        $price = $variants->first()->price ? $variants->first()->price : 0.0;
+                        $discountedPrice = $variants->first()->discounted_price ? $variants->first()->discounted_price : 0.0;
+                    }                    
+                }                
 
                 return (object)[
                     'id' => $page->id,
