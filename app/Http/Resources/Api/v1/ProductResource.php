@@ -29,7 +29,20 @@ class ProductResource extends ResourceCollection
                         $price = isset($variants->first()->price) ? $variants->first()->price : 0.0;
                         $discountedPrice = isset($variants->first()->discounted_price )? $variants->first()->discounted_price : 0.0;
                     }                    
-                }                
+                }             
+
+                $imageURL = '';
+                
+                if ($page->images) {
+                    $images = collect($page->images)->sortBy('created_at');
+                    if ($images) {
+                        $url = isset($images->first()->image_uploaded_url) ? $images->first()->image_uploaded_url : '';
+                        $name = isset($images->first()->image) ? $images->first()->image : '';                        
+                        if ($url !== '' && $name !== '') {
+                            $imageURL = $url.'/'.$name;
+                        }                        
+                    }
+                }
 
                 return (object)[
                     'id' => $page->id,
@@ -43,6 +56,7 @@ class ProductResource extends ResourceCollection
                     'subcategory' => $page->subcategory->name,
                     'variation_type' => $page->variation_type,
                     'status' => $page->status,
+                    'image' => $imageURL,
                     'created_at' => $page->created_at->format('Y-m-d H:i:s'),
                     'updated_at' => $page->updated_at->format('Y-m-d H:i:s'),
                     'price' => $price,
