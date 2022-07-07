@@ -69,7 +69,7 @@ Route::group(['prefix' => 'v1/client','middleware' => ['assign.guard:client']],f
 
     Route::get('invalidate/token', [ClientAuthController::class, 'invalidate'])->middleware(['jwt.auth']);    
 
-    Route::get('products', [ProductController::class, 'index'])->middleware(['jwt.auth']);
+    Route::post('products', [ProductController::class, 'index'])->middleware(['jwt.auth']);
     Route::post('product', [ProductController::class, 'store'])->middleware(['jwt.auth']);
     Route::post('product-details', [ProductController::class, 'show'])->middleware(['jwt.auth']);
     Route::post('product/image', [ProductController::class, 'imageUpload'])->middleware(['jwt.auth']);

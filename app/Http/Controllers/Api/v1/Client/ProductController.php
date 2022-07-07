@@ -23,8 +23,13 @@ class ProductController extends Controller
 
     }
 
-    public function index() {
-        $products = Product::all();
+    public function index(Request $request) {
+
+        if ($request->has('status')) {
+            $products = Product::where('status', $request->status)->get();
+        } else {
+            $products = Product::all();
+        }        
 
         if ($products->count() > 0) {
             return (new ProductResource($products))->response()->setStatusCode(200);
