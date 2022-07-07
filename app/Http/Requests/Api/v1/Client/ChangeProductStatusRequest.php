@@ -29,7 +29,7 @@ class ChangeProductStatusRequest extends FormRequest
             'product_ids' => 'sometimes|array|min:1',
             'product_variant_ids' => 'sometimes|array|min:1',
             //'product_ids.*' => 'exists:products,id',
-            'status' => 'required|in:active,inactive'
+            'status' => 'required|in:active,inactive,oos'
         ];
     }
 
