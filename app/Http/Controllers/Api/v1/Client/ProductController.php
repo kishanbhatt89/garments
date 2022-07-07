@@ -24,11 +24,25 @@ class ProductController extends Controller
     }
 
     public function index(Request $request) {
-
-        if ($request->has('status')) {
-            $products = Product::where('status', $request->status)->get();
+        
+        if ($request->status == 'all') {
+            if ($request->category_id) {                
+                $products = Product::where('category_id', $request->category_id)->get();                
+            } else {
+                $products = Product::all();
+            }
+        } else if (!$request->status) {
+            if ($request->category_id) {                
+                $products = Product::where('category_id', $request->category_id)->get();                
+            } else {
+                $products = Product::all();
+            }
         } else {
-            $products = Product::all();
+            if ($request->category_id) {
+                $products = Product::where('status', $request->status)->where('category_id', $request->category_id)->get();
+            } else {
+                $products = Product::where('status', $request->status)->get();
+            }
         }        
 
         if ($products->count() > 0) {
