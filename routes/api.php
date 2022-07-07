@@ -73,6 +73,7 @@ Route::group(['prefix' => 'v1/client','middleware' => ['assign.guard:client']],f
     Route::post('product', [ProductController::class, 'store'])->middleware(['jwt.auth']);
     Route::post('product-details', [ProductController::class, 'show'])->middleware(['jwt.auth']);
     Route::post('product/image', [ProductController::class, 'imageUpload'])->middleware(['jwt.auth']);
+    Route::post('product/changestatus', [ProductController::class, 'changeStatus'])->middleware(['jwt.auth']);    
 
 });
 use Jenssegers\Agent\Agent;

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\v1\Client;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Api\v1\Client\ChangeProductStatusRequest;
 use App\Http\Requests\Api\v1\Client\ProductImageRequest;
 use App\Http\Requests\Api\v1\Client\ProductRequest;
 use App\Http\Requests\Api\v1\Client\ShowProductRequest;
@@ -13,7 +14,8 @@ use App\Models\ProductColor;
 use App\Models\ProductImage;
 use App\Models\ProductVariation;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
+use \Illuminate\Support\Facades\Validator;
+
 
 class ProductController extends Controller
 {
@@ -27,21 +29,21 @@ class ProductController extends Controller
         
         if ($request->status == 'all') {
             if ($request->category_id) {                
-                $products = Product::where('category_id', $request->category_id)->get();                
+                $products = Product::where('category_id', $request->category_id)->where('client_id', auth('client')->user()->id)->get();                
             } else {
-                $products = Product::all();
+                $products = Product::where('client_id', auth('client')->user()->id)->get();
             }
         } else if (!$request->status) {
             if ($request->category_id) {                
-                $products = Product::where('category_id', $request->category_id)->get();                
+                $products = Product::where('category_id', $request->category_id)->where('client_id', auth('client')->user()->id)->get();                
             } else {
-                $products = Product::all();
+                $products = Product::where('client_id', auth('client')->user()->id)->get();
             }
         } else {
             if ($request->category_id) {
-                $products = Product::where('status', $request->status)->where('category_id', $request->category_id)->get();
+                $products = Product::where('status', $request->status)->where('category_id', $request->category_id)->where('client_id', auth('client')->user()->id)->get();
             } else {
-                $products = Product::where('status', $request->status)->get();
+                $products = Product::where('status', $request->status)->where('client_id', auth('client')->user()->id)->get();
             }
         }        
 
@@ -59,7 +61,7 @@ class ProductController extends Controller
 
     public function show(ShowProductRequest $request) {
 
-        $product = Product::find($request->id);
+        $product = Product::where('id',$request->id)->where('client_id', auth('client')->user()->id)->first();
 
         if ($product) {
             return (new SingleProductResource($product))->response()->setStatusCode(200);
@@ -82,7 +84,7 @@ class ProductController extends Controller
         }
 
         if ($request->sku) {
-            $product = Product::where('sku', $request->sku)->first();
+            $product = Product::where('sku', $request->sku)->where('client_id', auth('client')->user()->id)->first();
             if ($product) {
                 return response()->json([                
                     'msg'   => 'Product with same sku already exists.',
@@ -215,7 +217,7 @@ class ProductController extends Controller
 
     public function imageUpload(ProductImageRequest $request) {        
 
-        $product = Product::find($request->id);
+        $product = Product::where('id',$request->id)->where('client_id', auth('client')->user()->id)->first();
 
         if ($product->images->count() > 5) {
             return response()->json([                
@@ -263,6 +265,59 @@ class ProductController extends Controller
         //     'data'  => (object) []
         // ], 200);
 
+
+    }
+
+    public function changeStatus(ChangeProductStatusRequest $request) {
+
+        if (!$request->has('product_ids') && !$request->has('product_variant_ids')) {
+            return response()->json([                
+                'msg'   => 'Please add at least one product id or product variant id array',
+                'status'   => false,                    
+                'data'  => (object) []
+            ], 200);        
+        }
+
+        if ($request->has('product_ids')) {
+
+            $product_ids = $request->product_ids;
+
+            foreach ($product_ids as $product_id) {
+                $product = Product::where('id',$product_id)->where('client_id', auth('client')->user()->id)->first();
+                if ($product) {
+                    $product->status = $request->status;
+                    $product->save();    
+                }            
+            }
+
+            return response()->json([                
+                'msg'   => 'Product status updated successfully!',
+                'status'   => true,                    
+                'data'  => (object) []
+            ], 200);
+
+        }        
+
+        if ($request->has('product_variant_ids')) {
+
+            $product_variant_ids = $request->product_variant_ids;
+
+            foreach ($product_variant_ids as $product_variant_id) {
+                $productVariation = ProductVariation::where('id',$product_variant_id)->first();
+                if ($productVariation) {
+                    $productVariation->status = $request->status;
+                    $productVariation->save();    
+                }            
+            }
+
+            return response()->json([                
+                'msg'   => 'Product variant status updated successfully!',
+                'status'   => true,                    
+                'data'  => (object) []
+            ], 200);
+
+        }
+        
 
     }
     
