@@ -20,6 +20,19 @@ class SingleProductResource extends JsonResource
         $price = $variants->first()->price;
         $discountedPrice = $variants->first()->discounted_price;
 
+        $imageURL = '';
+        
+        if ($this->images) {
+            $images = collect($this->images)->sortBy('created_at');
+            if ($images) {
+                $url = isset($images->first()->image_uploaded_url) ? $images->first()->image_uploaded_url : '';
+                $name = isset($images->first()->image) ? $images->first()->image : '';                        
+                if ($url !== '' && $name !== '') {
+                    $imageURL = $url.'/'.$name;
+                }                        
+            }
+        }
+
         return [            
             'msg' => '',
             'status' => true,
@@ -35,6 +48,7 @@ class SingleProductResource extends JsonResource
                 'subcategory' => $this->subcategory->name,
                 'variation_type' => $this->variation_type,
                 'status' => $this->status,
+                'image' => $imageURL,
                 'price' => $price,
                 'discounted_price' => $discountedPrice,
                 'created_at' => $this->created_at->format('Y-m-d H:i:s'),
