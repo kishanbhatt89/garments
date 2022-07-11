@@ -8,6 +8,7 @@ use App\Http\Requests\Api\v1\Client\LogoutRequest;
 use App\Http\Requests\Api\v1\Client\RegisterRequest;
 use App\Http\Requests\Api\v1\Client\SessionRequest;
 use App\Models\Client;
+use App\Models\ClientDetail;
 use App\Models\ClientToken;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -276,6 +277,49 @@ class AuthController extends Controller
 
         return response()->json([            
             'msg'   => 'Invalid token or token not found.',
+            'status'   => false,                    
+            'data'  => (object) []
+        ], 200);
+
+    }
+
+    public function update(Request $request) {        
+
+        $updateClientArray = [];
+        $updateClientDetailsArray = [];        
+        
+        if ($request->first_name) $updateClientArray['first_name'] = $request->first_name;
+        if ($request->last_name) $updateClientArray['last_name'] = $request->last_name; 
+        if ($request->phone) $updateClientArray['phone'] = $request->phone;        
+        if ($request->address) $updateClientDetailsArray['address'] = $request->address;
+        if ($request->password) {
+            $updateClientArray['password'] = bcrypt($request->password);
+            $updateClientArray['last_password_change_at'] = now();
+        }        
+
+        if (!empty($updateClientArray)) {
+            Client::where('id',auth('client')->user()->id)->update($updateClientArray);
+        }
+
+        if (!empty($updateClientDetailsArray)) {
+            if (!isset(auth('client')->user()->clientDetails)) {
+                $updateClientDetailsArray['client_id'] = auth('client')->user()->id;
+                ClientDetail::create($updateClientDetailsArray);
+            } else {
+                ClientDetail::where('client_id',auth('client')->user()->id)->update($updateClientDetailsArray);
+            }                        
+        }
+
+        if (!empty($updateClientArray) || !empty($updateClientDetailsArray)) {
+            return response()->json([                
+                'msg'   => 'Profile updated successfully.',
+                'status'   => true,
+                'data'  => (object) []
+            ], 200);    
+        }
+
+        return response()->json([            
+            'msg'   => 'Error updating profile.',
             'status'   => false,                    
             'data'  => (object) []
         ], 200);

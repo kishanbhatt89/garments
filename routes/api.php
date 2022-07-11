@@ -41,7 +41,7 @@ Route::get('v1/clear', function() {
 
 Route::group(['prefix' => 'v1/client','middleware' => ['assign.guard:client']],function ()
 {
-    Route::post('register', [ClientAuthController::class, 'register']);
+    Route::post('register', [ClientAuthController::class, 'register']);    
     
     Route::get('email/verify/{id}', [ClientVerificationController::class, 'emailVerify'])->name('verification.verify');
     Route::get('email/resend', [ClientVerificationController::class, 'emailResend'])->name('verification.resend');
@@ -73,7 +73,9 @@ Route::group(['prefix' => 'v1/client','middleware' => ['assign.guard:client']],f
     Route::post('product', [ProductController::class, 'store'])->middleware(['jwt.auth']);
     Route::post('product-details', [ProductController::class, 'show'])->middleware(['jwt.auth']);
     Route::post('product/image', [ProductController::class, 'imageUpload'])->middleware(['jwt.auth']);
-    Route::post('product/changestatus', [ProductController::class, 'changeStatus'])->middleware(['jwt.auth']);    
+    Route::post('product/changestatus', [ProductController::class, 'changeStatus'])->middleware(['jwt.auth']);   
+    
+    Route::post('update-profile', [ClientAuthController::class, 'update'])->middleware(['jwt.auth']);
 
 });
 use Jenssegers\Agent\Agent;
