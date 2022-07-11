@@ -47,8 +47,8 @@ class ProductResource extends ResourceCollection
                 return (object)[
                     'id' => $page->id,
                     'name' => $page->name,
-                    'sku' => $page->sku,
-                    'brand' => $page->brand,
+                    'sku' => $page->sku ? $page->sku : '',
+                    'brand' => $page->brand ? $page->brand : '',
                     'client' => $page->client->first_name.' '.$page->client->last_name,
                     'store' => $page->store->name,                    
                     'details' => $page->details,
