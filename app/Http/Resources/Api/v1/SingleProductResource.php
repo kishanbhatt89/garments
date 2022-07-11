@@ -39,8 +39,8 @@ class SingleProductResource extends JsonResource
             'data' => [
                 'id' => $this->id,
                 'name' => $this->name,
-                'sku' => $this->sku,
-                'brand' => $this->brand,
+                'sku' => $this->sku ? $this->sku : '',
+                'brand' => $this->brand ? $this->brand : '',
                 'client' => $this->client->first_name.' '.$this->client->last_name,
                 'store' => $this->store->name,                
                 'details' => $this->details,
