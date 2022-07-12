@@ -30,8 +30,8 @@ class UpdateStoreRequest extends FormRequest
             'type' => 'sometimes|integer|exists:types,id',
             'description' => 'sometimes|nullable|string',
             'address' => 'sometimes|string',
-            'city' => 'sometimes|integer|exists:cities,id',
-            'state' => 'sometimes|integer|exists:states,id',
+            'city' => 'sometimes|string',
+            'state' => 'sometimes|string|exists:states,id',
             'zipcode' => 'sometimes|string',
             'gst' => 'sometimes|nullable|string'            
         ];
