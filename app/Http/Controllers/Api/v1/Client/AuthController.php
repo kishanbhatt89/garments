@@ -286,31 +286,16 @@ class AuthController extends Controller
 
     public function update(UpdateClientRequest $request) {        
 
-        $updateClientArray = [];
-        $updateClientDetailsArray = [];        
+        $updateClientArray = [];        
         
         if ($request->first_name) $updateClientArray['first_name'] = $request->first_name;
-        if ($request->last_name) $updateClientArray['last_name'] = $request->last_name;         
-        if ($request->address) $updateClientDetailsArray['address'] = $request->address;
-        if ($request->password) {
-            $updateClientArray['password'] = bcrypt($request->password);
-            $updateClientArray['last_password_change_at'] = now();
-        }        
+        if ($request->last_name) $updateClientArray['last_name'] = $request->last_name;                         
 
         if (!empty($updateClientArray)) {
             Client::where('id',auth('client')->user()->id)->update($updateClientArray);
-        }
+        }        
 
-        if (!empty($updateClientDetailsArray)) {
-            if (!isset(auth('client')->user()->clientDetails)) {
-                $updateClientDetailsArray['client_id'] = auth('client')->user()->id;
-                ClientDetail::create($updateClientDetailsArray);
-            } else {
-                ClientDetail::where('client_id',auth('client')->user()->id)->update($updateClientDetailsArray);
-            }                        
-        }
-
-        if (!empty($updateClientArray) || !empty($updateClientDetailsArray)) {
+        if (!empty($updateClientArray)) {
             return response()->json([                
                 'msg'   => 'Profile updated successfully.',
                 'status'   => true,

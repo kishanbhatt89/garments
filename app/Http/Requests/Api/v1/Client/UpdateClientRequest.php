@@ -27,9 +27,7 @@ class UpdateClientRequest extends FormRequest
     {
         return [
             'first_name' => 'sometimes|string',
-            'last_name' => 'sometimes|string',
-            'address' => 'sometimes|string',
-            'password' => 'sometimes|string|min:6',
+            'last_name' => 'sometimes|string',                        
         ];
     }
 
