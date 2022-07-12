@@ -4,9 +4,9 @@ namespace App\Http\Requests\Api\v1\Client;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
-use Illuminate\Contracts\Validation\Validator; 
+use Illuminate\Contracts\Validation\Validator;
 
-class UpdateStoreRequest extends FormRequest
+class UpdateClientRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -26,14 +26,10 @@ class UpdateStoreRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'sometimes|string|unique:stores,name,'.auth('client')->user()->store->id,
-            'type' => 'sometimes|integer|exists:types,id',
-            'description' => 'sometimes|nullable|string',
+            'first_name' => 'sometimes|string',
+            'last_name' => 'sometimes|string',
             'address' => 'sometimes|string',
-            'city' => 'sometimes|integer|exists:cities,id',
-            'state' => 'sometimes|integer|exists:states,id',
-            'zipcode' => 'sometimes|string',
-            'gst' => 'sometimes|nullable|string'            
+            'password' => 'sometimes|string|min:6',
         ];
     }
 

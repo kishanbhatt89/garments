@@ -54,5 +54,30 @@ class StoreController extends Controller
         }
 
     }
+
+    public function update(UpdateStoreRequest $request) {
+
+        $store = auth('client')->user()->store;
+
+        $data = $request->except(['state','type']);
+        
+        $data['state_id'] = $request->state;
+        $data['type_id'] = intval($request->type);
+
+        if ($store->update($data)) {
+            return response()->json([                
+                'msg'   => 'Store updated successfully.',
+                'status'   => true,                    
+                'data'  => (object) []
+            ], 200);
+        }
+
+        return response()->json([                
+            'msg'   => 'Error in updating store',
+            'status'   => false,                    
+            'data'  => (object) []
+        ], 200);
+
+    }
             
 }

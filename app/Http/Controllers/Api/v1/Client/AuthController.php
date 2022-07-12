@@ -7,6 +7,7 @@ use App\Http\Requests\Api\v1\Client\LoginRequest;
 use App\Http\Requests\Api\v1\Client\LogoutRequest;
 use App\Http\Requests\Api\v1\Client\RegisterRequest;
 use App\Http\Requests\Api\v1\Client\SessionRequest;
+use App\Http\Requests\Api\v1\Client\UpdateClientRequest;
 use App\Models\Client;
 use App\Models\ClientDetail;
 use App\Models\ClientToken;
@@ -283,14 +284,13 @@ class AuthController extends Controller
 
     }
 
-    public function update(Request $request) {        
+    public function update(UpdateClientRequest $request) {        
 
         $updateClientArray = [];
         $updateClientDetailsArray = [];        
         
         if ($request->first_name) $updateClientArray['first_name'] = $request->first_name;
-        if ($request->last_name) $updateClientArray['last_name'] = $request->last_name; 
-        if ($request->phone) $updateClientArray['phone'] = $request->phone;        
+        if ($request->last_name) $updateClientArray['last_name'] = $request->last_name;         
         if ($request->address) $updateClientDetailsArray['address'] = $request->address;
         if ($request->password) {
             $updateClientArray['password'] = bcrypt($request->password);

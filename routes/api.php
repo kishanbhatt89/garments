@@ -76,6 +76,7 @@ Route::group(['prefix' => 'v1/client','middleware' => ['assign.guard:client']],f
     Route::post('product/changestatus', [ProductController::class, 'changeStatus'])->middleware(['jwt.auth']);   
     
     Route::post('update-profile', [ClientAuthController::class, 'update'])->middleware(['jwt.auth']);
+    Route::post('update-store', [StoreController::class, 'update'])->middleware(['jwt.auth']);
 
 });
 use Jenssegers\Agent\Agent;
