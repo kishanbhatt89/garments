@@ -7,6 +7,7 @@ use App\Http\Requests\Api\v1\Client\ChangeProductStatusRequest;
 use App\Http\Requests\Api\v1\Client\ProductImageRequest;
 use App\Http\Requests\Api\v1\Client\ProductRequest;
 use App\Http\Requests\Api\v1\Client\ShowProductRequest;
+use App\Http\Requests\Api\v1\Client\UpdateProductRequest;
 use App\Http\Resources\Api\v1\ProductResource;
 use App\Http\Resources\Api\v1\SingleProductResource;
 use App\Models\Product;
@@ -318,6 +319,57 @@ class ProductController extends Controller
 
         }
         
+
+    }
+
+    public function update(UpdateProductRequest $request) {
+
+        if (auth('client')->user()->is_store_setup == 0) {
+            return response()->json([                
+                'msg'   => 'Store not setup. Please setup store first.',
+                'status'   => false,                    
+                'data'  => (object) []
+            ], 200);
+        }
+
+        // if ($request->sku) {
+        //     $product = Product::where('sku', $request->sku)->where('client_id', auth('client')->user()->id)->first();
+        //     if ($product) {
+        //         return response()->json([                
+        //             'msg'   => 'Product with same sku already exists.',
+        //             'status'   => false,                    
+        //             'data'  => (object) []
+        //         ], 200);
+        //     }
+        // }
+
+        $product = Product::where('id', $request->id)->where('client_id', auth('client')->user()->id)->first();
+
+        if ($product) {
+
+            $product->name = $request->name ? $request->name : $product->name;
+            $product->details = $request->details ? $request->details : $product->details;
+            $product->sku = $request->sku ? $request->sku : $product->sku;  
+            $product->category_id = $request->category_id ? $request->category_id : $product->category_id;
+            $product->subcategory_id = $request->subcategory_id ? $request->subcategory_id : $product->subcategory_id;
+            $product->brand = $request->brand ? $request->brand : $product->brand;
+            $product->status = $request->status ? $request->status : $product->status;
+
+            if ($product->save()) {
+                return response()->json([                
+                    'msg'   => 'Product details updated successfully.',
+                    'status'   => true,                    
+                    'data'  => (object) []
+                ], 200);
+            }            
+
+        }
+
+        return response()->json([                
+            'msg'   => 'Error in updating product details.',
+            'status'   => false,                    
+            'data'  => (object) []
+        ], 200);
 
     }
     
