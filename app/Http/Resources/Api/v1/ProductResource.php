@@ -24,7 +24,7 @@ class ProductResource extends ResourceCollection
                 $discountedPrice = 0.0;
 
                 if ($page->variations) {
-                    $variants = collect($page->variations)->sortBy('price');
+                    $variants = collect($page->variations)->where('is_deleted',0)->sortBy('price');
                     if ($variants) {
                         $price = isset($variants->first()->price) ? $variants->first()->price : 0.0;
                         $discountedPrice = isset($variants->first()->discounted_price )? $variants->first()->discounted_price : 0.0;
@@ -75,15 +75,17 @@ class ProductResource extends ResourceCollection
                         ];
                     }),
                     'variants' => $page->variations->transform(function($variant){
-                        return (object)[
-                            'id' => $variant->id,
-                            'name' => $variant->name, 
-                            'price' => $variant->price,                            
-                            'discounted_price' => $variant->discounted_price, 
-                            'status' => $variant->status,
-                            'created_at' => $variant->created_at->format('Y-m-d H:i:s'),
-                            'updated_at' => $variant->updated_at->format('Y-m-d H:i:s'),
-                        ];
+                        if ($variant->is_deleted !== 1) {
+                            return (object)[
+                                'id' => $variant->id,
+                                'name' => $variant->name, 
+                                'price' => $variant->price,                            
+                                'discounted_price' => $variant->discounted_price, 
+                                'status' => $variant->status,
+                                'created_at' => $variant->created_at->format('Y-m-d H:i:s'),
+                                'updated_at' => $variant->updated_at->format('Y-m-d H:i:s'),
+                            ];
+                        }                        
                     }),                    
                 ];
             })   

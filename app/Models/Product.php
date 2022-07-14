@@ -15,6 +15,10 @@ class Product extends Model
         return $this->hasMany(ProductVariation::class);
     }
 
+    public function defaultVariations() {
+        return $this->hasMany(ProductVariation::class)->where('name', 'default');
+    }
+
     public function colors() {
         return $this->hasMany(ProductColor::class);
     }

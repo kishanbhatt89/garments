@@ -18,6 +18,7 @@ return new class extends Migration
             $table->foreignId('product_id')->nullable()->constrained();
             $table->mediumText('image')->nullable();
             $table->mediumText('image_uploaded_url')->nullable();
+            $table->boolean('is_deleted')->default(false);
             $table->timestamps();
         });
     }

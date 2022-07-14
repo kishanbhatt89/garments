@@ -25,6 +25,7 @@ return new class extends Migration
             $table->string('variation_type');
             $table->string('brand')->nullable();
             $table->string('status');
+            $table->boolean('is_deleted')->default(false);
             $table->timestamp('last_edited_date')->nullable();
             $table->timestamps();
         });

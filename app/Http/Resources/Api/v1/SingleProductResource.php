@@ -15,7 +15,7 @@ class SingleProductResource extends JsonResource
     public function toArray($request)
     {        
 
-        $variants = collect($this->variations)->sortBy('price');
+        $variants = collect($this->variations)->where('is_deleted',0)->sortBy('price');
 
         $price = $variants->first()->price;
         $discountedPrice = $variants->first()->discounted_price;
@@ -67,15 +67,17 @@ class SingleProductResource extends JsonResource
                     ];
                 }),
                 'variants' => $this->variations->transform(function($variant){
-                    return (object)[
-                        'id' => $variant->id,
-                        'name' => $variant->name, 
-                        'price' => $variant->price,                            
-                        'discounted_price' => $variant->discounted_price, 
-                        'status' => $variant->status,
-                        'created_at' => $variant->created_at->format('Y-m-d H:i:s'),
-                        'updated_at' => $variant->updated_at->format('Y-m-d H:i:s'),
-                    ];
+                    if ($variant->is_deleted !== 1) {
+                        return (object)[
+                            'id' => $variant->id,
+                            'name' => $variant->name, 
+                            'price' => $variant->price,                            
+                            'discounted_price' => $variant->discounted_price, 
+                            'status' => $variant->status,
+                            'created_at' => $variant->created_at->format('Y-m-d H:i:s'),
+                            'updated_at' => $variant->updated_at->format('Y-m-d H:i:s'),
+                        ];
+                    }                    
                 }),                    
             ]        
         ];

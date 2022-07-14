@@ -355,7 +355,90 @@ class ProductController extends Controller
             $product->brand = $request->brand ? $request->brand : $product->brand;
             $product->status = $request->status ? $request->status : $product->status;
 
+            $existing_variation_type = $product->variation_type;
+
+            $product->variation_type = $request->variation_type ? $request->variation_type : $product->variation_type;
+            
             if ($product->save()) {
+
+                // if (
+                //     ($existing_variation_type == 'single' && $product->variation_type == 'multiple') ||
+                //     ($existing_variation_type == 'multiple' && $product->variation_type == 'single')
+                // ) {
+                //     $product->variations()->update(['is_deleted' => 1]);
+                // }
+                
+                if ($existing_variation_type == 'single' && $product->variation_type == 'single') {
+                    $variations = $request->variations;
+                    $product->defaultVariations()->first()->update([
+                        'price' => $variations[0]['price'],
+                        'discounted_price' => $variations[0]['discounted_price'],
+                        'is_deleted' => 0,
+                        'last_edited_at' => now()
+                    ]);
+                }
+
+                if ($existing_variation_type == 'multiple' && $product->variation_type == 'multiple') {
+                    $variations = $request->variations;
+                    foreach ($variations as $variation) {
+                        if (isset($variation['id'])) {
+                            $product->variations()->where('id', $variation['id'])->first()->update([
+                                'price' => $variation['price'],
+                                'discounted_price' => $variation['discounted_price'],
+                                'is_deleted' => 0,
+                                'last_edited_at' => now()
+                            ]);
+                        } else {
+                            $product->variations()->create([
+                                'name' => $variation['name'],
+                                'price' => $variation['price'],
+                                'discounted_price' => $variation['discounted_price'],
+                                'is_deleted' => 0
+                            ]);
+                        }
+                    }
+                }
+
+                if ($existing_variation_type == 'single' && $product->variation_type == 'multiple') {
+
+                    $product->defaultVariations()->first()->update(['is_deleted' => 1]);
+
+                    $variations = $request->variations;
+                    
+                    foreach ($variations as $variation){                        
+                        $productVariation = new ProductVariation();
+                        $productVariation->product_id = $product->id;
+                        $productVariation->name = $variation['name'];
+                        $productVariation->price = $variation['price'];
+                        $productVariation->discounted_price = $variation['discounted_price'];
+                        $productVariation->status = 'active';                            
+                        $productVariation->save();                        
+                    }
+
+                }
+
+                if ($existing_variation_type == 'multiple' && $product->variation_type == 'single') {
+
+                    $variations = $request->variations;
+                    
+                    if($product->defaultVariations()->first()) {
+                        $existingDefault = $product->defaultVariations()->first();                            
+                        $existingDefault->price = $variations[0]['price'];
+                        $existingDefault->discounted_price = $variations[0]['discounted_price'];
+                        $existingDefault->is_deleted = 0;
+                        $existingDefault->save();
+                    } else {
+                        $productVariation = new ProductVariation();
+                        $productVariation->product_id = $product->id;
+                        $productVariation->name = 'default';
+                        $productVariation->price = $variations[0]['price'];
+                        $productVariation->discounted_price = $variations[0]['discounted_price'];
+                        $productVariation->status = 'active';
+                        $productVariation->save();
+                    }                    
+
+                }
+
                 return response()->json([                
                     'msg'   => 'Product details updated successfully.',
                     'status'   => true,                    
