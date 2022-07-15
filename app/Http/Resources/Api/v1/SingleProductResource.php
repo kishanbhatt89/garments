@@ -33,6 +33,20 @@ class SingleProductResource extends JsonResource
             }
         }
 
+        $variants = collect($this->variations)->where('is_deleted',0);
+        $variantResponseArr = [];
+        foreach ($variants as $variant) {
+            $variantResponseArr[] = [
+                'id' => $variant->id,
+                'name' => $variant->name, 
+                'price' => $variant->price,                            
+                'discounted_price' => $variant->discounted_price, 
+                'status' => $variant->status,
+                'created_at' => $variant->created_at->format('Y-m-d H:i:s'),
+                'updated_at' => $variant->updated_at->format('Y-m-d H:i:s'),
+            ];
+        }
+
         return [            
             'msg' => '',
             'status' => true,
@@ -66,19 +80,7 @@ class SingleProductResource extends JsonResource
                         'updated_at' => $color->updated_at->format('Y-m-d H:i:s'),
                     ];
                 }),
-                'variants' => $this->variations->transform(function($variant){
-                    if ($variant->is_deleted !== 1) {
-                        return (object)[
-                            'id' => $variant->id,
-                            'name' => $variant->name, 
-                            'price' => $variant->price,                            
-                            'discounted_price' => $variant->discounted_price, 
-                            'status' => $variant->status,
-                            'created_at' => $variant->created_at->format('Y-m-d H:i:s'),
-                            'updated_at' => $variant->updated_at->format('Y-m-d H:i:s'),
-                        ];
-                    }                    
-                }),                    
+                'variants' => $variantResponseArr,                    
             ]        
         ];
     }
