@@ -488,9 +488,9 @@ class ProductController extends Controller
 
                     if ($variations) {
 
-                        $eVariations = ProductVariation::where('product_id',$product->id)->where('name','!==','default')->get();
+                        $eVariations = ProductVariation::where('product_id',$product->id)->where('name !=','default')->get();
 
-                        dd($eVariations);
+                        dd($eVariations, ProductVariation::where('product_id',$product->id)->get(), $product->id);
 
                         if($product->defaultVariations()->first()) {
                             $existingDefault = $product->defaultVariations()->first();                            
