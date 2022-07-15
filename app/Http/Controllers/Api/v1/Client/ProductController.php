@@ -492,7 +492,7 @@ class ProductController extends Controller
 
                         if ($eVariations) {
                             foreach ($eVariations as $key => $eVariation) {
-                                $eVariation->is_delete = 1;
+                                $eVariation->is_deleted = 1;
                                 $eVariation->last_edited_at = now();
                                 $eVariation->save();
                             }
