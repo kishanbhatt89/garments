@@ -32,8 +32,8 @@ class UpdateProductRequest extends FormRequest
             'subcategory_id' => 'sometimes|exists:categories,id',
             'variation_type' => 'sometimes|string|in:single,multiple',
             'status' => 'sometimes|string',
-            'sku' => 'sometimes|string|unique:products,sku,'.$this->id,
-            'brand' => 'sometimes|string'
+            'sku' => 'sometimes|unique:products,sku,'.$this->id,
+            'brand' => 'sometimes'
         ];
     }
 
