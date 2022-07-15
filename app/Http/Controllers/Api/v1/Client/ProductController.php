@@ -347,19 +347,20 @@ class ProductController extends Controller
 
         if ($product) {
 
-            $product->name = $request->name ? $request->name : $product->name;
-            $product->details = $request->details ? $request->details : $product->details;
-            $product->sku = $request->sku ? $request->sku : $product->sku;  
-            $product->category_id = $request->category_id ? $request->category_id : $product->category_id;
-            $product->subcategory_id = $request->subcategory_id ? $request->subcategory_id : $product->subcategory_id;
-            $product->brand = $request->brand ? $request->brand : $product->brand;
-            $product->status = $request->status ? $request->status : $product->status;
+            $productUpdateArr = [];
 
-            $existing_variation_type = $product->variation_type;
+            if ($request->has('name')) { $productUpdateArr['name'] = $request->name; }
+            if ($request->has('details')) { $productUpdateArr['details'] = $request->details; }
+            if ($request->has('sku')) { $productUpdateArr['sku'] = $request->sku; }
+            if ($request->has('category_id')) { $productUpdateArr['category_id'] = $request->category_id; } 
+            if ($request->has('subcategory_id')) { $productUpdateArr['subcategory_id'] = $request->subcategory_id; }
+            if ($request->has('brand')) { $productUpdateArr['brand'] = $request->brand; }
+            if ($request->has('status')) { $productUpdateArr['status'] = $request->status; }
+            if ($request->has('variation_type')) { $productUpdateArr['variation_type'] = $request->variation_type; }            
 
-            $product->variation_type = $request->variation_type ? $request->variation_type : $product->variation_type;
+            $existing_variation_type = $product->variation_type;                        
             
-            if ($product->save()) {
+            if ($product->update($productUpdateArr)) {
 
                 $colors = $request->colors;
 
@@ -392,84 +393,116 @@ class ProductController extends Controller
                 
                 if ($existing_variation_type == 'single' && $product->variation_type == 'single') {
                     $variations = $request->variations;
-                    $product->defaultVariations()->first()->update([
-                        'price' => $variations[0]['price'],
-                        'discounted_price' => $variations[0]['discounted_price'],
-                        'is_deleted' => 0,
-                        'last_edited_at' => now()
-                    ]);
+                    if ($variations) {
+                        $product->defaultVariations()->first()->update([
+                            'price' => $variations[0]['price'],
+                            'discounted_price' => $variations[0]['discounted_price'],
+                            'is_deleted' => 0,
+                            'last_edited_at' => now()
+                        ]);
+                    }                    
                 }
 
                 if ($existing_variation_type == 'multiple' && $product->variation_type == 'multiple') {
                     $variations = $request->variations;
-                    
-                    foreach ($variations as $variation) {
-                        if (isset($variation['id'])) {
-                            $product->variations()->where('id', $variation['id'])->first()->update([
-                                'name' => $variation['name'],
-                                'price' => $variation['price'],
-                                'discounted_price' => $variation['discounted_price'],
-                                'is_deleted' => 0,
-                                'last_edited_at' => now()
-                            ]);
-                        } else {
-                            $pVariation = ProductVariation::where('product_id',$product->id)->where('name',$variation['name'])->first();
-                            if (!$pVariation) {
-                                $product->variations()->create([
-                                    'name' => $variation['name'],
-                                    'price' => $variation['price'],
-                                    'discounted_price' => $variation['discounted_price'],
-                                    'status' => 'active',
-                                    'is_deleted' => 0
+                    if ($variations) {
+                        
+                        foreach ($variations as $variation) {
+
+                            if (isset($variation['id']) && isset($variation['flag'])) {
+                                $product->variations()->where('id', $variation['id'])->first()->update([
+                                    'is_deleted' => 1
                                 ]);
-                            } else {
-                                $pVariation->price = $variation['price'];
-                                $pVariation->discounted_price = $variation['discounted_price'];
-                                $pVariation->save();
                             }
-                                                     
+
+                            if (isset($variation['id']) && !isset($variation['flag'])) {
+
+                                $updateVariatonArray = [];
+
+                                if (isset($variation['name'])) { $updateVariatonArray['name'] = $variation['name']; }
+                                if (isset($variation['price'])) { $updateVariatonArray['price'] = $variation['price']; }
+                                if (isset($variation['discounted_price'])) { $updateVariatonArray['discounted_price'] = $variation['discounted_price']; }
+                            
+                                $updateVariatonArray['is_deleted'] = 0;
+                                $updateVariatonArray['last_edited_at'] = now();
+
+                                $product->variations()->where('id', $variation['id'])->first()->update($updateVariatonArray);
+                            }
+
+                            if (!isset($variation['id']) && !isset($variation['flag'])) {
+                                $pVariation = ProductVariation::where('product_id',$product->id)->where('name',$variation['name'])->first();
+                                if (!$pVariation) {
+                                    $product->variations()->create([
+                                        'name' => $variation['name'],
+                                        'price' => $variation['price'],
+                                        'discounted_price' => $variation['discounted_price'],
+                                        'status' => 'active',
+                                        'is_deleted' => 0
+                                    ]);
+                                } else {                                    
+
+                                    if (isset($variation['name'])) { 
+                                        $pVariation->name = $variation['name'];
+                                    }
+                                    if (isset($variation['price'])) { 
+                                        $pVariation->price = $variation['price'];    
+                                    }
+                                    if (isset($variation['discounted_price'])) { 
+                                        $pVariation->discounted_price = $variation['discounted_price'];
+                                    }
+
+                                    $pVariation->save();
+                                }
+                            }
+                            
+
+                            
                         }
-                    }
+                    }                    
                 }
 
                 if ($existing_variation_type == 'single' && $product->variation_type == 'multiple') {
 
-                    $product->defaultVariations()->first()->update(['is_deleted' => 1]);
+                    $variations = $request->variations;                                    
 
-                    $variations = $request->variations;
-                    
-                    foreach ($variations as $variation){                        
-                        $productVariation = new ProductVariation();
-                        $productVariation->product_id = $product->id;
-                        $productVariation->name = $variation['name'];
-                        $productVariation->price = $variation['price'];
-                        $productVariation->discounted_price = $variation['discounted_price'];
-                        $productVariation->status = 'active';                            
-                        $productVariation->save();                        
+                    if ($variations) {
+                        $product->defaultVariations()->first()->update(['is_deleted' => 1]);
+                        foreach ($variations as $variation){                        
+                            $productVariation = new ProductVariation();
+                            $productVariation->product_id = $product->id;
+                            $productVariation->name = $variation['name'];
+                            $productVariation->price = $variation['price'];
+                            $productVariation->discounted_price = $variation['discounted_price'];
+                            $productVariation->status = 'active';                            
+                            $productVariation->save();                        
+                        }
                     }
+                    
+                    
 
                 }
 
                 if ($existing_variation_type == 'multiple' && $product->variation_type == 'single') {
 
                     $variations = $request->variations;
-                    
-                    if($product->defaultVariations()->first()) {
-                        $existingDefault = $product->defaultVariations()->first();                            
-                        $existingDefault->price = $variations[0]['price'];
-                        $existingDefault->discounted_price = $variations[0]['discounted_price'];
-                        $existingDefault->is_deleted = 0;
-                        $existingDefault->status = "active";
-                        $existingDefault->save();
-                    } else {
-                        $productVariation = new ProductVariation();
-                        $productVariation->product_id = $product->id;
-                        $productVariation->name = 'default';
-                        $productVariation->price = $variations[0]['price'];
-                        $productVariation->discounted_price = $variations[0]['discounted_price'];
-                        $productVariation->status = 'active';
-                        $productVariation->save();
-                    }                    
+                    if ($variations) {
+                        if($product->defaultVariations()->first()) {
+                            $existingDefault = $product->defaultVariations()->first();                            
+                            $existingDefault->price = $variations[0]['price'];
+                            $existingDefault->discounted_price = $variations[0]['discounted_price'];
+                            $existingDefault->is_deleted = 0;
+                            $existingDefault->status = "active";
+                            $existingDefault->save();
+                        } else {
+                            $productVariation = new ProductVariation();
+                            $productVariation->product_id = $product->id;
+                            $productVariation->name = 'default';
+                            $productVariation->price = $variations[0]['price'];
+                            $productVariation->discounted_price = $variations[0]['discounted_price'];
+                            $productVariation->status = 'active';
+                            $productVariation->save();
+                        }       
+                    }                                 
 
                 }
 
