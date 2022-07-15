@@ -490,7 +490,13 @@ class ProductController extends Controller
 
                         $eVariations = ProductVariation::where('product_id',$product->id)->where('name','!=','default')->get();
 
-                        dd($eVariations, ProductVariation::where('product_id',$product->id)->get(), $product->id, 'test');
+                        if ($eVariations) {
+                            foreach ($eVariations as $key => $eVariation) {
+                                $eVariation->is_delete = 1;
+                                $eVariation->last_edited_at = now();
+                                $eVariation->save();
+                            }
+                        }
 
                         if($product->defaultVariations()->first()) {
                             $existingDefault = $product->defaultVariations()->first();                            
