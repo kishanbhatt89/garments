@@ -406,6 +406,7 @@ class ProductController extends Controller
                     foreach ($variations as $variation) {
                         if (isset($variation['id'])) {
                             $product->variations()->where('id', $variation['id'])->first()->update([
+                                'name' => $variation['name'],
                                 'price' => $variation['price'],
                                 'discounted_price' => $variation['discounted_price'],
                                 'is_deleted' => 0,
