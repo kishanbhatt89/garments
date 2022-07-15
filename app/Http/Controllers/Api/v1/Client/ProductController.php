@@ -485,7 +485,11 @@ class ProductController extends Controller
                 if ($existing_variation_type == 'multiple' && $product->variation_type == 'single') {
 
                     $variations = $request->variations;
+
                     if ($variations) {
+
+                        $product->variants()->where('name','!=','default')->update(['is_deleted' => 1, 'last_edited_at' => now()]);
+
                         if($product->defaultVariations()->first()) {
                             $existingDefault = $product->defaultVariations()->first();                            
                             $existingDefault->price = $variations[0]['price'];
