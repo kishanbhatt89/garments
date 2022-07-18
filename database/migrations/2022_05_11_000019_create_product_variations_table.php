@@ -19,8 +19,7 @@ return new class extends Migration
             $table->string('name');
             $table->float('price');
             $table->float('discounted_price');
-            $table->string('status');
-            $table->unique(['product_id', 'name']);
+            $table->string('status');            
             $table->boolean('is_deleted')->default(false);
             $table->timestamp('last_edited_at')->nullable();
             $table->timestamps();

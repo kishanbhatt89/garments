@@ -75,6 +75,7 @@ Route::group(['prefix' => 'v1/client','middleware' => ['assign.guard:client']],f
     Route::post('product/image', [ProductController::class, 'imageUpload'])->middleware(['jwt.auth']);
     Route::post('product/changestatus', [ProductController::class, 'changeStatus'])->middleware(['jwt.auth']);   
     Route::post('product/update-product', [ProductController::class, 'update'])->middleware(['jwt.auth']);
+    Route::post('product/delete-product-image', [ProductController::class, 'deleteImage'])->middleware(['jwt.auth']);
     
     Route::post('update-profile', [ClientAuthController::class, 'update'])->middleware(['jwt.auth']);
     Route::post('update-store', [StoreController::class, 'update'])->middleware(['jwt.auth']);

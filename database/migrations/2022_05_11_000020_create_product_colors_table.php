@@ -17,8 +17,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('product_id')->nullable()->constrained();
             $table->string('color_code');        
-            $table->boolean('is_deleted')->default(false);    
-            $table->unique(['product_id', 'color_code']);
+            $table->boolean('is_deleted')->default(false);                
             $table->timestamps();
         });
     }

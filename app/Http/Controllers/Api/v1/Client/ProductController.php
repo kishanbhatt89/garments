@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\v1\Client;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\v1\Client\ChangeProductStatusRequest;
+use App\Http\Requests\Api\v1\Client\DeleteProductImageRequest;
 use App\Http\Requests\Api\v1\Client\ProductImageRequest;
 use App\Http\Requests\Api\v1\Client\ProductRequest;
 use App\Http\Requests\Api\v1\Client\ShowProductRequest;
@@ -366,38 +367,56 @@ class ProductController extends Controller
 
                 if ($colors) {
                     foreach ($colors as $color) {
-                        if (isset($color['id'])) {
-                            $productColor = ProductColor::where('product_id', $product->id)->where('id', $color['id'])->first();
-                            if (!$productColor) {
-                                $product->colors()->create([
-                                    'color_code' => $color['color_code'],
-                                ]);                                
-                            } else {
-                                $productColor->color_code = $color['color_code'];
+
+                        // Delete
+                        if (isset($color['flag'])) {
+                            
+                            $productColor = ProductColor::where('product_id', $product->id)
+                                        ->where('id', $color['id'])
+                                        ->first();
+                            
+                            if ($productColor) {
+                                $productColor->is_deleted = 1;
                                 $productColor->save();
                             }
-                        } else {
-                            $product->colors()->create([
-                                'color_code' => $color['color_code'],
-                            ]);
-                        }              
-                    }
-                }
 
-                // if (
-                //     ($existing_variation_type == 'single' && $product->variation_type == 'multiple') ||
-                //     ($existing_variation_type == 'multiple' && $product->variation_type == 'single')
-                // ) {
-                //     $product->variations()->update(['is_deleted' => 1]);
-                // }
+                        }
+                        
+                        // Add
+                        if (!isset($color['flag'])) {
+                            
+                            $productColor = new ProductColor();
+                            $productColor->product_id = $product->id;
+                            $productColor->color_code = $color['color_code'];
+                            $productColor->save();                            
+
+                        }
+
+                        // if (isset($color['id'])) {
+                        //     $productColor = ProductColor::where('product_id', $product->id)->where('id', $color['id'])->first();
+                        //     if (!$productColor) {
+                        //         $product->colors()->create([
+                        //             'color_code' => $color['color_code'],
+                        //         ]);                                
+                        //     } else {
+                        //         $productColor->color_code = $color['color_code'];
+                        //         $productColor->save();
+                        //     }
+                        // } else {
+                        //     $product->colors()->create([
+                        //         'color_code' => $color['color_code'],
+                        //     ]);
+                        // }              
+                    }
+                }                
                 
                 if ($existing_variation_type == 'single' && $product->variation_type == 'single') {
                     $variations = $request->variations;
+                    
                     if ($variations) {
-                        $product->defaultVariations()->first()->update([
+                        $product->updateDefaultVariation()->first()->update([
                             'price' => $variations[0]['price'],
-                            'discounted_price' => $variations[0]['discounted_price'],
-                            'is_deleted' => 0,
+                            'discounted_price' => $variations[0]['discounted_price'],                            
                             'last_edited_at' => now()
                         ]);
                     }                    
@@ -409,12 +428,14 @@ class ProductController extends Controller
                         
                         foreach ($variations as $variation) {
 
+                            // Delete Variations
                             if (isset($variation['id']) && isset($variation['flag'])) {
                                 $product->variations()->where('id', $variation['id'])->first()->update([
                                     'is_deleted' => 1
                                 ]);
                             }
 
+                            // Update Variations
                             if (isset($variation['id']) && !isset($variation['flag'])) {
 
                                 $updateVariatonArray = [];
@@ -429,8 +450,9 @@ class ProductController extends Controller
                                 $product->variations()->where('id', $variation['id'])->first()->update($updateVariatonArray);
                             }
 
+                            // Create Variations
                             if (!isset($variation['id']) && !isset($variation['flag'])) {
-                                $pVariation = ProductVariation::where('product_id',$product->id)->where('name',$variation['name'])->first();
+                                $pVariation = ProductVariation::where('product_id',$product->id)->where('name',$variation['name'])->where('is_deleted',0)->first();
                                 if (!$pVariation) {
                                     $product->variations()->create([
                                         'name' => $variation['name'],
@@ -466,7 +488,7 @@ class ProductController extends Controller
                     $variations = $request->variations;                                    
 
                     if ($variations) {
-                        $product->defaultVariations()->first()->update(['is_deleted' => 1]);
+                        $product->updateDefaultVariation()->first()->update(['is_deleted' => 1]);
                         foreach ($variations as $variation){                        
                             $productVariation = new ProductVariation();
                             $productVariation->product_id = $product->id;
@@ -497,23 +519,15 @@ class ProductController extends Controller
                                 $eVariation->save();
                             }
                         }
-
-                        if($product->defaultVariations()->first()) {
-                            $existingDefault = $product->defaultVariations()->first();                            
-                            $existingDefault->price = $variations[0]['price'];
-                            $existingDefault->discounted_price = $variations[0]['discounted_price'];
-                            $existingDefault->is_deleted = 0;
-                            $existingDefault->status = "active";
-                            $existingDefault->save();
-                        } else {
-                            $productVariation = new ProductVariation();
-                            $productVariation->product_id = $product->id;
-                            $productVariation->name = 'default';
-                            $productVariation->price = $variations[0]['price'];
-                            $productVariation->discounted_price = $variations[0]['discounted_price'];
-                            $productVariation->status = 'active';
-                            $productVariation->save();
-                        }       
+                        
+                        $productVariation = new ProductVariation();
+                        $productVariation->product_id = $product->id;
+                        $productVariation->name = 'default';
+                        $productVariation->price = $variations[0]['price'];
+                        $productVariation->discounted_price = $variations[0]['discounted_price'];
+                        $productVariation->status = 'active';
+                        $productVariation->save();
+                               
                     }                                 
 
                 }
@@ -529,6 +543,31 @@ class ProductController extends Controller
 
         return response()->json([                
             'msg'   => 'Error in updating product details.',
+            'status'   => false,                    
+            'data'  => (object) []
+        ], 200);
+
+    }
+
+    public function deleteImage(DeleteProductImageRequest $request) {
+
+        $product = Product::find($request->product_id);
+
+        if ($product) {
+            $image = $product->images()->where('id', $request->image_id)->first();
+            if ($image) {
+                $image->is_deleted = 1;
+                $image->save();
+                return response()->json([
+                    'msg'   => 'Product image deleted successfully.',
+                    'status'   => true,
+                    'data'  => (object) []
+                ], 200);
+            }
+        }
+
+        return response()->json([                
+            'msg'   => 'Error in deleting product image.',
             'status'   => false,                    
             'data'  => (object) []
         ], 200);

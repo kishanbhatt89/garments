@@ -16,9 +16,12 @@ class SingleProductResource extends JsonResource
     {        
 
         $variants = collect($this->variations)->where('is_deleted',0)->sortBy('price');
-
-        $price = $variants->first()->price;
-        $discountedPrice = $variants->first()->discounted_price;
+        
+        $price = $discountedPrice = 0.0;
+        if (!$variants->isEmpty()) {
+            $price = isset($variants->first()->price) ? $variants->first()->price : 0.0;
+            $discountedPrice = isset($variants->first()->discounted_price )? $variants->first()->discounted_price : 0.0;
+        }        
 
         $imageURL = '';
         
@@ -47,6 +50,26 @@ class SingleProductResource extends JsonResource
             ];
         }
 
+        $colors = collect($this->colors)->where('is_deleted',0);
+        $colorResponseArr = [];
+        foreach ($colors as $color) {
+            $colorResponseArr[] = [
+                'id' => $color->id,
+                'code' => $color->color_code, 
+                'created_at' => $color->created_at->format('Y-m-d H:i:s'),
+                'updated_at' => $color->updated_at->format('Y-m-d H:i:s'),
+            ];
+        }
+
+        $images = collect($this->images)->where('is_deleted',0);
+        $imageResponseArr = [];
+        foreach ($images as $image) {
+            $imageResponseArr[] = [
+                'id' => $image->id,
+                'image' => $image->image_uploaded_url."/".$image->image,
+            ];
+        }
+
         return [            
             'msg' => '',
             'status' => true,
@@ -67,19 +90,8 @@ class SingleProductResource extends JsonResource
                 'discounted_price' => $discountedPrice,
                 'created_at' => $this->created_at->format('Y-m-d H:i:s'),
                 'updated_at' => $this->updated_at->format('Y-m-d H:i:s'),
-                'images' => $this->images->transform(function($image){
-                    return (object)[                            
-                        'image' => $image->image_uploaded_url."/".$image->image,                            
-                    ];
-                }),
-                'colors' => $this->colors->transform(function($color){
-                    return (object)[
-                        'id' => $color->id,                            
-                        'code' => $color->color_code,                            
-                        'created_at' => $color->created_at->format('Y-m-d H:i:s'),
-                        'updated_at' => $color->updated_at->format('Y-m-d H:i:s'),
-                    ];
-                }),
+                'images' => $imageResponseArr,
+                'colors' => $colorResponseArr,
                 'variants' => $variantResponseArr,                    
             ]        
         ];

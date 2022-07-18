@@ -19,6 +19,10 @@ class Product extends Model
         return $this->hasMany(ProductVariation::class)->where('name', 'default');
     }
 
+    public function updateDefaultVariation() {
+        return $this->hasMany(ProductVariation::class)->where('name', 'default')->where('is_deleted',0);
+    }
+
     public function colors() {
         return $this->hasMany(ProductColor::class);
     }
