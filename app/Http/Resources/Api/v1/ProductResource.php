@@ -27,8 +27,8 @@ class ProductResource extends ResourceCollection
                     $variants = collect($page->variations)->where('is_deleted',0)->sortBy('price');
                     $price = $discountedPrice = 0.0;
                     if (!$variants->isEmpty()) {
-                        $price = isset($variants->first()->price) ? $variants->first()->price : 0.0;
-                        $discountedPrice = isset($variants->first()->discounted_price )? $variants->first()->discounted_price : 0.0;
+                        $price = isset($variants->first()->price) ? round($variants->first()->price,2) : 0.0;
+                        $discountedPrice = isset($variants->first()->discounted_price )? round($variants->first()->discounted_price,2) : 0.0;
                     }                    
                 }             
 
