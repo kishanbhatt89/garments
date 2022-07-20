@@ -20,15 +20,15 @@ class ProductResource extends ResourceCollection
             'status' => true,
             'data' => $this->collection->transform(function($page){
 
-                $price = 0.0;
-                $discountedPrice = 0.0;
+                $price = floatval(0.0);
+                $discountedPrice = floatval(0.0);
 
                 if ($page->variations) {
                     $variants = collect($page->variations)->where('is_deleted',0)->sortBy('price');
                     
                     if (!$variants->isEmpty()) {
-                        $price = isset($variants->first()->price) ? number_format((float)$variants->first()->price, 2, '.', '') : 0.0;
-                        $discountedPrice = isset($variants->first()->discounted_price )? number_format((float)$variants->first()->discounted_price, 2, '.', '') : 0.0;
+                        $price = isset($variants->first()->price) ? floatval(number_format((float)$variants->first()->price, 2, '.', '')) : 0.0;
+                        $discountedPrice = isset($variants->first()->discounted_price )? floatval(number_format((float)$variants->first()->discounted_price, 2, '.', '')) : 0.0;
                     }                    
                 }             
 
@@ -51,8 +51,8 @@ class ProductResource extends ResourceCollection
                     $variantResponseArr[] = [
                         'id' => $variant->id,
                         'name' => $variant->name, 
-                        'price' => number_format((float)$variant->price, 2, '.', ''),                            
-                        'discounted_price' => number_format((float)$variant->discounted_price, 2, '.', ''), 
+                        'price' => floatval(number_format((float)$variant->price, 2, '.', '')),                            
+                        'discounted_price' => floatval(number_format((float)$variant->discounted_price, 2, '.', '')), 
                         'status' => $variant->status,
                         'created_at' => $variant->created_at->format('Y-m-d H:i:s'),
                         'updated_at' => $variant->updated_at->format('Y-m-d H:i:s'),
@@ -94,8 +94,8 @@ class ProductResource extends ResourceCollection
                     'image' => $imageURL,
                     'created_at' => $page->created_at->format('Y-m-d H:i:s'),
                     'updated_at' => $page->updated_at->format('Y-m-d H:i:s'),
-                    'price' => number_format((float)$price, 2, '.', ''),
-                    'discounted_price' => number_format((float)$discountedPrice, 2, '.', ''),
+                    'price' => floatval(number_format((float)$price, 2, '.', '')),                    
+                    'discounted_price' => floatval(number_format((float)$discountedPrice, 2, '.', '')),
                     'images' => $imageResponseArr,
                     'colors' => $colorResponseArr,
                     'variants' => $variantResponseArr,                   

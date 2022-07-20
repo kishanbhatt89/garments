@@ -17,10 +17,10 @@ class SingleProductResource extends JsonResource
 
         $variants = collect($this->variations)->where('is_deleted',0)->sortBy('price');
         
-        $price = $discountedPrice = 0.0;
+        $price = $discountedPrice = floatval(0.0);
         if (!$variants->isEmpty()) {
-            $price = isset($variants->first()->price) ? number_format((float)$variants->first()->price, 2, '.', '') : 0.0;
-            $discountedPrice = isset($variants->first()->discounted_price)? number_format((float)$variants->first()->discounted_price, 2, '.', '') : 0.0;
+            $price = isset($variants->first()->price) ? floatval(number_format((float)$variants->first()->price, 2, '.', '')) : 0.0;
+            $discountedPrice = isset($variants->first()->discounted_price)? floatval(number_format((float)$variants->first()->discounted_price, 2, '.', '')) : 0.0;
         }        
 
         $imageURL = '';
@@ -42,8 +42,8 @@ class SingleProductResource extends JsonResource
             $variantResponseArr[] = [
                 'id' => $variant->id,
                 'name' => $variant->name, 
-                'price' => number_format((float)$variant->price, 2, '.', ''),                            
-                'discounted_price' => number_format((float)$variant->discounted_price, 2, '.', ''), 
+                'price' => floatval(number_format((float)$variant->price, 2, '.', '')),                            
+                'discounted_price' => floatval(number_format((float)$variant->discounted_price, 2, '.', '')), 
                 'status' => $variant->status,
                 'created_at' => $variant->created_at->format('Y-m-d H:i:s'),
                 'updated_at' => $variant->updated_at->format('Y-m-d H:i:s'),
@@ -86,8 +86,8 @@ class SingleProductResource extends JsonResource
                 'variation_type' => $this->variation_type,
                 'status' => $this->status,
                 'image' => $imageURL,
-                'price' => number_format((float)$price, 2, '.', ''),
-                'discounted_price' => number_format((float)$discountedPrice, 2, '.', ''),
+                'price' => floatval(number_format((float)$price, 2, '.', '')),
+                'discounted_price' => floatval(number_format((float)$discountedPrice, 2, '.', '')),
                 'created_at' => $this->created_at->format('Y-m-d H:i:s'),
                 'updated_at' => $this->updated_at->format('Y-m-d H:i:s'),
                 'images' => $imageResponseArr,
