@@ -95,6 +95,7 @@ class ProductResource extends ResourceCollection
                     'created_at' => $page->created_at->format('Y-m-d H:i:s'),
                     'updated_at' => $page->updated_at->format('Y-m-d H:i:s'),
                     'price' => floatval(number_format((float)$price, 2, '.', '')),                    
+                    "price_type" => gettype(floatval(number_format((float)$price, 2, '.', ''))),                    
                     'discounted_price' => floatval(number_format((float)$discountedPrice, 2, '.', '')),
                     'images' => $imageResponseArr,
                     'colors' => $colorResponseArr,
