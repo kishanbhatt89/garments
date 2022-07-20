@@ -26,7 +26,7 @@ class SingleProductResource extends JsonResource
         $imageURL = '';
         
         if ($this->images) {
-            $images = collect($this->images)->sortBy('created_at');
+            $images = collect($this->images)->where('is_deleted',0)->sortBy('created_at');
             if ($images) {
                 $url = isset($images->first()->image_uploaded_url) ? $images->first()->image_uploaded_url : '';
                 $name = isset($images->first()->image) ? $images->first()->image : '';                        
