@@ -27,7 +27,6 @@ class ProductResource extends ResourceCollection
                     $variants = collect($page->variations)->where('is_deleted',0)->sortBy('price');
                     
                     if (!$variants->isEmpty()) {
-                        dd($variants->first(), $variants->first()->price);
                         $price = isset($variants->first()->price) ? round($variants->first()->price,2) : 0.0;
                         $discountedPrice = isset($variants->first()->discounted_price )? round($variants->first()->discounted_price,2) : 0.0;
                     }                    
@@ -95,8 +94,8 @@ class ProductResource extends ResourceCollection
                     'image' => $imageURL,
                     'created_at' => $page->created_at->format('Y-m-d H:i:s'),
                     'updated_at' => $page->updated_at->format('Y-m-d H:i:s'),
-                    'price' => $price,
-                    'discounted_price' => $discountedPrice,
+                    'price' => round($price,2),
+                    'discounted_price' => round($discountedPrice,2),
                     'images' => $imageResponseArr,
                     'colors' => $colorResponseArr,
                     'variants' => $variantResponseArr,                   
