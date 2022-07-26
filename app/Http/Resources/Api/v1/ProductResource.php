@@ -121,9 +121,9 @@ class ProductResource extends ResourceCollection
             'from' => $this['from'],
             'next_page_url' => $this['next_page_url'],
             'per_page' => $this['per_page'],
-            'prev_page_url' => $this['prev_page_url'],
-            'last_page_url' => $this['last_page_url'],
-            'to' => $this['to']
+            'prev_page_url' => $this['prev_page_url'],            
+            'to' => $this['to'],
+            'last_page_url' => $this['last_page_url']
         ];            
 
         return [            
