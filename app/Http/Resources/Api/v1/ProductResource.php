@@ -45,7 +45,7 @@ class ProductResource extends ResourceCollection
                     }                                        
 
                 }
-
+                dd($product['images']);
                 if (isset($product['images']) && count($product['images']) > 0) {
 
                     $url = isset($images['images'][0]['image_uploaded_url']) ? $images['images'][0]['image_uploaded_url'] : '';
