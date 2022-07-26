@@ -173,9 +173,11 @@ class ProductController extends Controller
             }
         }        
 
-        $data = $products->simplePaginate(4);
-        
+        $data = $products->paginate(4);
+
         $finalProducts = (!empty($data)) ? $data->toArray() : array();
+
+        dd($finalProducts);
         
         if ($finalProducts && count($finalProducts) > 0) {
 
