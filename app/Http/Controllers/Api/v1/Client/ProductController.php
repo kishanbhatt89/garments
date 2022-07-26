@@ -27,30 +27,164 @@ class ProductController extends Controller
 
     }
 
-    public function index(Request $request) {
+    public function index(Request $request) {        
         
         if ($request->status == 'all') {
-            if ($request->category_id) {                
-                $products = Product::where('category_id', $request->category_id)->where('client_id', auth('client')->user()->id)->get();                
+
+            if ($request->category_id) {       
+
+                $products = Product::with([
+                                'variations' => function($query) {
+                                    $query->where('is_deleted',0)->orderBy('price','asc');
+                                },
+                                'images' => function($query) {
+                                    $query->where('is_deleted',0)->orderBy('created_at','asc');
+                                },
+                                'colors' => function($query) {
+                                    $query->where('is_deleted',0)->orderBy('created_at','asc');
+                                },
+                                'client',
+                                'store',
+                                'category',
+                                'subcategory'
+                            ])
+                            ->where('client_id', auth('client')->user()->id)
+                            ->where('category_id', $request->category_id)
+                            ->where('status','active')
+                            ->where('is_deleted',0)
+                            ->orderBy('created_at','asc');                
+
             } else {
-                $products = Product::where('client_id', auth('client')->user()->id)->get();
+
+                $products = Product::with([
+                                'variations' => function($query) {
+                                    $query->where('is_deleted',0)->orderBy('price','asc');
+                                },
+                                'images' => function($query) {
+                                    $query->where('is_deleted',0)->orderBy('created_at','asc');
+                                },
+                                'colors' => function($query) {
+                                    $query->where('is_deleted',0)->orderBy('created_at','asc');
+                                },
+                                'client',
+                                'store',
+                                'category',
+                                'subcategory'
+                            ])
+                            ->where('client_id', auth('client')->user()->id)                            
+                            ->where('status','active')
+                            ->where('is_deleted',0)
+                            ->orderBy('created_at','asc');                
+
             }
+
         } else if (!$request->status) {
+
             if ($request->category_id) {                
-                $products = Product::where('category_id', $request->category_id)->where('client_id', auth('client')->user()->id)->get();                
+
+                $products = Product::with([
+                                'variations' => function($query) {
+                                    $query->where('is_deleted',0)->orderBy('price','asc');
+                                },
+                                'images' => function($query) {
+                                    $query->where('is_deleted',0)->orderBy('created_at','asc');
+                                },
+                                'colors' => function($query) {
+                                    $query->where('is_deleted',0)->orderBy('created_at','asc');
+                                },
+                                'client',
+                                'store',
+                                'category',
+                                'subcategory'
+                            ])
+                            ->where('client_id', auth('client')->user()->id)
+                            ->where('category_id', $request->category_id)
+                            ->where('status','active')
+                            ->where('is_deleted',0)
+                            ->orderBy('created_at','asc');                
+
             } else {
-                $products = Product::where('client_id', auth('client')->user()->id)->get();
+
+                $products = Product::with([
+                                'variations' => function($query) {
+                                    $query->where('is_deleted',0)->orderBy('price','asc');
+                                },
+                                'images' => function($query) {
+                                    $query->where('is_deleted',0)->orderBy('created_at','asc');
+                                },
+                                'colors' => function($query) {
+                                    $query->where('is_deleted',0)->orderBy('created_at','asc');
+                                },
+                                'client',
+                                'store',
+                                'category',
+                                'subcategory'
+                            ])
+                            ->where('client_id', auth('client')->user()->id)                            
+                            ->where('status','active')
+                            ->where('is_deleted',0)
+                            ->orderBy('created_at','asc');
+
             }
+
         } else {
+
             if ($request->category_id) {
-                $products = Product::where('status', $request->status)->where('category_id', $request->category_id)->where('client_id', auth('client')->user()->id)->get();
+
+                $products = Product::with([
+                                'variations' => function($query) {
+                                    $query->where('is_deleted',0)->orderBy('price','asc');
+                                },
+                                'images' => function($query) {
+                                    $query->where('is_deleted',0)->orderBy('created_at','asc');
+                                },
+                                'colors' => function($query) {
+                                    $query->where('is_deleted',0)->orderBy('created_at','asc');
+                                },
+                                'client',
+                                'store',
+                                'category',
+                                'subcategory'
+                            ])
+                            ->where('client_id', auth('client')->user()->id)
+                            ->where('category_id', $request->category_id)
+                            ->where('status',$request->status)
+                            ->where('is_deleted',0)
+                            ->orderBy('created_at','asc');
+
             } else {
-                $products = Product::where('status', $request->status)->where('client_id', auth('client')->user()->id)->get();
+
+                $products = Product::with([
+                                'variations' => function($query) {
+                                    $query->where('is_deleted',0)->orderBy('price','asc');
+                                },
+                                'images' => function($query) {
+                                    $query->where('is_deleted',0)->orderBy('created_at','asc');
+                                },
+                                'colors' => function($query) {
+                                    $query->where('is_deleted',0)->orderBy('created_at','asc');
+                                },
+                                'client',
+                                'store',
+                                'category',
+                                'subcategory'
+                            ])
+                            ->where('client_id', auth('client')->user()->id)                            
+                            ->where('status',$request->status)
+                            ->where('is_deleted',0)
+                            ->orderBy('created_at','asc');                                
+
             }
         }        
 
-        if ($products->count() > 0) {
-            return (new ProductResource($products))->response()->setStatusCode(200);
+        $data = $products->simplePaginate(1);
+        
+        $finalProducts = (!empty($data)) ? $data->toArray() : array();
+        
+        if ($finalProducts && count($finalProducts) > 0) {
+
+            return (new ProductResource($finalProducts))->response()->setStatusCode(200);
+
         }
 
         return [            
