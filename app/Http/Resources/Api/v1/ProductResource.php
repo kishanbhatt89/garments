@@ -68,6 +68,8 @@ class ProductResource extends ResourceCollection
 
                 }
 
+                dd($imageURL);
+
                 if (isset($product['colors']) && count($product['colors']) > 0) {
 
                     foreach ($product['colors'] as $color) {
