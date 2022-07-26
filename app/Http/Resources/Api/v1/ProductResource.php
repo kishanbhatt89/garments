@@ -125,7 +125,7 @@ class ProductResource extends ResourceCollection
             'to' => $this['to'],
             'last_page_url' => $this['last_page_url'],
             'total_products' => $this['total'],
-            'total_pages' => intval(explode('page=', $this['last_page_url'])[1]),
+            'last_page' => intval(explode('page=', $this['last_page_url'])[1]),
         ];            
 
         return [            
