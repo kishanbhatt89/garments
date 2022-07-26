@@ -124,7 +124,7 @@ class ProductResource extends ResourceCollection
             'prev_page_url' => $this['prev_page_url'],            
             'to' => $this['to'],
             'last_page_url' => $this['last_page_url'],
-            'total' => $this['total'],
+            'total_products' => $this['total'],
             'total_pages' => explode('page=', $this['last_page_url'])[1],
         ];            
 
