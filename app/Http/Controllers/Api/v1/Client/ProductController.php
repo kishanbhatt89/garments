@@ -49,8 +49,7 @@ class ProductController extends Controller
                                 'subcategory'
                             ])
                             ->where('client_id', auth('client')->user()->id)
-                            ->where('category_id', $request->category_id)
-                            ->where('status','active')
+                            ->where('category_id', $request->category_id)                            
                             ->where('is_deleted',0)
                             ->orderBy('created_at','asc');                
 
@@ -71,8 +70,7 @@ class ProductController extends Controller
                                 'category',
                                 'subcategory'
                             ])
-                            ->where('client_id', auth('client')->user()->id)                            
-                            ->where('status','active')
+                            ->where('client_id', auth('client')->user()->id)                                                        
                             ->where('is_deleted',0)
                             ->orderBy('created_at','asc');                
 
@@ -98,8 +96,7 @@ class ProductController extends Controller
                                 'subcategory'
                             ])
                             ->where('client_id', auth('client')->user()->id)
-                            ->where('category_id', $request->category_id)
-                            ->where('status','active')
+                            ->where('category_id', $request->category_id)                            
                             ->where('is_deleted',0)
                             ->orderBy('created_at','asc');                
 
@@ -120,8 +117,7 @@ class ProductController extends Controller
                                 'category',
                                 'subcategory'
                             ])
-                            ->where('client_id', auth('client')->user()->id)                            
-                            ->where('status','active')
+                            ->where('client_id', auth('client')->user()->id)                                                        
                             ->where('is_deleted',0)
                             ->orderBy('created_at','asc');
 
