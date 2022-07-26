@@ -173,7 +173,7 @@ class ProductController extends Controller
             }
         }        
 
-        $data = $products->simplePaginate(1);
+        $data = $products->simplePaginate(4);
         
         $finalProducts = (!empty($data)) ? $data->toArray() : array();
         
