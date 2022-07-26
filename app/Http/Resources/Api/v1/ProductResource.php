@@ -16,7 +16,7 @@ class ProductResource extends ResourceCollection
     {                
         $responseData = [];
         $productData = [];
-        dd($this);
+        
         if (isset($this['data']) && count($this['data']) > 0) {            
 
             $variationResponseArr = $imageResponseArr = $colorResponseArr = [];
@@ -123,7 +123,9 @@ class ProductResource extends ResourceCollection
             'per_page' => $this['per_page'],
             'prev_page_url' => $this['prev_page_url'],            
             'to' => $this['to'],
-            'last_page_url' => $this['last_page_url']
+            'last_page_url' => $this['last_page_url'],
+            'total' => $this['total'],
+            'total_pages' => explode('?', $this['last_page_url'])[1],
         ];            
 
         return [            
