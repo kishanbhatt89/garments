@@ -45,11 +45,11 @@ class ProductResource extends ResourceCollection
                     }                                        
 
                 }
-                dd($product['images']);
+                
                 if (isset($product['images']) && count($product['images']) > 0) {
 
-                    $url = isset($images['images'][0]['image_uploaded_url']) ? $images['images'][0]['image_uploaded_url'] : '';
-                    $name = isset($images['images'][0]['image']) ? $images['images'][0]['image'] : '';                        
+                    $url = isset($product['images'][0]['image_uploaded_url']) ? $product['images'][0]['image_uploaded_url'] : '';
+                    $name = isset($product['images'][0]['image']) ? $product['images'][0]['image'] : '';                        
 
                     if ($url !== '' && $name !== '') {
 
@@ -66,9 +66,7 @@ class ProductResource extends ResourceCollection
 
                     }
 
-                }
-
-                dd($imageURL);
+                }                
 
                 if (isset($product['colors']) && count($product['colors']) > 0) {
 
