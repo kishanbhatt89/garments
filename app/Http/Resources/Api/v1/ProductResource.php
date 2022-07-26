@@ -111,6 +111,9 @@ class ProductResource extends ResourceCollection
         }   
 
         $responseData['products'] = count($productData) > 0 ? $productData : [];
+
+        $replaceString = "page=".$this['to'];
+        $last_page_url = str_replace("page=1", $replaceString, $this['first_page_url']);
         
         $responseData['pagination'][] = [
             'current_page' => $this['current_page'],
@@ -119,6 +122,7 @@ class ProductResource extends ResourceCollection
             'next_page_url' => $this['next_page_url'],
             'per_page' => $this['per_page'],
             'prev_page_url' => $this['prev_page_url'],
+            'last_page_url' => $last_page_url,
             'to' => $this['to']
         ];            
 
