@@ -21,15 +21,18 @@
                                 <path d="M11 2.375L2 9.575V20.575C2 21.175 2.4 21.575 3 21.575H9C9.6 21.575 10 21.175 10 20.575V14.575C10 13.975 10.4 13.575 11 13.575H13C13.6 13.575 14 13.975 14 14.575V20.575C14 21.175 14.4 21.575 15 21.575H21C21.6 21.575 22 21.175 22 20.575V9.575L13 2.375C12.4 1.875 11.6 1.875 11 2.375Z" fill="black" />
                             </svg>
                         </span>
-                        Add Category</a>
+                        Edit Category</a>
 
                     </li>
 
                 </ul>
 
-                <form action="{{ route('admin.categories.store') }}" enctype="multipart/form-data" method="post">
+                <form action="{{ route('admin.categories.update', $category->id) }}" enctype="multipart/form-data" method="post">
 
                     @csrf
+                    @method('PUT')
+
+                    <input type="hidden" name="category_id" value="{{ $category->id }}">
 
                     <div class="tab-content" id="myTabContent">
                         
@@ -41,7 +44,7 @@
                                     
                                     <div class="card-title">
                                         
-                                        <h2>Add Categories</h2>
+                                        <h2>Edit Category</h2>
                                         
                                     </div>
                                     
@@ -62,7 +65,7 @@
 
                                         <div class="col-md-9">
                                             
-                                            <input type="text" class="form-control form-control-solid @error('name') is-invalid @enderror" name="name" id="name" value="{{ old('name') ?? '' }}" />
+                                            <input type="text" class="form-control form-control-solid @error('name') is-invalid @enderror" name="name" id="name" value="{{ $category->name ?? '' }}" />
 
                                             @error('name')
                                                 <span class="invalid-feedback" role="alert">
@@ -87,7 +90,7 @@
 
                                         <div class="col-md-9">
                                             
-                                            <input type="text" class="form-control form-control-solid" name="slug" id="slug" value="{{ old('slug') ?? '' }}" />
+                                            <input type="text" class="form-control form-control-solid" name="slug" id="slug" value="{{ $category->slug ?? '' }}" />
 
                                             @error('slug')
                                                 <span class="invalid-feedback d-block" role="alert">
@@ -114,8 +117,8 @@
                                             
                                             <select class="form-select form-control form-select-solid" ata-hide-search="true" name="parent_id" id="parent_id" data-control="select2" data-placeholder="Select a parent cateogry">
                                                 <option></option>
-                                                @foreach ($categories as $category)
-                                                    <option value="{{ $category->id }}">{{ $category->name }}</option>    
+                                                @foreach ($categories as $cat)
+                                                    <option value="{{ $cat->id }}" @if($category->parent_id == $cat->id) 'selected' @endif>{{ $cat->name }}</option>    
                                                 @endforeach                                                    
                                             </select>                                            
 
@@ -143,8 +146,17 @@
                                         </div>
 
                                         <div class="col-md-9">
-                                                                                        
-                                            <div class="image-input image-input-outline" data-kt-image-input="true" style="background-image: url(/assets/media/svg/avatars/blank.svg)">
+
+                                            @php
+                                                $image = $category->image ?? '';
+                                                $image_url = asset('storage/categories/'.$image);
+                                            @endphp
+
+                                            @if ($image)
+                                                <div class="image-input image-input-outline" data-kt-image-input="true" style="background-image: url({{ $image_url }}) !important;">                                                
+                                            @else
+                                                <div class="image-input image-input-outline" data-kt-image-input="true" style="background-image: url({{ $image_url }})">
+                                            @endif                                                                                                                               
 
                                                 <div class="image-input-wrapper w-125px h-125px"></div>                                                
                                                 
@@ -198,7 +210,7 @@
                                             <div class="d-flex justify-content-end">
                                                 
                                                 <button type="submit"class="btn btn-primary">
-                                                    <span class="indicator-label">Save</span>
+                                                    <span class="indicator-label">Update</span>
                                                     <span class="indicator-progress">Please wait...
                                                     <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
                                                 </button>

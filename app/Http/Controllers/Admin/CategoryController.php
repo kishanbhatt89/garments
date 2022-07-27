@@ -30,6 +30,13 @@ class CategoryController extends Controller
         return view('admin.categories.add', compact('categories'));
     }
 
+    public function edit($id)
+    {
+        $category = Category::find($id);
+        $categories = Category::all();
+        return view('admin.categories.edit', compact('category','categories'));
+    }
+
     public function show(Request $request)
     {
         $category = Category::where('id',$request->get('id'))->first();            
@@ -84,29 +91,37 @@ class CategoryController extends Controller
     }
 
     public function update(Request $request)
-    {
-        $validator = Validator::make($request->all(), [
-            'name' => 'required|unique:categories,id,'.$request->id.',id',
-            'slug' => 'required|unique:categories,id,'.$request->id.',id',
+    {   
+        
+        $request->validate([
+            'name' => 'required|unique:categories,id,'.$request->category_id.',id',
+            'slug' => 'required|unique:categories,id,'.$request->category_id.',id',
+            'image' => 'sometimes|image|mimes:jpeg,png,jpg,gif,svg',
             'parent_id' => 'nullable|integer',       
-        ]);   
+        ]);           
 
-        if ($validator->fails()) {
-            return response()->json(['data'=> $validator->errors()], 400);    
-        }
-
-        $category = Category::find($request->id);
+        $category = Category::find($request->category_id);
         
         $category->name = $request->name;
         $category->slug = $request->slug;
         $category->parent_id = $request->parent_id ? $request->parent_id : 0;
 
+        if ($request->image) {
+            $uploadFolder = 'categories';
+
+            $image = $request->file('image');
+
+            $image_uploaded_path = $image->store($uploadFolder, 'public');
+
+            $category->image = basename($image_uploaded_path);
+        }
+
         if($category->save()) 
         {
-            return response()->json(['msg'=> 'Category updated successfully! '], 200);    
+            return redirect()->back()->with('success', 'Category updated successfully!'); 
         } 
 
-        return response()->json(['msg'=> 'Error in updating category'], 200);
+        return redirect()->back()->with('error', 'Error in adding category!');
     }
 
     public function destroy(Request $request)
