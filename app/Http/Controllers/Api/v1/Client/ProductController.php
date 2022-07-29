@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\v1\Client;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\v1\Client\ChangeProductStatusRequest;
 use App\Http\Requests\Api\v1\Client\DeleteProductImageRequest;
+use App\Http\Requests\Api\v1\Client\DeleteProductRequest;
 use App\Http\Requests\Api\v1\Client\ProductImageRequest;
 use App\Http\Requests\Api\v1\Client\ProductRequest;
 use App\Http\Requests\Api\v1\Client\ShowProductRequest;
@@ -701,6 +702,47 @@ class ProductController extends Controller
             'status'   => false,                    
             'data'  => (object) []
         ], 200);
+
+    }
+
+    public function delete(DeleteProductRequest $request) {
+
+        $product = Product::find($request->id);
+
+        if ($product) {
+
+            $product->is_deleted = 1;
+
+            if ($product->save()) {
+
+                $product->variations()->update([
+                    'is_deleted' => 1
+                ]);
+
+                $product->colors()->update([
+                    'is_deleted' => 1
+                ]);
+
+                $product->images()->update([
+                    'is_deleted' => 1
+                ]);
+
+                return response()->json([
+                    'msg'   => 'Product deleted successfully.',
+                    'status'   => true,
+                    'data'  => (object) []
+                ], 200);
+
+            }   
+
+        }
+
+        return response()->json([                
+            'msg'   => 'Error in deleting product.',
+            'status'   => false,                    
+            'data'  => (object) []
+        ], 200);
+
 
     }
     

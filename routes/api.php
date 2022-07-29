@@ -72,10 +72,11 @@ Route::group(['prefix' => 'v1/client','middleware' => ['assign.guard:client']],f
     Route::get('products', [ProductController::class, 'index'])->middleware(['jwt.auth']);
     Route::post('product', [ProductController::class, 'store'])->middleware(['jwt.auth']);
     Route::post('product-details', [ProductController::class, 'show'])->middleware(['jwt.auth']);
+    Route::post('product/delete-product', [ProductController::class, 'delete'])->middleware(['jwt.auth']);
     Route::post('product/image', [ProductController::class, 'imageUpload'])->middleware(['jwt.auth']);
     Route::post('product/changestatus', [ProductController::class, 'changeStatus'])->middleware(['jwt.auth']);   
     Route::post('product/update-product', [ProductController::class, 'update'])->middleware(['jwt.auth']);
-    Route::post('product/delete-product-image', [ProductController::class, 'deleteImage'])->middleware(['jwt.auth']);
+    Route::post('product/delete-product-image', [ProductController::class, 'deleteImage'])->middleware(['jwt.auth']);    
     
     Route::post('update-profile', [ClientAuthController::class, 'update'])->middleware(['jwt.auth']);
     Route::post('update-store', [StoreController::class, 'update'])->middleware(['jwt.auth']);
