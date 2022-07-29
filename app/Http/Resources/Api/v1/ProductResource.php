@@ -123,7 +123,7 @@ class ProductResource extends ResourceCollection
             $responseData['products'] = collect($responseData['products'])->sortByDesc('price');
         }        
 
-        if ($request->sort) {
+        if ($request->sort && ($request->sort == 'price-ltoh' || $request->sort == 'price-htol')) {
 
             $responseData['products'] = $responseData['products']->map(function($product){
                 $product['price'] = number_format((float)$product['price'], 2, '.', '');
