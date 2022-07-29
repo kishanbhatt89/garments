@@ -38,7 +38,7 @@ class ProductController extends Controller
         
         if ($request->sort == 'name') {
             $sort = 'name';
-            $order = $request->order ?? $order;
+            $order = 'asc';
         } else if ($request->sort == 'price-htol') {            
             $vSort = 'price';
             $vOrder = 'desc';
@@ -47,7 +47,7 @@ class ProductController extends Controller
             $vOrder = 'asc';
         } else if ($request->sort == 'default') {
             $sort = 'created_at';
-            $order = $request->order ?? $order;
+            $order = 'desc';
         }       
         
         if ($request->status == 'all') {
