@@ -45,7 +45,10 @@ class ProductController extends Controller
         } else if ($request->sort == 'price-ltoh') {            
             $vSort = 'price';
             $vOrder = 'asc';
-        }        
+        } else if ($request->sort == 'default') {
+            $sort = 'created_at';
+            $order = $request->order ?? $order;
+        }       
         
         if ($request->status == 'all') {
 
@@ -119,7 +122,7 @@ class ProductController extends Controller
                             ->orderBy($sort,$order);                 
 
             } else {
-
+                
                 $products = Product::with([
                                 'variations' => function($query) use ($vSort, $vOrder) {
                                     $query->where('is_deleted',0)->orderBy($vSort,$vOrder);
