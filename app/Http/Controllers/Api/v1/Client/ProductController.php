@@ -52,7 +52,7 @@ class ProductController extends Controller
             if ($request->category_id) {       
 
                 $products = Product::with([
-                                'variations' => function($query, $vSort, $vOrder) {
+                                'variations' => function($query) use ($vSort, $vOrder) {
                                     $query->where('is_deleted',0)->orderBy($vSort,$vOrder);
                                 },
                                 'images' => function($query) {
@@ -74,7 +74,7 @@ class ProductController extends Controller
             } else {
 
                 $products = Product::with([
-                                'variations' => function($query, $vSort, $vOrder) {
+                                'variations' => function($query) use ($vSort, $vOrder) {
                                     $query->where('is_deleted',0)->orderBy($vSort,$vOrder);
                                 },
                                 'images' => function($query) {
