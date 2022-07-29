@@ -128,8 +128,7 @@ class ProductResource extends ResourceCollection
                                         $product['discounted_price'] = number_format((float)$product['discounted_price'], 2, '.', '');
                                         return $product;
                                     })->toArray();
-
-        dd($responseData['products']);
+        
         //$replaceString = "page=".$this['to'];
         //$last_page_url = str_replace("page=1", $replaceString, $this['first_page_url']);
         
