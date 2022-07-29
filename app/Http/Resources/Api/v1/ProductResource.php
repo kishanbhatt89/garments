@@ -18,18 +18,21 @@ class ProductResource extends ResourceCollection
         $productData = [];
         
         if (isset($this['data']) && count($this['data']) > 0) {            
-
-            $variationResponseArr = $imageResponseArr = $colorResponseArr = [];
+            
             
             foreach ($this['data']  as $key => $product) {      
 
                 $price = $discountedPrice = 0.0;
                 $imageURL = '';                                
+
+                $variationResponseArr = $imageResponseArr = $colorResponseArr = [];                                
                 
                 if (isset($product['variations']) && count($product['variations']) > 0) {
+
+                    $priceData = $this->getLowestPrice($product['variations']);
                     
-                    $price = isset($product['variations'][0]['price']) ? number_format((float)$product['variations'][0]['price'], 2, '.', '') : 0.0;
-                    $discountedPrice = isset($product['variations'][0]['discounted_price'])? number_format((float)$product['variations'][0]['discounted_price'], 2, '.', '') : 0.0;
+                    $price = number_format((float)$priceData['price'], 2, '.', '');
+                    $discountedPrice = number_format((float)$priceData['discounted_price'], 2, '.', '');
 
                     foreach ($product['variations'] as $variation) {
 
@@ -96,8 +99,8 @@ class ProductResource extends ResourceCollection
                     'variation_type' => $product['variation_type'] ? $product['variation_type'] : '',
                     'status' => $product['status'],
                     'image' => $imageURL,
-                    'price' => number_format((float)$price, 2, '.', ''),
-                    'discounted_price' => number_format((float)$discountedPrice, 2, '.', ''),                    
+                    'price' =>  floatval($price), //number_format((float)$price, 2, '.', ''),
+                    'discounted_price' => floatval($discountedPrice), //number_format((float)$discountedPrice, 2, '.', ''),                    
                     'created_at' => $product['created_at'],
                     'updated_at' => $product['updated_at'],
                     'variants' => $variationResponseArr,
@@ -108,10 +111,25 @@ class ProductResource extends ResourceCollection
 
             }
 
-        }   
+        }           
 
-        $responseData['products'] = count($productData) > 0 ? $productData : [];
+        $responseData['products'] = count($productData) > 0 ? $productData : [];        
 
+        if ($request->sort == 'price-ltoh') {
+            $responseData['products'] = collect($responseData['products'])->sortBy('price');
+        }
+
+        if ($request->sort == 'price-htol') {
+            $responseData['products'] = collect($responseData['products'])->sortByDesc('price');
+        }        
+        
+        $responseData['products'] = $responseData['products']->map(function($product){
+                                        $product['price'] = number_format((float)$product['price'], 2, '.', '');
+                                        $product['discounted_price'] = number_format((float)$product['discounted_price'], 2, '.', '');
+                                        return $product;
+                                    })->toArray();
+
+        dd($responseData['products']);
         //$replaceString = "page=".$this['to'];
         //$last_page_url = str_replace("page=1", $replaceString, $this['first_page_url']);
         
@@ -223,5 +241,9 @@ class ProductResource extends ResourceCollection
             })   
         ];
         */
+    }
+
+    private function getLowestPrice($variations) {
+        return collect($variations)->sortBy('price')->first();        
     }
 }

@@ -28,21 +28,38 @@ class ProductController extends Controller
 
     }
 
-    public function index(Request $request) {        
+    public function index(Request $request) {    
+
+        $sort = 'created_at';
+        $order = 'desc';
+
+        $vSort = 'price';
+        $vOrder = 'asc';
+        
+        if ($request->sort == 'name') {
+            $sort = 'name';
+            $order = $request->order ?? $order;
+        } else if ($request->sort == 'price-htol') {            
+            $vSort = 'price';
+            $vOrder = 'desc';
+        } else if ($request->sort == 'price-ltoh') {            
+            $vSort = 'price';
+            $vOrder = 'asc';
+        }        
         
         if ($request->status == 'all') {
 
             if ($request->category_id) {       
 
                 $products = Product::with([
-                                'variations' => function($query) {
-                                    $query->where('is_deleted',0)->orderBy('price','asc');
+                                'variations' => function($query, $vSort, $vOrder) {
+                                    $query->where('is_deleted',0)->orderBy($vSort,$vOrder);
                                 },
                                 'images' => function($query) {
-                                    $query->where('is_deleted',0)->orderBy('created_at','asc');
+                                    $query->where('is_deleted',0)->orderBy('created_at','desc');
                                 },
                                 'colors' => function($query) {
-                                    $query->where('is_deleted',0)->orderBy('created_at','asc');
+                                    $query->where('is_deleted',0)->orderBy('created_at','desc');
                                 },
                                 'client',
                                 'store',
@@ -52,19 +69,19 @@ class ProductController extends Controller
                             ->where('client_id', auth('client')->user()->id)
                             ->where('category_id', $request->category_id)                            
                             ->where('is_deleted',0)
-                            ->orderBy('created_at','asc');                
+                            ->orderBy($sort,$order);                
 
             } else {
 
                 $products = Product::with([
-                                'variations' => function($query) {
-                                    $query->where('is_deleted',0)->orderBy('price','asc');
+                                'variations' => function($query, $vSort, $vOrder) {
+                                    $query->where('is_deleted',0)->orderBy($vSort,$vOrder);
                                 },
                                 'images' => function($query) {
-                                    $query->where('is_deleted',0)->orderBy('created_at','asc');
+                                    $query->where('is_deleted',0)->orderBy('created_at','desc');
                                 },
                                 'colors' => function($query) {
-                                    $query->where('is_deleted',0)->orderBy('created_at','asc');
+                                    $query->where('is_deleted',0)->orderBy('created_at','desc');
                                 },
                                 'client',
                                 'store',
@@ -73,7 +90,7 @@ class ProductController extends Controller
                             ])
                             ->where('client_id', auth('client')->user()->id)                                                        
                             ->where('is_deleted',0)
-                            ->orderBy('created_at','asc');                
+                            ->orderBy($sort,$order);                
 
             }
 
@@ -82,14 +99,14 @@ class ProductController extends Controller
             if ($request->category_id) {                
 
                 $products = Product::with([
-                                'variations' => function($query) {
-                                    $query->where('is_deleted',0)->orderBy('price','asc');
+                                'variations' => function($query) use ($vSort, $vOrder) {
+                                    $query->where('is_deleted',0)->orderBy($vSort,$vOrder);
                                 },
                                 'images' => function($query) {
-                                    $query->where('is_deleted',0)->orderBy('created_at','asc');
+                                    $query->where('is_deleted',0)->orderBy('created_at','desc');
                                 },
                                 'colors' => function($query) {
-                                    $query->where('is_deleted',0)->orderBy('created_at','asc');
+                                    $query->where('is_deleted',0)->orderBy('created_at','desc');
                                 },
                                 'client',
                                 'store',
@@ -99,19 +116,19 @@ class ProductController extends Controller
                             ->where('client_id', auth('client')->user()->id)
                             ->where('category_id', $request->category_id)                            
                             ->where('is_deleted',0)
-                            ->orderBy('created_at','asc');                
+                            ->orderBy($sort,$order);                 
 
             } else {
 
                 $products = Product::with([
-                                'variations' => function($query) {
-                                    $query->where('is_deleted',0)->orderBy('price','asc');
+                                'variations' => function($query) use ($vSort, $vOrder) {
+                                    $query->where('is_deleted',0)->orderBy($vSort,$vOrder);
                                 },
                                 'images' => function($query) {
-                                    $query->where('is_deleted',0)->orderBy('created_at','asc');
+                                    $query->where('is_deleted',0)->orderBy('created_at','desc');
                                 },
                                 'colors' => function($query) {
-                                    $query->where('is_deleted',0)->orderBy('created_at','asc');
+                                    $query->where('is_deleted',0)->orderBy('created_at','desc');
                                 },
                                 'client',
                                 'store',
@@ -120,7 +137,7 @@ class ProductController extends Controller
                             ])
                             ->where('client_id', auth('client')->user()->id)                                                        
                             ->where('is_deleted',0)
-                            ->orderBy('created_at','asc');
+                            ->orderBy($sort,$order); 
 
             }
 
@@ -129,14 +146,14 @@ class ProductController extends Controller
             if ($request->category_id) {
 
                 $products = Product::with([
-                                'variations' => function($query) {
-                                    $query->where('is_deleted',0)->orderBy('price','asc');
+                                'variations' => function($query) use ($vSort, $vOrder) {
+                                    $query->where('is_deleted',0)->orderBy($vSort,$vOrder);
                                 },
                                 'images' => function($query) {
-                                    $query->where('is_deleted',0)->orderBy('created_at','asc');
+                                    $query->where('is_deleted',0)->orderBy('created_at','desc');
                                 },
                                 'colors' => function($query) {
-                                    $query->where('is_deleted',0)->orderBy('created_at','asc');
+                                    $query->where('is_deleted',0)->orderBy('created_at','desc');
                                 },
                                 'client',
                                 'store',
@@ -147,19 +164,19 @@ class ProductController extends Controller
                             ->where('category_id', $request->category_id)
                             ->where('status',$request->status)
                             ->where('is_deleted',0)
-                            ->orderBy('created_at','asc');
+                            ->orderBy($sort,$order); 
 
             } else {
 
                 $products = Product::with([
-                                'variations' => function($query) {
-                                    $query->where('is_deleted',0)->orderBy('price','asc');
+                                'variations' => function($query) use ($vSort, $vOrder) {
+                                    $query->where('is_deleted',0)->orderBy($vSort,$vOrder);
                                 },
                                 'images' => function($query) {
-                                    $query->where('is_deleted',0)->orderBy('created_at','asc');
+                                    $query->where('is_deleted',0)->orderBy('created_at','desc');
                                 },
                                 'colors' => function($query) {
-                                    $query->where('is_deleted',0)->orderBy('created_at','asc');
+                                    $query->where('is_deleted',0)->orderBy('created_at','desc');
                                 },
                                 'client',
                                 'store',
@@ -169,7 +186,7 @@ class ProductController extends Controller
                             ->where('client_id', auth('client')->user()->id)                            
                             ->where('status',$request->status)
                             ->where('is_deleted',0)
-                            ->orderBy('created_at','asc');                                
+                            ->orderBy($sort,$order);                                
 
             }
         }        
