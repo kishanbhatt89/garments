@@ -122,12 +122,16 @@ class ProductResource extends ResourceCollection
         if ($request->sort == 'price-htol') {
             $responseData['products'] = collect($responseData['products'])->sortByDesc('price');
         }        
-        
-        $responseData['products'] = $responseData['products']->map(function($product){
-                                        $product['price'] = number_format((float)$product['price'], 2, '.', '');
-                                        $product['discounted_price'] = number_format((float)$product['discounted_price'], 2, '.', '');
-                                        return $product;
-                                    })->toArray();
+
+        if ($request->sort) {
+
+            $responseData['products'] = $responseData['products']->map(function($product){
+                $product['price'] = number_format((float)$product['price'], 2, '.', '');
+                $product['discounted_price'] = number_format((float)$product['discounted_price'], 2, '.', '');
+                return $product;
+            })->toArray();
+
+        }            
         
         //$replaceString = "page=".$this['to'];
         //$last_page_url = str_replace("page=1", $replaceString, $this['first_page_url']);
