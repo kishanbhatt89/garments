@@ -115,7 +115,7 @@ class ProductResource extends ResourceCollection
 
         $responseData['products'] = count($productData) > 0 ? $productData : [];        
 
-        if ($request->sort == 'price-ltoh') {            
+        if ($request->sort == 'price-ltoh') {
             $responseData['products'] = collect($responseData['products'])->sortBy('price');
         }
 
