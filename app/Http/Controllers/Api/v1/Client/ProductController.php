@@ -132,9 +132,9 @@ class ProductController extends Controller
                             product_variations.*,
                         FROM products 
                         LEFT JOIN product_variations
-                        ON product_variations.product_id = products.id
-                        WHERE products.client_id = ? AND products.is_deleted = 0 AND product_variations.is_deleted = 0
-                        ORDER BY products.created_at DESC',                        
+                        ON "product_variations.product_id = products.id"
+                        WHERE "products.client_id" = ? AND "products.is_deleted" = 0 AND "product_variations.is_deleted" = 0
+                        ORDER BY "products.created_at" DESC',                        
                         [auth('client')->user()->id]
 
                     )
