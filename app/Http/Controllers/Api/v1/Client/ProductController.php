@@ -123,16 +123,12 @@ class ProductController extends Controller
                             ->orderBy($sort,$order);                 
 
             } else {
-                
-                dd(
-                    DB::select(
-                        "SELECT products, product_variations 
-                        FROM products 
-                        LEFT JOIN product_variations
-                        ON product_variatons.product_id = products.id
-                        WHERE client_id = ".auth('client')->user()->id." AND is_deleted = 0 ORDER BY ".$sort." ".$order
-                    )
-                );
+                $query = '
+                    SELECT products.*, product_variations.* FROM products
+                    LEFT JOIN product_variations ON product_variations.product_id = products.id
+                    WHERE products.client_id = "'.auth('client')->user()->id.'" AND products.is_deleted = 0 AND product_variations.is_deleted = 0
+                ';
+                dd(DB::select($query));
 
                 $products = Product::with([
                                 'variations' => function($query) use ($vSort, $vOrder) {
