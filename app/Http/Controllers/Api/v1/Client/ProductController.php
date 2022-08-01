@@ -127,8 +127,16 @@ class ProductController extends Controller
                 dd(
 
                     DB::select(
-                        'SELECT * FROM products WHERE client_id = ? AND is_deleted = ? ORDER BY '.$sort.' '.$order,
-                        [auth('client')->user()->id, 0]                    
+                        'SELECT 
+                            products.*,
+                            product_variations.*,
+                        FROM products 
+                        LEFT JOIN product_variations
+                        ON product_variations.product_id = products.id
+                        WHERE products.client_id = ? AND products.is_deleted = 0 AND product_variations.is_deleted = 0
+                        ORDER BY products.created_at DESC',                        
+                        [auth('client')->user()->id]
+
                     )
 
                 );
