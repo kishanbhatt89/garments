@@ -132,7 +132,7 @@ class ProductController extends Controller
                             ->select('products.*', 'product_variations.price')
                             ->get();*/
                 
-                $data = Product::leftJoin('product_vairaionts', 'product_variations.product_id','=','products.id')                    
+                $data = Product::leftJoin('product_variations', 'product_variations.product_id','=','products.id')                    
                     ->select('product_variations.*')
                     ->get();
 
