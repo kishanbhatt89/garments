@@ -122,7 +122,7 @@ class ProductController extends Controller
                             ->orderBy($sort,$order);                 
 
             } else {
-                
+                dd('calling 1');
                 $products = Product::with([
                                 'variations' => function($query) use ($vSort, $vOrder) {
                                     $query->where('is_deleted',0)->orderBy($vSort,$vOrder);
