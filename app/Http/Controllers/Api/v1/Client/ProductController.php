@@ -17,6 +17,7 @@ use App\Models\ProductColor;
 use App\Models\ProductImage;
 use App\Models\ProductVariation;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
 use \Illuminate\Support\Facades\Validator;
 
 
@@ -195,8 +196,14 @@ class ProductController extends Controller
             }
         }        
         
-        $data = $products->paginate(4);        
+        $paginated_data = $products->paginate(4);        
 
+        if ($request->sort == 'price-htol') {
+            $data = $paginated_data->sortBy('price');
+        
+            $data = new LengthAwarePaginator($data, $paginated_data->total(), $paginated_data->perPage());        
+        }
+        dd($data);
         $finalProducts = (!empty($data)) ? $data->toArray() : array();        
         
         if ($finalProducts && count($finalProducts) > 0) {

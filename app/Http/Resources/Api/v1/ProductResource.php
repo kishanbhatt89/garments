@@ -3,7 +3,6 @@
 namespace App\Http\Resources\Api\v1;
 
 use Illuminate\Http\Resources\Json\ResourceCollection;
-use Illuminate\Pagination\LengthAwarePaginator;
 
 class ProductResource extends ResourceCollection
 {
@@ -116,21 +115,12 @@ class ProductResource extends ResourceCollection
 
         $responseData['products'] = count($productData) > 0 ? $productData : [];        
 
-        if ($request->sort == 'price-ltoh') {
-
-            // $data = $paginated_data->sortBy(function($likes) {
-            //     return $likes->count();
-            // });
-        
-            // $data = new LengthAwarePaginator($data, $this['total'], $this['per_page']);        
-
-            //$responseData['products'] = collect($responseData['products'])->sortBy('price');
-            $responseData['products'] = new LengthAwarePaginator(collect($responseData['products'])->sortBy('price'), $this['total'], $this['per_page']);        
+        if ($request->sort == 'price-ltoh') {            
+            $responseData['products'] = collect($responseData['products'])->sortBy('price');
         }
 
         if ($request->sort == 'price-htol') {
-            //$responseData['products'] = collect($responseData['products'])->sortByDesc('price');
-            $responseData['products'] = new LengthAwarePaginator(collect($responseData['products'])->sortByDesc('price'), $this['total'], $this['per_page']);        
+            $responseData['products'] = collect($responseData['products'])->sortByDesc('price');
         }
         
         if ($request->sort == 'default') {
