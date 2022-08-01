@@ -124,13 +124,17 @@ class ProductController extends Controller
 
             } else {
                 
-                $data = DB::table('products')
+                /*$data = DB::table('products')
                             ->leftJoin('product_variations', 'product_variations.product_id', '=', 'products.id')
                             ->where('products.client_id', auth('client')->user()->id)
                             ->where('products.is_deleted',0)
                             ->where('product_variations.is_deleted',0)
                             ->select('products.*', 'product_variations.price')
-                            ->get();
+                            ->get();*/
+                
+                $data = Product::leftJoin('product_vairaionts', 'product_variations.product_id','=','products.id')                    
+                    ->select('product_variations.*')
+                    ->get();
 
                 dd($data);
 
