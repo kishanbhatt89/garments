@@ -124,10 +124,7 @@ class ProductController extends Controller
 
             } else {
 
-                $data = DB::statement("SELECT * FROM products WHERE client_id = ".auth('client')->user()->id." AND is_deleted = 0 ORDER BY ".$sort." ".$order);
-                
-
-                dd($data);
+                dd(DB::raw("SELECT * FROM products WHERE client_id = ".auth('client')->user()->id." AND is_deleted = 0 ORDER BY ".$sort." ".$order));
 
                 $products = Product::with([
                                 'variations' => function($query) use ($vSort, $vOrder) {
