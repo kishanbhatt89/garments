@@ -128,7 +128,7 @@ class ProductController extends Controller
                     LEFT JOIN product_variations ON product_variations.product_id = products.id
                     WHERE products.client_id = "'.auth('client')->user()->id.'" AND products.is_deleted = 0 AND product_variations.is_deleted = 0
                 ';
-                dd(DB::raw($query));
+                dd(DB::select(DB::raw($query)));
 
                 $products = Product::with([
                                 'variations' => function($query) use ($vSort, $vOrder) {
