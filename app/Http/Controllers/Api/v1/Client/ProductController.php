@@ -125,20 +125,13 @@ class ProductController extends Controller
             } else {
                 
                 dd(
-
                     DB::select(
-                        'SELECT 
-                            products.*,
-                            product_variations.*,
+                        "SELECT products, product_variations 
                         FROM products 
                         LEFT JOIN product_variations
-                        ON "product_variations.product_id = products.id"
-                        WHERE "products.client_id" = ? AND "products.is_deleted" = 0 AND "product_variations.is_deleted" = 0
-                        ORDER BY "products.created_at" DESC',                        
-                        [auth('client')->user()->id]
-
+                        ON product_variatons.product_id = products.id
+                        WHERE client_id = ".auth('client')->user()->id." AND is_deleted = 0 ORDER BY ".$sort." ".$order
                     )
-
                 );
 
                 $products = Product::with([
