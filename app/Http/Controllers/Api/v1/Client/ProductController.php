@@ -124,11 +124,9 @@ class ProductController extends Controller
 
             } else {
 
-                $data = DB::table('products')
-                            ->join('product_variations as variations', 'variations.product_id', '=', 'products.id')
-                            //->join('product_images as images', 'images.product_id', '=', 'products.id')
-                            //->join('product_colors as colors', 'colors.product_id', '=', 'products.id')
-                            ->get();
+                $data = DB::statement("SELECT * FROM products WHERE client_id = ".auth('client')->user()->id." AND is_deleted = 0 ORDER BY ".$sort." ".$order);
+                
+
                 dd($data);
 
                 $products = Product::with([
