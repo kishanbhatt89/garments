@@ -136,7 +136,7 @@ class ProductController extends Controller
                     ->select('product_variations.*')
                     ->get();
 
-                dd($data);
+                dd($data->variations());
 
                 $products = Product::with([
                                 'variations' => function($query) use ($vSort, $vOrder) {
