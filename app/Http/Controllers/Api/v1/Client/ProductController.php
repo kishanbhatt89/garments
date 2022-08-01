@@ -17,6 +17,7 @@ use App\Models\ProductColor;
 use App\Models\ProductImage;
 use App\Models\ProductVariation;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use \Illuminate\Support\Facades\Validator;
 
 
@@ -122,7 +123,14 @@ class ProductController extends Controller
                             ->orderBy($sort,$order);                 
 
             } else {
-                dd('calling 1');
+
+                $data = DB::table('products')
+                            ->join('variations', 'variations.product_id', '=', 'products.id')
+                            ->join('images', 'images.product_id', '=', 'products.id')
+                            ->join('colors', 'colors.product_id', '=', 'products.id')
+                            ->get();
+                dd($data);
+
                 $products = Product::with([
                                 'variations' => function($query) use ($vSort, $vOrder) {
                                     $query->where('is_deleted',0)->orderBy($vSort,$vOrder);
