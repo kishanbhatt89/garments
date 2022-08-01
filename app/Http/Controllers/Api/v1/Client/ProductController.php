@@ -130,7 +130,7 @@ class ProductController extends Controller
                             ->where('products.client_id', auth('client')->user()->id)
                             ->where('products.is_deleted',0)
                             ->where('product_variations.is_deleted',0)
-                            ->orderBy($sort,$order)
+                            //->orderBy($sort,$order)
                             ->get();
                 
                 dd($data);
