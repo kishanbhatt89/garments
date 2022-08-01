@@ -202,9 +202,7 @@ class ProductController extends Controller
             return $likes->count();
         });
     
-        $data = new LengthAwarePaginator($data, $paginated_data->total(), $paginated_data->perPage());
-
-        dd($data);
+        $data = new LengthAwarePaginator($data, $paginated_data->total(), $paginated_data->perPage());        
 
         $finalProducts = (!empty($data)) ? $data->toArray() : array();        
         
