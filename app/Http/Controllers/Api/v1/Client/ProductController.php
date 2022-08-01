@@ -18,7 +18,6 @@ use App\Models\ProductImage;
 use App\Models\ProductVariation;
 use Illuminate\Http\Request;
 use \Illuminate\Support\Facades\Validator;
-use Illuminate\Pagination\LengthAwarePaginator;
 
 
 
@@ -196,13 +195,7 @@ class ProductController extends Controller
             }
         }        
         
-        $paginated_data = $products->paginate(4);
-
-        $data = $paginated_data->sortBy(function($likes) {
-            return $likes->count();
-        });
-    
-        $data = new LengthAwarePaginator($data, $paginated_data->total(), $paginated_data->perPage());        
+        $data = $products->paginate(4);        
 
         $finalProducts = (!empty($data)) ? $data->toArray() : array();        
         
