@@ -124,10 +124,10 @@ class ProductController extends Controller
 
             } else {
 
-                $data = DB::table('products, product_variations, product_images, product_colors')
-                            ->join('product_variations as variations', 'variations.product_id', '=', 'products.id')
-                            ->join('product_images as images', 'images.product_id', '=', 'products.id')
-                            ->join('product_colors as colors', 'colors.product_id', '=', 'products.id')
+                $data = DB::table('products')
+                            //->join('product_variations as variations', 'variations.product_id', '=', 'products.id')
+                            //->join('product_images as images', 'images.product_id', '=', 'products.id')
+                            //->join('product_colors as colors', 'colors.product_id', '=', 'products.id')
                             ->get();
                 dd($data);
 
