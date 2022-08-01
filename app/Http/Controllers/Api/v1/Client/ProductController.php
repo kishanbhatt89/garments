@@ -193,7 +193,7 @@ class ProductController extends Controller
 
             }
         }        
-
+        dd($products);
         $data = $products->paginate(4);
 
         $finalProducts = (!empty($data)) ? $data->toArray() : array();        
