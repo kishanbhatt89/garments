@@ -123,10 +123,10 @@ class ProductController extends Controller
                             ->orderBy($sort,$order);                 
 
             } else {
-                
+                $arr = [];
                 $data = DB::table('products')
                             ->join('product_variations', function($query) {
-                                dd($query);
+                                $arr[] = $query->where('product_variations.product_id','=','products.id');
                             })
                             ->join('product_images','products.id','=','product_images.product_id')
                             ->join('product_colors','products.id','=','product_colors.product_id')
@@ -137,7 +137,7 @@ class ProductController extends Controller
                             ->where('product_images.is_deleted',0)
                             ->where('product_colors.is_deleted',0)
                             ->get();
-                dd($data);
+                dd($data,$arr);
 
                 $products = Product::with([
                                 'variations' => function($query) use ($vSort, $vOrder) {
