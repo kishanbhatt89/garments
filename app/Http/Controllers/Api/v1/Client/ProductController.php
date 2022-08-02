@@ -125,10 +125,15 @@ class ProductController extends Controller
             } else {
                 
                 $data = DB::table('products')
-                            ->join('product_variations','products.id','=','product_variations.id')
-                            ->select('products.*','product_variations.price')
+                            ->join('product_variations','products.id','=','product_variations.product_id')
+                            ->join('product_images','product.id','=','product_images.product_id')
+                            ->join('product_colors','product.id','=','product_colors.product_id')
+                            ->select('products.*','product_variations.price','product_variations.discounted_price','product_colors.color_code','product_images.image','product_images.image_uploaded_url')
                             ->where('products.client_id', auth('client')->user()->id)
                             ->where('products.is_deleted',0)
+                            ->where('product_variations.is_deleted',0)
+                            ->where('product_images.is_deleted',0)
+                            ->where('product_colors.is_deleted',0)
                             ->get();
                 dd($data);
 
