@@ -148,7 +148,10 @@ class ProductController extends Controller
                         "created_at" => $product->created_at->diffForHumans(),
                         "updated_at" => $product->updated_at->diffForHumans(),
                         "price" => $product->variations->sortBy('price')->first()->price,
-                        "discounted_price" => $product->variations->sortBy('price')->first()->discounted_price
+                        "discounted_price" => $product->variations->sortBy('price')->first()->discounted_price,
+                        "variants" => $product->variations,
+                        "images" => $product->images,
+                        "colors" => $product->colors
                     ];
 
                     if ($request->sort == 'price-htol') {
