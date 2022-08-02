@@ -126,8 +126,8 @@ class ProductController extends Controller
                 
                 $data = DB::table('products')
                             ->join('product_variations','products.id','=','product_variations.product_id')
-                            ->join('product_images','product.id','=','product_images.product_id')
-                            ->join('product_colors','product.id','=','product_colors.product_id')
+                            ->join('product_images','products.id','=','product_images.product_id')
+                            ->join('product_colors','products.id','=','product_colors.product_id')
                             ->select('products.*','product_variations.price','product_variations.discounted_price','product_colors.color_code','product_images.image','product_images.image_uploaded_url')
                             ->where('products.client_id', auth('client')->user()->id)
                             ->where('products.is_deleted',0)
