@@ -124,19 +124,11 @@ class ProductController extends Controller
 
             } else {
                 
-                /*$data = DB::table('products')
-                            ->leftJoin('product_variations', 'product_variations.product_id', '=', 'products.id')
-                            ->where('products.client_id', auth('client')->user()->id)
-                            ->where('products.is_deleted',0)
-                            ->where('product_variations.is_deleted',0)
-                            ->select('products.*', 'product_variations.price')
-                            ->get();*/
-                
-                $data = Product::leftJoin('product_variations', 'product_variations.product_id','=','products.id')                    
-                    ->select('product_variations.*')
-                    ->get();
-
-                dd($data->variations());
+                $data = DB::table('products')
+                            ->join('product_variations','products.id','=','product_variations.id')
+                            ->select('products.*','product_variations.price')
+                            ->get();
+                dd($data);
 
                 $products = Product::with([
                                 'variations' => function($query) use ($vSort, $vOrder) {
