@@ -124,17 +124,12 @@ class ProductController extends Controller
 
             } else {
                 
-                $data = Product::with([
-                            'variations' => function ($query) use ($vSort, $vOrder) {
-                                $query->whereRaw(`MIN(price) as price`);                                
-                            }
-                        ])
-                        ->where('client_id', auth('client')->user()->id)                                                        
-                        ->where('is_deleted',0)
-                        ->orderBy($sort,$order)
-                        ->paginate(4);                         
-
+                $data = Product::where('client_id', auth('client')->user()->id)
+                                ->where('is_deleted',0)
+                                ->orderBy($sort,$order)
+                                ->get();
                 dd($data);
+
 
                 $products = Product::with([
                                 'variations' => function($query) use ($vSort, $vOrder) {
