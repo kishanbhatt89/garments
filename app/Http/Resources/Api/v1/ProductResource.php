@@ -25,7 +25,7 @@ class ProductResource extends ResourceCollection
 
                 $variationResponseArr = $imageResponseArr = $colorResponseArr = [];                                
 
-                dd($product);
+                dd($product['variations']);
                 
                 if (isset($product['variations']) && count($product['variations']) > 0) {                    
 
