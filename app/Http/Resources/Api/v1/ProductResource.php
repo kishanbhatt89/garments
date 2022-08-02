@@ -110,7 +110,7 @@ class ProductResource extends ResourceCollection
 
         $responseData['products'] = count($productData) > 0 ? $productData : [];                
         
-        dd(url()->current());
+        dd(url()->current(),$this['first_page_url'],$this['prev_page_url']);
 
         $responseData['pagination'][] = [
             'current_page' => $this['current_page'],
