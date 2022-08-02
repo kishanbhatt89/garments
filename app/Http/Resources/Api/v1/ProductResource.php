@@ -109,18 +109,21 @@ class ProductResource extends ResourceCollection
         }           
 
         $responseData['products'] = count($productData) > 0 ? $productData : [];                
-        
-        dd(url()->current(),$this['first_page_url'],$this['prev_page_url']);
+                
+        $firstPageUrl = url()->current().ltrim($this['first_page_url'],"/");
+        $nextPageUrl = url()->current().ltrim($this['next_page_url'],"/");
+        $prevPageUrl = url()->current().ltrim($this['prev_page_url'],"/");
+        $lastPageUrl = url()->current().ltrim($this['last_page_url'],"/");
 
         $responseData['pagination'][] = [
             'current_page' => $this['current_page'],
-            'first_page_url' => rtrim(url('/client/products'),"/").rtrim($this['first_page_url'],"/"),
+            'first_page_url' => $firstPageUrl,
             'from' => $this['from'],
-            'next_page_url' => rtrim(url('/client/products'),"/").rtrim($this['next_page_url'],"/"),
+            'next_page_url' => $nextPageUrl,
             'per_page' => $this['per_page'],
-            'prev_page_url' => rtrim(url('/client/products'),"/").rtrim($this['prev_page_url'],"/"),            
+            'prev_page_url' => $prevPageUrl,            
             'to' => $this['to'],
-            'last_page_url' => rtrim(url('/client/products'),"/").rtrim($this['last_page_url'],"/"),
+            'last_page_url' => $lastPageUrl,
             'total_products' => $this['total'],
             'last_page' => intval(explode('page=', $this['last_page_url'])[1]),
         ];            
