@@ -147,18 +147,18 @@ class ProductController extends Controller
                         "status" => $product->status,
                         "created_at" => $product->created_at->diffForHumans(),
                         "updated_at" => $product->updated_at->diffForHumans(),
-                        "price" => $product->variations->sort('price')->price,
-                        "discounted_price" => $product->variations->sort('price')->discounted_price
+                        "price" => $product->variations->sort('price')->first()->price,
+                        "discounted_price" => $product->variations->sort('price')->first()->discounted_price
                     ];
 
                     if ($request->sort == 'price-htol') {
-                        $productsArr['price'] = $product->variations->sortByDesc('price')->price;
-                        $productsArr['discounted_price'] = $product->variations->sortByDesc('price')->discounted_price;
+                        $productsArr['price'] = $product->variations->sortByDesc('price')->first()->price;
+                        $productsArr['discounted_price'] = $product->variations->sortByDesc('price')->first()->discounted_price;
                     }
 
                     if ($request->sort == 'price-ltoh') {
-                        $productsArr['price'] = $product->variations->sort('price')->price;
-                        $productsArr['discounted_price'] = $product->variations->sortByDesc('price')->discounted_price;
+                        $productsArr['price'] = $product->variations->sort('price')->first()->price;
+                        $productsArr['discounted_price'] = $product->variations->sortByDesc('price')->first()->discounted_price;
                     }
 
                 }
