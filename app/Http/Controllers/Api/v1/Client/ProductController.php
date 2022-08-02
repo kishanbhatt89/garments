@@ -266,7 +266,7 @@ class ProductController extends Controller
             }
 
         }    
-        
+        dd(gettype($products), gettype($productsArr));
         return collect($productsArr);
 
     }
