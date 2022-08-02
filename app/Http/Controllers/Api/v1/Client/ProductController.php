@@ -132,7 +132,7 @@ class ProductController extends Controller
                                 ->get();                
 
                 foreach ($products as $product) {
-                    dd(collect($product->variations)->sort('price')->first()->price);
+                    dd(collect($product->variations)->sortBy('price')->first()->price);
                     $productsArr[] = [
                         "id" => $product->id,
                         "client_id" => $product->client_id,
