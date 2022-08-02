@@ -93,7 +93,7 @@ class ProductController extends Controller
         } else {
             $products = Product::where('client_id', auth('client')->user()->id)
                             ->where('is_deleted',0)
-                            ->where('category_id', $category_id)
+                            ->where('category_id', $category_id)                            
                             ->orderBy($sort,$order)
                             ->get();
         }                        
@@ -254,6 +254,8 @@ class ProductController extends Controller
     public function getProducts($sort, $order) {
 
         $productsArr = [];
+
+        dd($sort, $order, 'calling');
 
         if ($sort == 'price-htol' || $sort == 'price-ltoh') {
             $products = Product::where('client_id', auth('client')->user()->id)
