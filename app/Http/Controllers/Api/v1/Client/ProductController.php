@@ -40,7 +40,10 @@ class ProductController extends Controller
         } else if ($request->sort == 'default') {
             $sort = 'created_at';
             $order = 'desc';
-        }               
+        } else if ($request->sort == 'price-htol' || $request->sort == 'price-ltoh') {
+            $sort = 'price';
+            $order = $request->order ?? 'asc';
+        }  
         
         if ($request->status == 'all') {
             if ($request->category_id) {       
@@ -257,7 +260,7 @@ class ProductController extends Controller
                 "images" => $product->images,
                 "colors" => $product->colors
             ];
-            dd($sort, $product->variations->sortByDesc('price'));
+            
             if ($sort == 'price-htol') {
                 $productsArr['price'] = $product->variations->sortByDesc('price')->first()->price;
                 $productsArr['discounted_price'] = $product->variations->sortByDesc('price')->first()->discounted_price;
