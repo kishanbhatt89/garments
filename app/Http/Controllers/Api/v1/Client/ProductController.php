@@ -124,15 +124,17 @@ class ProductController extends Controller
 
             } else {
                 
-                $data = Product::with([
-                            'variations' => function($query) use ($vSort, $vOrder) {
-                                $query->selectRaw("MIN('price') as price")->groupBy('product_id')->where('is_deleted',0)->orderBy($vSort,$vOrder);
-                            },
-                        ])
-                        ->where('client_id', auth('client')->user()->id)                                                        
-                        ->where('is_deleted',0)
-                        ->orderBy($sort,$order)
-                        ->paginate(4);
+                // $data = Product::with([
+                //             'variations' => function($query) use ($vSort, $vOrder) {
+                //                 $query->selectRaw("MIN('price') as price")->groupBy('product_id')->where('is_deleted',0)->orderBy($vSort,$vOrder);
+                //             },
+                //         ])
+                //         ->where('client_id', auth('client')->user()->id)                                                        
+                //         ->where('is_deleted',0)
+                //         ->orderBy($sort,$order)
+                //         ->paginate(4);
+
+                $data = ProductVariation::selectRaw("MIN('price') as price")->groupBy('product_id')->where('is_deleted',0)->orderBy($vSort,$vOrder)->get();
                 
                 dd($data);
 
