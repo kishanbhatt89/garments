@@ -146,7 +146,9 @@ class ProductController extends Controller
                         "brand" => $product->brand,
                         "status" => $product->status,
                         "created_at" => $product->created_at->diffForHumans(),
-                        "updated_at" => $product->updated_at->diffForHumans()
+                        "updated_at" => $product->updated_at->diffForHumans(),
+                        "price" => $product->variations->sortByDesc('price')->price,
+                        "discounted_price" => $product->variations->sortByDesc('price')->discounted_price
                     ];
 
                 }
