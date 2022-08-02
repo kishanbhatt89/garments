@@ -85,11 +85,18 @@ class ProductController extends Controller
 
         $productsArr = [];
 
-        $products = Product::where('client_id', auth('client')->user()->id)
+        if ($sort == 'price-htol' || $sort == 'price-ltoh') {
+            $products = Product::where('client_id', auth('client')->user()->id)
+                            ->where('is_deleted',0)
+                            ->where('category_id', $category_id)                            
+                            ->get();
+        } else {
+            $products = Product::where('client_id', auth('client')->user()->id)
                             ->where('is_deleted',0)
                             ->where('category_id', $category_id)
                             ->orderBy($sort,$order)
-                            ->get();                
+                            ->get();
+        }                        
 
         foreach ($products as $product) {
             
@@ -134,11 +141,18 @@ class ProductController extends Controller
 
         $productsArr = [];
 
-        $products = Product::where('client_id', auth('client')->user()->id)
+        if ($sort == 'price-htol' || $sort == 'price-ltoh') {
+            $products = Product::where('client_id', auth('client')->user()->id)
+                            ->where('is_deleted',0)
+                            ->where('status', $status)                            
+                            ->get();                
+        } else {
+            $products = Product::where('client_id', auth('client')->user()->id)
                             ->where('is_deleted',0)
                             ->where('status', $status)
                             ->orderBy($sort,$order)
                             ->get();                
+        }        
 
         foreach ($products as $product) {
             
@@ -183,12 +197,20 @@ class ProductController extends Controller
 
         $productsArr = [];
 
-        $products = Product::where('client_id', auth('client')->user()->id)
+        if ($sort == 'price-htol' || $sort == 'price-ltoh') {
+            $products = Product::where('client_id', auth('client')->user()->id)
+                            ->where('is_deleted',0)
+                            ->where('category_id', $category_id)
+                            ->where('status', $status)                            
+                            ->get();
+        } else {
+            $products = Product::where('client_id', auth('client')->user()->id)
                             ->where('is_deleted',0)
                             ->where('category_id', $category_id)
                             ->where('status', $status)
                             ->orderBy($sort,$order)
-                            ->get();                
+                            ->get();
+        }                        
 
         foreach ($products as $product) {
             
@@ -233,10 +255,16 @@ class ProductController extends Controller
 
         $productsArr = [];
 
-        $products = Product::where('client_id', auth('client')->user()->id)
+        if ($sort == 'price-htol' || $sort == 'price-ltoh') {
+            $products = Product::where('client_id', auth('client')->user()->id)
+                            ->where('is_deleted',0)                            
+                            ->get();                
+        } else {
+            $products = Product::where('client_id', auth('client')->user()->id)
                             ->where('is_deleted',0)                            
                             ->orderBy($sort,$order)
                             ->get();                
+        }        
 
         foreach ($products as $product) {
             
