@@ -131,7 +131,8 @@ class ProductController extends Controller
                         ])
                         ->where('client_id', auth('client')->user()->id)                                                        
                         ->where('is_deleted',0)
-                        ->orderBy($sort,$order); 
+                        ->orderBy($sort,$order)
+                        ->paginate(4);
                 
                 dd($data);
 
