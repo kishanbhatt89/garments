@@ -40,10 +40,13 @@ class ProductController extends Controller
         } else if ($request->sort == 'default') {
             $sort = 'created_at';
             $order = 'desc';
-        } else if ($request->sort == 'price-htol' || $request->sort == 'price-ltoh') {
-            $sort = 'price';
+        } else if ($request->sort == 'price-htol') {
+            $sort = 'price-htol';
             $order = $request->order ?? 'asc';
-        }  
+        } else if ($request->sort == 'price-ltoh') {
+            $sort = 'price-ltoh';
+            $order = $request->order ?? 'asc';
+        } 
         
         if ($request->status == 'all') {
             if ($request->category_id) {       
@@ -253,9 +256,7 @@ class ProductController extends Controller
 
     public function getProducts($sort, $order) {
 
-        $productsArr = [];
-
-        dd($sort, $order, 'calling');
+        $productsArr = [];        
 
         if ($sort == 'price-htol' || $sort == 'price-ltoh') {
             $products = Product::where('client_id', auth('client')->user()->id)
