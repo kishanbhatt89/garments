@@ -112,13 +112,13 @@ class ProductResource extends ResourceCollection
         
         $responseData['pagination'][] = [
             'current_page' => $this['current_page'],
-            'first_page_url' => url('').$this['first_page_url'],
+            'first_page_url' => url('/client/products').$this['first_page_url'],
             'from' => $this['from'],
-            'next_page_url' => url('').$this['next_page_url'],
+            'next_page_url' => url('/client/products').$this['next_page_url'],
             'per_page' => $this['per_page'],
-            'prev_page_url' => url('').$this['prev_page_url'],            
+            'prev_page_url' => url('/client/products').$this['prev_page_url'],            
             'to' => $this['to'],
-            'last_page_url' => url('').$this['last_page_url'],
+            'last_page_url' => url('/client/products').$this['last_page_url'],
             'total_products' => $this['total'],
             'last_page' => intval(explode('page=', $this['last_page_url'])[1]),
         ];            
