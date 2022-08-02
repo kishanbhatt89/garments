@@ -126,8 +126,7 @@ class ProductController extends Controller
                 
                 $data = Product::with([
                             'variations' => function ($query) use ($vSort, $vOrder) {
-                                $query->whereRaw(`MIN(price) as price`);
-                                $query->groupBy('product_id');
+                                $query->whereRaw(`MIN(price) as price`);                                
                                 $query->orderBy($vSort, $vOrder);
                             }
                         ])
