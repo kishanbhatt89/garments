@@ -128,7 +128,7 @@ class ProductController extends Controller
                             ->join('product_variations','products.id','=','product_variations.product_id')
                             ->join('product_images','products.id','=','product_images.product_id')
                             ->join('product_colors','products.id','=','product_colors.product_id')
-                            ->select('products.*','product_variations.price','product_variations.discounted_price','product_colors.color_code','product_images.image','product_images.image_uploaded_url')
+                            ->select('products.name','product_variations.price','product_variations.discounted_price','product_colors.color_code','product_images.image','product_images.image_uploaded_url')
                             ->where('products.client_id', auth('client')->user()->id)
                             ->where('products.is_deleted',0)
                             ->where('product_variations.is_deleted',0)
