@@ -234,7 +234,7 @@ class ProductController extends Controller
                             ->where('is_deleted',0)                            
                             ->orderBy($sort,$order)
                             ->get();                
-
+        dd($products);
         foreach ($products as $product) {
             
             $productsArr[] = [
