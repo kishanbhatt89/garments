@@ -14,9 +14,7 @@ class ProductResource extends ResourceCollection
      */
     public function toArray($request)
     {                
-        $responseData = $productData = [];
-
-        dd($this['data']);
+        $responseData = $productData = [];        
         
         if (isset($this['data']) && count($this['data']) > 0) {            
                     
@@ -26,6 +24,8 @@ class ProductResource extends ResourceCollection
                 $imageURL = '';                                
 
                 $variationResponseArr = $imageResponseArr = $colorResponseArr = [];                                
+
+                dd($product);
                 
                 if (isset($product['variations']) && count($product['variations']) > 0) {                    
 
