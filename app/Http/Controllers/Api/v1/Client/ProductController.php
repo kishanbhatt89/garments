@@ -257,7 +257,7 @@ class ProductController extends Controller
                 "images" => $product->images,
                 "colors" => $product->colors
             ];
-
+            dd($sort, $product->variations->sortByDesc('price'));
             if ($sort == 'price-htol') {
                 $productsArr['price'] = $product->variations->sortByDesc('price')->first()->price;
                 $productsArr['discounted_price'] = $product->variations->sortByDesc('price')->first()->discounted_price;
