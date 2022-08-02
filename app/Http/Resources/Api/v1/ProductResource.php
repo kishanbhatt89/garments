@@ -23,9 +23,7 @@ class ProductResource extends ResourceCollection
                 $price = $discountedPrice = 0.0;
                 $imageURL = '';                                
 
-                $variationResponseArr = $imageResponseArr = $colorResponseArr = [];                                
-
-                dd($product['variants']);
+                $variationResponseArr = $imageResponseArr = $colorResponseArr = [];                                                
                 
                 if (isset($product['variants']) && count($product['variants']) > 0) {                    
 
