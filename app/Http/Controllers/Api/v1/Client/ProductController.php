@@ -132,7 +132,7 @@ class ProductController extends Controller
                                 ->get();                
 
                 foreach ($products as $product) {
-                    dd($product->variations->sortByDesc('price'));
+                    
                     $productsArr[] = [
                         "id" => $product->id,
                         "client_id" => $product->client_id,
@@ -147,9 +147,19 @@ class ProductController extends Controller
                         "status" => $product->status,
                         "created_at" => $product->created_at->diffForHumans(),
                         "updated_at" => $product->updated_at->diffForHumans(),
-                        "price" => $product->variations->sortByDesc('price')->price,
-                        "discounted_price" => $product->variations->sortByDesc('price')->discounted_price
+                        //"price" => $request->sort == 'price-htol' ? $product->variations->sortByDesc('price')->price : $product->variations->sort('price')->price,
+                        //"discounted_price" => $product->variations->sortByDesc('price')->discounted_price
                     ];
+
+                    if ($request->sort == 'price-htol') {
+                        $productsArr['price'] = $product->variations->sortByDesc('price')->price;
+                        $productsArr['discounted_price'] = $product->variations->sortByDesc('price')->discounted_price;
+                    }
+
+                    if ($request->sort == 'price-ltoh') {
+                        $productsArr['price'] = $product->variations->sort('price')->price;
+                        $productsArr['discounted_price'] = $product->variations->sortByDesc('price')->discounted_price;
+                    }
 
                 }
 
