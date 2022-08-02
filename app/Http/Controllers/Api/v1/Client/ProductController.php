@@ -145,8 +145,8 @@ class ProductController extends Controller
                         "variation_type" => $product->variation_type,
                         "brand" => $product->brand,
                         "status" => $product->status,
-                        "created_at" => $product->created_at,
-                        "updated_at" => $product->updated_at
+                        "created_at" => $product->created_at->diffForHumans(),
+                        "updated_at" => $product->updated_at->diffForHumans()
                     ];
 
                 }
