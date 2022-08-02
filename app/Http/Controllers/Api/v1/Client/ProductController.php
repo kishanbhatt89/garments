@@ -120,7 +120,7 @@ class ProductController extends Controller
 
         }    
         
-        return collect($productsArr);
+        return (object)$productsArr;
 
     }
 
@@ -169,7 +169,7 @@ class ProductController extends Controller
 
         }    
         
-        return collect($productsArr);
+        return (object)$productsArr;
 
     }
 
@@ -219,7 +219,7 @@ class ProductController extends Controller
 
         }    
         
-        return collect($productsArr);
+        return (object)$productsArr;
 
     }
 
@@ -266,8 +266,8 @@ class ProductController extends Controller
             }
 
         }    
-        dd(gettype($products), gettype((object)$productsArr));
-        return collect($productsArr);
+        
+        return (object)$productsArr;
 
     }
 
