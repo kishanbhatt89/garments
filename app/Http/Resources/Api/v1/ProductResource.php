@@ -14,12 +14,12 @@ class ProductResource extends ResourceCollection
      */
     public function toArray($request)
     {                
-        $responseData = [];
-        $productData = [];
+        $responseData = $productData = [];
+
+        dd($this);
         
         if (isset($this['data']) && count($this['data']) > 0) {            
-            
-            
+                    
             foreach ($this['data']  as $key => $product) {      
 
                 $price = $discountedPrice = 0.0;
@@ -27,12 +27,7 @@ class ProductResource extends ResourceCollection
 
                 $variationResponseArr = $imageResponseArr = $colorResponseArr = [];                                
                 
-                if (isset($product['variations']) && count($product['variations']) > 0) {
-
-                    $priceData = $this->getLowestPrice($product['variations']);
-                    
-                    $price = number_format((float)$priceData['price'], 2, '.', '');
-                    $discountedPrice = number_format((float)$priceData['discounted_price'], 2, '.', '');
+                if (isset($product['variations']) && count($product['variations']) > 0) {                    
 
                     foreach ($product['variations'] as $variation) {
 
@@ -113,40 +108,7 @@ class ProductResource extends ResourceCollection
 
         }           
 
-        $responseData['products'] = count($productData) > 0 ? $productData : [];        
-
-        if ($request->sort == 'price-ltoh') {
-            $responseData['products'] = collect($responseData['products'])->sortBy('price');
-        }
-
-        if ($request->sort == 'price-htol') {
-            $responseData['products'] = collect($responseData['products'])->sortByDesc('price');
-        }
-        
-        if ($request->sort == 'default') {
-            $responseData['products'] = collect($responseData['products']);
-        }
-
-        if ($request->sort && ($request->sort == 'price-ltoh' || $request->sort == 'price-htol')) {
-
-            $responseData['products'] = $responseData['products']->map(function($product){
-                $product['price'] = number_format((float)$product['price'], 2, '.', '');
-                $product['discounted_price'] = number_format((float)$product['discounted_price'], 2, '.', '');
-                return $product;
-            })->toArray();
-
-        }            
-
-        if ($request->sort == 'default') {
-            $responseData['products'] = $responseData['products']->map(function($product){
-                $product['price'] = number_format((float)$product['price'], 2, '.', '');
-                $product['discounted_price'] = number_format((float)$product['discounted_price'], 2, '.', '');
-                return $product;
-            })->toArray();
-        }
-        
-        //$replaceString = "page=".$this['to'];
-        //$last_page_url = str_replace("page=1", $replaceString, $this['first_page_url']);
+        $responseData['products'] = count($productData) > 0 ? $productData : [];                
         
         $responseData['pagination'][] = [
             'current_page' => $this['current_page'],

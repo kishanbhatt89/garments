@@ -24,218 +24,38 @@ use \Illuminate\Support\Facades\Validator;
 class ProductController extends Controller
 {
     public function __construct() {
-
         $this->middleware(['jwt.auth','is_client_active']);
-
     }
 
     public function index(Request $request) {    
-
         $sort = 'created_at';
-        $order = 'desc';
-
-        $vSort = 'price';
-        $vOrder = 'asc';
+        $order = 'desc';        
         
         if ($request->sort == 'name') {
             $sort = 'name';
             $order = 'asc';
-        } else if ($request->sort == 'price-htol') {            
-            $vSort = 'price';
-            $vOrder = 'desc';
-        } else if ($request->sort == 'price-ltoh') {            
-            $vSort = 'price';
-            $vOrder = 'asc';
         } else if ($request->sort == 'default') {
             $sort = 'created_at';
             $order = 'desc';
-        }       
+        }               
         
         if ($request->status == 'all') {
-
             if ($request->category_id) {       
-
-                $products = Product::with([
-                                'variations' => function($query) use ($vSort, $vOrder) {
-                                    $query->where('is_deleted',0)->orderBy($vSort,$vOrder);
-                                },
-                                'images' => function($query) {
-                                    $query->where('is_deleted',0)->orderBy('created_at','desc');
-                                },
-                                'colors' => function($query) {
-                                    $query->where('is_deleted',0)->orderBy('created_at','desc');
-                                },
-                                'client',
-                                'store',
-                                'category',
-                                'subcategory'
-                            ])
-                            ->where('client_id', auth('client')->user()->id)
-                            ->where('category_id', $request->category_id)                            
-                            ->where('is_deleted',0)
-                            ->orderBy($sort,$order);                
-
+                $products = $this->getProductsByCategory($request->category_id, $sort, $order);                               
             } else {
-
-                $products = Product::with([
-                                'variations' => function($query) use ($vSort, $vOrder) {
-                                    $query->where('is_deleted',0)->orderBy($vSort,$vOrder);
-                                },
-                                'images' => function($query) {
-                                    $query->where('is_deleted',0)->orderBy('created_at','desc');
-                                },
-                                'colors' => function($query) {
-                                    $query->where('is_deleted',0)->orderBy('created_at','desc');
-                                },
-                                'client',
-                                'store',
-                                'category',
-                                'subcategory'
-                            ])
-                            ->where('client_id', auth('client')->user()->id)                                                        
-                            ->where('is_deleted',0)
-                            ->orderBy($sort,$order);                
-
+                $products = $this->getProducts($sort, $order);                               
             }
-
         } else if (!$request->status) {
-
             if ($request->category_id) {                
-
-                $products = Product::with([
-                                'variations' => function($query) use ($vSort, $vOrder) {
-                                    $query->where('is_deleted',0)->orderBy($vSort,$vOrder);
-                                },
-                                'images' => function($query) {
-                                    $query->where('is_deleted',0)->orderBy('created_at','desc');
-                                },
-                                'colors' => function($query) {
-                                    $query->where('is_deleted',0)->orderBy('created_at','desc');
-                                },
-                                'client',
-                                'store',
-                                'category',
-                                'subcategory'
-                            ])
-                            ->where('client_id', auth('client')->user()->id)
-                            ->where('category_id', $request->category_id)                            
-                            ->where('is_deleted',0)
-                            ->orderBy($sort,$order);                 
-
+                $products = $this->getProductsByCategory($request->category_id, $sort, $order);                 
             } else {
-                
-                $productsArr = [];
-
-                $products = Product::where('client_id', auth('client')->user()->id)
-                                ->where('is_deleted',0)
-                                ->orderBy($sort,$order)
-                                ->get();                
-
-                foreach ($products as $product) {
-                    
-                    $productsArr[] = [
-                        "id" => $product->id,
-                        "client_id" => $product->client_id,
-                        "store_id" => $product->store_id,
-                        "sku" => $product->sku,
-                        "name" => $product->name,
-                        "details" => $product->details,
-                        "category" => $product->category->name,
-                        "subcategory" => $product->subcategory->name,
-                        "variation_type" => $product->variation_type,
-                        "brand" => $product->brand,
-                        "status" => $product->status,
-                        "created_at" => $product->created_at->diffForHumans(),
-                        "updated_at" => $product->updated_at->diffForHumans(),
-                        "price" => $product->variations->sortBy('price')->first()->price,
-                        "discounted_price" => $product->variations->sortBy('price')->first()->discounted_price,
-                        "variants" => $product->variations,
-                        "images" => $product->images,
-                        "colors" => $product->colors
-                    ];
-
-                    if ($request->sort == 'price-htol') {
-                        $productsArr['price'] = $product->variations->sortByDesc('price')->first()->price;
-                        $productsArr['discounted_price'] = $product->variations->sortByDesc('price')->first()->discounted_price;
-                    }
-
-                    if ($request->sort == 'price-ltoh') {
-                        $productsArr['price'] = $product->variations->sortBy('price')->first()->price;
-                        $productsArr['discounted_price'] = $product->variations->sortBy('price')->first()->discounted_price;
-                    }
-
-                }
-
-                dd($productsArr);
-
-                $products = Product::with([
-                                'variations' => function($query) use ($vSort, $vOrder) {
-                                    $query->where('is_deleted',0)->orderBy($vSort,$vOrder);
-                                },
-                                'images' => function($query) {
-                                    $query->where('is_deleted',0)->orderBy('created_at','desc');
-                                },
-                                'colors' => function($query) {
-                                    $query->where('is_deleted',0)->orderBy('created_at','desc');
-                                },
-                                'client',
-                                'store',
-                                'category',
-                                'subcategory'
-                            ])
-                            ->where('client_id', auth('client')->user()->id)                                                        
-                            ->where('is_deleted',0)
-                            ->orderBy($sort,$order); 
-
+                $products = $this->getProducts($sort, $order);                       
             }
-
         } else {
-
             if ($request->category_id) {
-
-                $products = Product::with([
-                                'variations' => function($query) use ($vSort, $vOrder) {
-                                    $query->where('is_deleted',0)->orderBy($vSort,$vOrder);
-                                },
-                                'images' => function($query) {
-                                    $query->where('is_deleted',0)->orderBy('created_at','desc');
-                                },
-                                'colors' => function($query) {
-                                    $query->where('is_deleted',0)->orderBy('created_at','desc');
-                                },
-                                'client',
-                                'store',
-                                'category',
-                                'subcategory'
-                            ])
-                            ->where('client_id', auth('client')->user()->id)
-                            ->where('category_id', $request->category_id)
-                            ->where('status',$request->status)
-                            ->where('is_deleted',0)
-                            ->orderBy($sort,$order); 
-
+                $products = $this->getProductsByCategoryAndStatus($request->category_id, $request->status, $sort, $order);                
             } else {
-                dd('calling');
-                $products = Product::with([
-                                'variations' => function($query) use ($vSort, $vOrder) {
-                                    $query->where('is_deleted',0)->orderBy($vSort,$vOrder);
-                                },
-                                'images' => function($query) {
-                                    $query->where('is_deleted',0)->orderBy('created_at','desc');
-                                },
-                                'colors' => function($query) {
-                                    $query->where('is_deleted',0)->orderBy('created_at','desc');
-                                },
-                                'client',
-                                'store',
-                                'category',
-                                'subcategory'
-                            ])
-                            ->where('client_id', auth('client')->user()->id)                            
-                            ->where('status',$request->status)
-                            ->where('is_deleted',0)
-                            ->orderBy($sort,$order);                                
-
+                $products = $this->getProductsByStatus($request->status, $sort, $order);                
             }
         }        
 
@@ -244,17 +64,211 @@ class ProductController extends Controller
         $finalProducts = (!empty($data)) ? $data->toArray() : array();        
         
         if ($finalProducts && count($finalProducts) > 0) {
-
             return (new ProductResource($finalProducts))->response()->setStatusCode(200);
-
         }
 
         return [            
             'msg' => 'No products found.',
             'status' => false,
             'data' => (object)[]                
-        ];
+        ];        
+    }
+
+
+    public function getProductsByCategory($category_id, $sort, $order) {
+
+        $productsArr = [];
+
+        $products = Product::where('client_id', auth('client')->user()->id)
+                            ->where('is_deleted',0)
+                            ->where('category_id', $category_id)
+                            ->orderBy($sort,$order)
+                            ->get();                
+
+        foreach ($products as $product) {
+            
+            $productsArr[] = [
+                "id" => $product->id,
+                "client_id" => $product->client->first_name.' '.$product->client->last_name,
+                "store_id" => $product->store->name,
+                "sku" => $product->sku,
+                "name" => $product->name,
+                "details" => $product->details,
+                "category" => $product->category->name,
+                "subcategory" => $product->subcategory->name,
+                "variation_type" => $product->variation_type,
+                "brand" => $product->brand,
+                "status" => $product->status,
+                "created_at" => $product->created_at->diffForHumans(),
+                "updated_at" => $product->updated_at->diffForHumans(),
+                "price" => $product->variations->sortBy('price')->first()->price,
+                "discounted_price" => $product->variations->sortBy('price')->first()->discounted_price,
+                "variants" => $product->variations,
+                "images" => $product->images,
+                "colors" => $product->colors
+            ];
+
+            if ($sort == 'price-htol') {
+                $productsArr['price'] = $product->variations->sortByDesc('price')->first()->price;
+                $productsArr['discounted_price'] = $product->variations->sortByDesc('price')->first()->discounted_price;
+            }
+
+            if ($sort == 'price-ltoh') {
+                $productsArr['price'] = $product->variations->sortBy('price')->first()->price;
+                $productsArr['discounted_price'] = $product->variations->sortBy('price')->first()->discounted_price;
+            }
+
+        }    
         
+        return collect($productsArr);
+
+    }
+
+    public function getProductsByStatus($status, $sort, $order) {
+
+        $productsArr = [];
+
+        $products = Product::where('client_id', auth('client')->user()->id)
+                            ->where('is_deleted',0)
+                            ->where('status', $status)
+                            ->orderBy($sort,$order)
+                            ->get();                
+
+        foreach ($products as $product) {
+            
+            $productsArr[] = [
+                "id" => $product->id,
+                "client_id" => $product->client->first_name.' '.$product->client->last_name,
+                "store_id" => $product->store->name,
+                "sku" => $product->sku,
+                "name" => $product->name,
+                "details" => $product->details,
+                "category" => $product->category->name,
+                "subcategory" => $product->subcategory->name,
+                "variation_type" => $product->variation_type,
+                "brand" => $product->brand,
+                "status" => $product->status,
+                "created_at" => $product->created_at->diffForHumans(),
+                "updated_at" => $product->updated_at->diffForHumans(),
+                "price" => $product->variations->sortBy('price')->first()->price,
+                "discounted_price" => $product->variations->sortBy('price')->first()->discounted_price,
+                "variants" => $product->variations,
+                "images" => $product->images,
+                "colors" => $product->colors
+            ];
+
+            if ($sort == 'price-htol') {
+                $productsArr['price'] = $product->variations->sortByDesc('price')->first()->price;
+                $productsArr['discounted_price'] = $product->variations->sortByDesc('price')->first()->discounted_price;
+            }
+
+            if ($sort == 'price-ltoh') {
+                $productsArr['price'] = $product->variations->sortBy('price')->first()->price;
+                $productsArr['discounted_price'] = $product->variations->sortBy('price')->first()->discounted_price;
+            }
+
+        }    
+        
+        return collect($productsArr);
+
+    }
+
+    public function getProductsByCategoryAndStatus($category_id, $status, $sort, $order) {
+
+        $productsArr = [];
+
+        $products = Product::where('client_id', auth('client')->user()->id)
+                            ->where('is_deleted',0)
+                            ->where('category_id', $category_id)
+                            ->where('status', $status)
+                            ->orderBy($sort,$order)
+                            ->get();                
+
+        foreach ($products as $product) {
+            
+            $productsArr[] = [
+                "id" => $product->id,
+                "client_id" => $product->client->first_name.' '.$product->client->last_name,
+                "store_id" => $product->store->name,
+                "sku" => $product->sku,
+                "name" => $product->name,
+                "details" => $product->details,
+                "category" => $product->category->name,
+                "subcategory" => $product->subcategory->name,
+                "variation_type" => $product->variation_type,
+                "brand" => $product->brand,
+                "status" => $product->status,
+                "created_at" => $product->created_at->diffForHumans(),
+                "updated_at" => $product->updated_at->diffForHumans(),
+                "price" => $product->variations->sortBy('price')->first()->price,
+                "discounted_price" => $product->variations->sortBy('price')->first()->discounted_price,
+                "variants" => $product->variations,
+                "images" => $product->images,
+                "colors" => $product->colors
+            ];
+
+            if ($sort == 'price-htol') {
+                $productsArr['price'] = $product->variations->sortByDesc('price')->first()->price;
+                $productsArr['discounted_price'] = $product->variations->sortByDesc('price')->first()->discounted_price;
+            }
+
+            if ($sort == 'price-ltoh') {
+                $productsArr['price'] = $product->variations->sortBy('price')->first()->price;
+                $productsArr['discounted_price'] = $product->variations->sortBy('price')->first()->discounted_price;
+            }
+
+        }    
+        
+        return collect($productsArr);
+
+    }
+
+    public function getProducts($sort, $order) {
+
+        $productsArr = [];
+
+        $products = Product::where('client_id', auth('client')->user()->id)
+                            ->where('is_deleted',0)                            
+                            ->orderBy($sort,$order)
+                            ->get();                
+
+        foreach ($products as $product) {
+            
+            $productsArr[] = [
+                "id" => $product->id,
+                "client_id" => $product->client->first_name.' '.$product->client->last_name,
+                "store_id" => $product->store->name,
+                "sku" => $product->sku,
+                "name" => $product->name,
+                "details" => $product->details,
+                "category" => $product->category->name,
+                "subcategory" => $product->subcategory->name,
+                "variation_type" => $product->variation_type,
+                "brand" => $product->brand,
+                "status" => $product->status,
+                "created_at" => $product->created_at->diffForHumans(),
+                "updated_at" => $product->updated_at->diffForHumans(),
+                "price" => $product->variations->sortBy('price')->first()->price,
+                "discounted_price" => $product->variations->sortBy('price')->first()->discounted_price,
+                "variants" => $product->variations,
+                "images" => $product->images,
+                "colors" => $product->colors
+            ];
+
+            if ($sort == 'price-htol') {
+                $productsArr['price'] = $product->variations->sortByDesc('price')->first()->price;
+                $productsArr['discounted_price'] = $product->variations->sortByDesc('price')->first()->discounted_price;
+            }
+
+            if ($sort == 'price-ltoh') {
+                $productsArr['price'] = $product->variations->sortBy('price')->first()->price;
+                $productsArr['discounted_price'] = $product->variations->sortBy('price')->first()->discounted_price;
+            }
+
+        }    
+        
+        return collect($productsArr);
+
     }
 
     public function show(ShowProductRequest $request) {
@@ -809,7 +823,6 @@ class ProductController extends Controller
         ], 200);
 
 
-    }
-    
+    }    
 
 }
