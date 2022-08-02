@@ -123,18 +123,16 @@ class ProductController extends Controller
                             ->orderBy($sort,$order);                 
 
             } else {
-            
-                $data = DB::table('products')
-                            ->join('product_variations','products.id','=','product_variations.product_id')
-                            ->join('product_images','products.id','=','product_images.product_id')
-                            ->join('product_colors','products.id','=','product_colors.product_id')
-                            ->select('products.name','MIN(product_variations.price)','MIN(product_variations.discounted_price)')
-                            ->where('products.client_id', auth('client')->user()->id)
-                            ->where('products.is_deleted',0)
-                            ->where('product_variations.is_deleted',0)
-                            ->where('product_images.is_deleted',0)
-                            ->where('product_colors.is_deleted',0)
-                            ->get();
+                
+                $data = Product::with([
+                            'variations' => function($query) use ($vSort, $vOrder) {
+                                $query->groupBy('product_id')->where('is_deleted',0)->orderBy($vSort,$vOrder);
+                            },
+                        ])
+                        ->where('client_id', auth('client')->user()->id)                                                        
+                        ->where('is_deleted',0)
+                        ->orderBy($sort,$order); 
+                
                 dd($data);
 
                 $products = Product::with([
