@@ -125,7 +125,7 @@ class ProductController extends Controller
             } else {
                 $arr = [];
                 $data = DB::table('products')
-                            ->join('product_variations','products.id','=','product_variations.product_id','inner')
+                            ->join('product_variations','products.id','=','product_variations.product_id','left')
                             ->join('product_images','products.id','=','product_images.product_id')
                             ->join('product_colors','products.id','=','product_colors.product_id')
                             ->select('products.name','product_variations.price','product_variations.discounted_price','product_colors.color_code','product_images.image','product_images.image_uploaded_url')
