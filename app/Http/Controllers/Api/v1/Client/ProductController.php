@@ -302,9 +302,7 @@ class ProductController extends Controller
                 $productsArr['discounted_price'] = $product->variations->sortBy('price')->first()->discounted_price;
             }
 
-        }    
-
-        dd($productsArr);
+        }            
         
         return $productsArr;
 
