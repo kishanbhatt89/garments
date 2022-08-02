@@ -132,7 +132,7 @@ class ProductController extends Controller
                                 ->get();                
 
                 foreach ($products as $product) {
-                    dd(collect($product->variations)->sortBy('price')->first()->price);
+                    dd($product->variations->sortBy('price')->first()->price);
                     $productsArr[] = [
                         "id" => $product->id,
                         "client_id" => $product->client_id,
@@ -147,8 +147,8 @@ class ProductController extends Controller
                         "status" => $product->status,
                         "created_at" => $product->created_at->diffForHumans(),
                         "updated_at" => $product->updated_at->diffForHumans(),
-                        //"price" => $product->variations->sort('price')->first()->price,
-                        //"discounted_price" => $product->variations->sort('price')->first()->discounted_price
+                        "price" => $product->variations->sortBy('price')->first()->price,
+                        "discounted_price" => $product->variations->sortBy('price')->first()->discounted_price
                     ];
 
                     if ($request->sort == 'price-htol') {
@@ -157,8 +157,8 @@ class ProductController extends Controller
                     }
 
                     if ($request->sort == 'price-ltoh') {
-                        $productsArr['price'] = $product->variations->sort('price')->first()->price;
-                        $productsArr['discounted_price'] = $product->variations->sortByDesc('price')->first()->discounted_price;
+                        $productsArr['price'] = $product->variations->sortBy('price')->first()->price;
+                        $productsArr['discounted_price'] = $product->variations->sortBy('price')->first()->discounted_price;
                     }
 
                 }
