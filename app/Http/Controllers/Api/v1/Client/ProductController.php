@@ -126,7 +126,7 @@ class ProductController extends Controller
                 $arr = [];
                 $data = DB::table('products')
                             ->join('product_variations', function($query) {
-                                $arr[] = $query->where('product_variations.product_id','=','products.id');
+                                $query->where('product_variations.product_id','=','products.id');
                             })
                             ->join('product_images','products.id','=','product_images.product_id')
                             ->join('product_colors','products.id','=','product_colors.product_id')
