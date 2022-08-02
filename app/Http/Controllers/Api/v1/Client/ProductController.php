@@ -19,6 +19,9 @@ use App\Models\ProductVariation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use \Illuminate\Support\Facades\Validator;
+use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Collection;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 
 class ProductController extends Controller
@@ -58,8 +61,8 @@ class ProductController extends Controller
                 $products = $this->getProductsByStatus($request->status, $sort, $order);                
             }
         }        
-
-        $data = $products->paginate(4);
+        
+        $data = $this->paginate($products);
 
         $finalProducts = (!empty($data)) ? $data->toArray() : array();        
         
@@ -824,5 +827,27 @@ class ProductController extends Controller
 
 
     }    
+
+     /**
+
+     * The attributes that are mass assignable.
+
+     *
+
+     * @var array
+
+     */
+
+    public function paginate($items, $perPage = 5, $page = null, $options = [])
+
+    {
+
+        $page = $page ?: (Paginator::resolveCurrentPage() ?: 1);
+
+        $items = $items instanceof Collection ? $items : Collection::make($items);
+
+        return new LengthAwarePaginator($items->forPage($page, $perPage), $items->count(), $perPage, $page, $options);
+
+    }
 
 }
