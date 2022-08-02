@@ -20,7 +20,9 @@ class ProductResource extends ResourceCollection
                     
             foreach ($this['data']  as $key => $product) {      
 
-                $price = $discountedPrice = 0.0;
+                $price = $product['price'];
+                $discountedPrice = $product['discounted_price'];
+
                 $imageURL = '';                                
 
                 $variationResponseArr = $imageResponseArr = $colorResponseArr = [];                                                
