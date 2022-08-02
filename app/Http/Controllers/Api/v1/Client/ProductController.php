@@ -124,12 +124,34 @@ class ProductController extends Controller
 
             } else {
                 
-                $data = Product::where('client_id', auth('client')->user()->id)
+                $productsArr = [];
+
+                $products = Product::where('client_id', auth('client')->user()->id)
                                 ->where('is_deleted',0)
                                 ->orderBy($sort,$order)
-                                ->get();
-                dd($data);
+                                ->get();                
 
+                foreach ($products as $product) {
+
+                    $productsArr[] = [
+                        "id" => $product->id,
+                        "client_id" => $product->client_id,
+                        "store_id" => $product->store_id,
+                        "sku" => $product->sku,
+                        "name" => $product->name,
+                        "details" => $product->details,
+                        "category" => $product->category->name,
+                        "subcategory" => $product->subcategory->name,
+                        "variation_type" => $product->variation_type,
+                        "brand" => $product->brand,
+                        "status" => $product->status,
+                        "created_at" => $product->created_at,
+                        "updated_at" => $product->updated_at
+                    ];
+
+                }
+
+                dd($productsArr);
 
                 $products = Product::with([
                                 'variations' => function($query) use ($vSort, $vOrder) {
