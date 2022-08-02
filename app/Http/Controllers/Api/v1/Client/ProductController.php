@@ -127,6 +127,8 @@ class ProductController extends Controller
                 $data = DB::table('products')
                             ->join('product_variations','products.id','=','product_variations.id')
                             ->select('products.*','product_variations.price')
+                            ->where('products.client_id', auth('client')->user()->id)
+                            ->where('products.is_deleted',0)
                             ->get();
                 dd($data);
 
