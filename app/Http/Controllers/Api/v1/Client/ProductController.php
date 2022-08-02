@@ -134,7 +134,7 @@ class ProductController extends Controller
                 //         ->orderBy($sort,$order)
                 //         ->paginate(4);
 
-                $data = ProductVariation::selectRaw("MIN('price') as price")->groupBy('product_id')->where('is_deleted',0)->orderBy($vSort,$vOrder)->get();
+                $data = ProductVariation::select("price")->groupBy('product_id')->where('is_deleted',0)->orderBy($vSort,$vOrder)->get();
                 
                 dd($data);
 
