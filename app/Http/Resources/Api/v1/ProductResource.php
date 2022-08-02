@@ -25,11 +25,11 @@ class ProductResource extends ResourceCollection
 
                 $variationResponseArr = $imageResponseArr = $colorResponseArr = [];                                
 
-                dd($product['variations']);
+                dd($product['variants']);
                 
-                if (isset($product['variations']) && count($product['variations']) > 0) {                    
+                if (isset($product['variants']) && count($product['variants']) > 0) {                    
 
-                    foreach ($product['variations'] as $variation) {
+                    foreach ($product['variants'] as $variation) {
 
                         $variationResponseArr[] = [
                             'id' => $variation['id'],
