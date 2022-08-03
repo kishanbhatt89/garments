@@ -322,7 +322,7 @@ class ProductController extends Controller
     }
 
     public function store(ProductRequest $request) {
-        dd(collect($request->variations)->sortBy('price'));
+        dd(collect($request->variations)->sortBy('price')->first());
         dd(collect($request->variations)->sortBy('price')->first()->price, collect($request->variations)->sortBy('price')->first()->discounted_price);
 
         if (auth('client')->user()->is_store_setup == 0) {
