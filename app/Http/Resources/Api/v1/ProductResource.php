@@ -80,7 +80,7 @@ class ProductResource extends ResourceCollection
                     }                    
 
                 }
-
+                dd($product);
                 $productData[$key] = [
                     'id' => $product['id'],
                     'name' => $product['name'],
