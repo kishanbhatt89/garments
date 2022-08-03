@@ -676,8 +676,8 @@ class ProductController extends Controller
                             'last_edited_at' => now()
                         ]);
                         $product->update([
-                            'price' => collect($request->variations)->sortBy('price')->first()['price'],
-                            'discounted_price' => collect($request->variations)->sortBy('price')->first()['discounted_price']
+                            'price' => $product->variations()->where('is_deleted', 0)->orderBy('price')->first()->price,
+                            'discounted_price' => $product->variations()->where('is_deleted', 0)->orderBy('price')->first()->discounted_price,
                         ]);
                     }                    
                 }
@@ -690,14 +690,13 @@ class ProductController extends Controller
 
                             // Delete Variations
                             if (isset($variation['id']) && isset($variation['flag'])) {
-                                dd($product->variations()->where('is_deleted', 0)->orderBy('price')->first()->price);
-                                //collect($product->variations()->where('is_deleted', 0))->sortBy('price')->first()
+                                
                                 $product->variations()->where('id', $variation['id'])->first()->update([
                                     'is_deleted' => 1
                                 ]);
                                 $product->update([
-                                    "price" => collect($product->variations()->where('is_deleted', 0))->sortBy('price')->first()['price'],
-                                    "discounted_price" => collect($product->variations()->where('is_deleted', 0))->sortBy('price')->first()['discounted_price'],
+                                    "price" => $product->variations()->where('is_deleted', 0)->orderBy('price')->first()->price,
+                                    "discounted_price" => $product->variations()->where('is_deleted', 0)->orderBy('price')->first()->discounted_price,
                                 ]);                                
                             }
 
@@ -716,8 +715,8 @@ class ProductController extends Controller
                                 $product->variations()->where('id', $variation['id'])->first()->update($updateVariatonArray);
 
                                 $product->update([
-                                    "price" => collect($product->variations()->where('is_deleted', 0))->sortBy('price')->first()['price'],
-                                    "discounted_price" => collect($product->variations()->where('is_deleted', 0))->sortBy('price')->first()['discounted_price'],
+                                    "price" => $product->variations()->where('is_deleted', 0)->orderBy('price')->first()->price,
+                                    "discounted_price" => $product->variations()->where('is_deleted', 0)->orderBy('price')->first()->discounted_price,
                                 ]);
                             }
 
@@ -747,8 +746,8 @@ class ProductController extends Controller
                                     $pVariation->save();
                                 }
                                 $product->update([
-                                    "price" => collect($product->variations()->where('is_deleted', 0))->sortBy('price')->first()['price'],
-                                    "discounted_price" => collect($product->variations()->where('is_deleted', 0))->sortBy('price')->first()['discounted_price'],
+                                    "price" => $product->variations()->where('is_deleted', 0)->orderBy('price')->first()->price,
+                                    "discounted_price" => $product->variations()->where('is_deleted', 0)->orderBy('price')->first()->discounted_price,
                                 ]);
                             }
                             
@@ -774,8 +773,8 @@ class ProductController extends Controller
                             $productVariation->save();                        
                         }
                         $product->update([
-                            "price" => collect($product->variations()->where('is_deleted', 0))->sortBy('price')->first()['price'],
-                            "discounted_price" => collect($product->variations()->where('is_deleted', 0))->sortBy('price')->first()['discounted_price'],
+                            "price" => $product->variations()->where('is_deleted', 0)->orderBy('price')->first()->price,
+                            "discounted_price" => $product->variations()->where('is_deleted', 0)->orderBy('price')->first()->discounted_price,
                         ]);
                     }
                     
@@ -808,8 +807,8 @@ class ProductController extends Controller
                         $productVariation->save();
 
                         $product->update([
-                            "price" => collect($product->variations()->where('is_deleted', 0))->sortBy('price')->first()['price'],
-                            "discounted_price" => collect($product->variations()->where('is_deleted', 0))->sortBy('price')->first()['discounted_price'],
+                            "price" => $product->variations()->where('is_deleted', 0)->orderBy('price')->first()->price,
+                            "discounted_price" => $product->variations()->where('is_deleted', 0)->orderBy('price')->first()->discounted_price,
                         ]);
                                
                     }                                 
