@@ -15,11 +15,11 @@ class ProductResource extends ResourceCollection
     public function toArray($request)
     {                
         $responseData = $productData = [];        
-        
+        dd($this);
         if (isset($this['data']) && count($this['data']) > 0) {            
                     
             foreach ($this['data']  as $key => $product) {      
-                dd($product);        
+                
                 $imageURL = '';                                
 
                 $variationResponseArr = $imageResponseArr = $colorResponseArr = [];                                                
@@ -83,16 +83,16 @@ class ProductResource extends ResourceCollection
                     'name' => $product['name'],
                     'sku' => $product['sku'] ? $product['sku'] : '',
                     'brand' => $product['brand'] ? $product['brand'] : '',
-                    'client' => isset($product['client']) ? $product['client'].' '.$product['client'] : '',
-                    'store' => isset($product['store']) ? $product['store'] : '',
+                    'client' => isset($product['client']['first_name']) ? $product['client']['first_name'].' '.$product['client']['last_name'] : '',
+                    'store' => isset($product['store']['name']) ? $product['store']['name'] : '',
                     'details' => $product['details'] ? $product['details'] : '',
-                    'category' => isset($product['category']) ? $product['category'] : '',
-                    'subcategory' => isset($product['subcategory']) ? $product['subcategory'] : '',
+                    'category' => isset($product['category']['name']) ? $product['category']['name'] : '',
+                    'subcategory' => isset($product['subcategory']['name']) ? $product['subcategory']['name'] : '',
                     'variation_type' => $product['variation_type'] ? $product['variation_type'] : '',
                     'status' => $product['status'],
                     'image' => $imageURL,
-                    'price' =>  floatval($price), //number_format((float)$price, 2, '.', ''),
-                    'discounted_price' => floatval($discountedPrice), //number_format((float)$discountedPrice, 2, '.', ''),                    
+                    'price' =>  number_format((float)$product['price'], 2, '.', ''),                            
+                    'discounted_price' => number_format((float)$product['discounted_price'], 2, '.', ''),                            
                     'created_at' => $product['created_at'],
                     'updated_at' => $product['updated_at'],
                     'variants' => $variationResponseArr,
