@@ -386,11 +386,9 @@ class ProductController extends Controller
                     }
 
                     $Product = Product::find($product->id);
-
-                    $Product->update([
-                        'price' => collect($request->variations)->sortBy('price')->first()['price'],
-                        'discounted_price' => collect($request->variations)->sortBy('price')->first()['discounted_price']
-                    ]);                  
+                    $Product->price = collect($request->variations)->sortBy('price')->first()['price'];
+                    $Product->discounted_price = collect($request->variations)->sortBy('price')->first()['discounted_price'];
+                    $Product->save();                  
                 }
 
                 return response()->json([                
