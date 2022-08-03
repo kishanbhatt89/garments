@@ -69,7 +69,7 @@ class ProductController extends Controller
         }        
         
         $data = $this->paginate($products,1,$request->page);
-
+        dd($data, $products, $request->all());
         $finalProducts = (!empty($data)) ? $data->toArray() : array();        
         
         if ($finalProducts && count($finalProducts) > 0) {
@@ -302,8 +302,7 @@ class ProductController extends Controller
                 $productsArr['discounted_price'] = $product->variations->sortBy('price')->first()->discounted_price;
             }
 
-        }            
-        dd($productsArr);
+        }                    
         return $productsArr;
 
     }
