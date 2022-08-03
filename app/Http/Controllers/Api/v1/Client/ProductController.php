@@ -71,35 +71,35 @@ class ProductController extends Controller
                 $products = $this->getProductsByStatus($request->status, $sort, $order, $perPage);                
             }
         }        
-        dd($products);
-        foreach ($products as $product) {
+        // dd($products);
+        // foreach ($products as $product) {
             
-            $productsArr[] = [
-                "id" => $product->id,
-                "client_id" => $product->client->first_name.' '.$product->client->last_name,
-                "store_id" => $product->store->name,
-                "sku" => $product->sku,
-                "name" => $product->name,
-                "details" => $product->details,
-                "category" => $product->category->name,
-                "subcategory" => $product->subcategory->name,
-                "variation_type" => $product->variation_type,
-                "brand" => $product->brand,
-                "status" => $product->status,
-                "created_at" => $product->created_at->diffForHumans(),
-                "updated_at" => $product->updated_at->diffForHumans(),
-                "price" => $product->price,
-                "discounted_price" => $product->discounted_price,
-                "variants" => $product->variations,
-                "images" => $product->images,
-                "colors" => $product->colors
-            ];
+        //     $productsArr[] = [
+        //         "id" => $product->id,
+        //         "client_id" => $product->client->first_name.' '.$product->client->last_name,
+        //         "store_id" => $product->store->name,
+        //         "sku" => $product->sku,
+        //         "name" => $product->name,
+        //         "details" => $product->details,
+        //         "category" => $product->category->name,
+        //         "subcategory" => $product->subcategory->name,
+        //         "variation_type" => $product->variation_type,
+        //         "brand" => $product->brand,
+        //         "status" => $product->status,
+        //         "created_at" => $product->created_at->diffForHumans(),
+        //         "updated_at" => $product->updated_at->diffForHumans(),
+        //         "price" => $product->price,
+        //         "discounted_price" => $product->discounted_price,
+        //         "variants" => $product->variations,
+        //         "images" => $product->images,
+        //         "colors" => $product->colors
+        //     ];
             
-        }
+        // }
         
-        $data = $this->paginate($products,1,$request->page);
+        // $data = $this->paginate($products,1,$request->page);
         
-        $finalProducts = (!empty($data)) ? $data->toArray() : array();        
+        $finalProducts = (!empty($product)) ? $product->toArray() : array();        
         
         if ($finalProducts && count($finalProducts) > 0) {
             return (new ProductResource($finalProducts))->response()->setStatusCode(200);
