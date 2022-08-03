@@ -71,33 +71,6 @@ class ProductController extends Controller
                 $products = $this->getProductsByStatus($request->status, $sort, $order, $perPage);                
             }
         }        
-        // dd($products);
-        // foreach ($products as $product) {
-            
-        //     $productsArr[] = [
-        //         "id" => $product->id,
-        //         "client_id" => $product->client->first_name.' '.$product->client->last_name,
-        //         "store_id" => $product->store->name,
-        //         "sku" => $product->sku,
-        //         "name" => $product->name,
-        //         "details" => $product->details,
-        //         "category" => $product->category->name,
-        //         "subcategory" => $product->subcategory->name,
-        //         "variation_type" => $product->variation_type,
-        //         "brand" => $product->brand,
-        //         "status" => $product->status,
-        //         "created_at" => $product->created_at->diffForHumans(),
-        //         "updated_at" => $product->updated_at->diffForHumans(),
-        //         "price" => $product->price,
-        //         "discounted_price" => $product->discounted_price,
-        //         "variants" => $product->variations,
-        //         "images" => $product->images,
-        //         "colors" => $product->colors
-        //     ];
-            
-        // }
-        
-        // $data = $this->paginate($products,1,$request->page);
         
         $finalProducts = (!empty($products)) ? $products->toArray() : array();        
         
@@ -115,7 +88,18 @@ class ProductController extends Controller
 
     public function getProductsByCategory($category_id, $sort, $order, $perPage) {        
 
-        return Product::with(['client','store','category','subcategory','variations','images','colors'])
+        return Product::with([
+            'client','store','category','subcategory',
+            'variations' => function($query) {
+                $query->where('is_deleted',0);
+            },
+            'images' => function($query) {
+                $query->where('is_deleted',0);
+            },
+            'colors' => function($query) {
+                $query->where('is_deleted',0);
+            }
+        ])
         ->where('client_id', auth('client')->user()->id)
         ->where('is_deleted',0)
         ->where('category_id', $category_id)                            
@@ -126,7 +110,18 @@ class ProductController extends Controller
 
     public function getProductsByStatus($status, $sort, $order, $perPage) {
 
-        return Product::with(['client','store','category','subcategory','variations','images','colors'])
+        return Product::with([
+            'client','store','category','subcategory',
+            'variations' => function($query) {
+                $query->where('is_deleted',0);
+            },
+            'images' => function($query) {
+                $query->where('is_deleted',0);
+            },
+            'colors' => function($query) {
+                $query->where('is_deleted',0);
+            }
+        ])
         ->where('client_id', auth('client')->user()->id)
         ->where('is_deleted',0)
         ->where('status', $status)
@@ -137,7 +132,18 @@ class ProductController extends Controller
 
     public function getProductsByCategoryAndStatus($category_id, $status, $sort, $order, $perPage) {
 
-        return Product::with(['client','store','category','subcategory','variations','images','colors'])
+        return Product::with([
+            'client','store','category','subcategory',
+            'variations' => function($query) {
+                $query->where('is_deleted',0);
+            },
+            'images' => function($query) {
+                $query->where('is_deleted',0);
+            },
+            'colors' => function($query) {
+                $query->where('is_deleted',0);
+            }
+        ])
         ->where('client_id', auth('client')->user()->id)
         ->where('is_deleted',0)
         ->where('category_id', $category_id)
@@ -149,7 +155,18 @@ class ProductController extends Controller
 
     public function getProducts($sort, $order, $perPage) {
         
-        return Product::with(['client','store','category','subcategory','variations','images','colors'])
+        return Product::with([
+            'client','store','category','subcategory',
+            'variations' => function($query) {
+                $query->where('is_deleted',0);
+            },
+            'images' => function($query) {
+                $query->where('is_deleted',0);
+            },
+            'colors' => function($query) {
+                $query->where('is_deleted',0);
+            }
+        ])
         ->where('client_id', auth('client')->user()->id)
         ->where('is_deleted',0)                            
         ->orderBy($sort,$order)
