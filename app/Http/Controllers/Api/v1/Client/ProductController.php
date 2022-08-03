@@ -69,11 +69,11 @@ class ProductController extends Controller
                 $products = $this->getProductsByStatus($request->status, $sort, $order, $perPage);                
             }
         }        
-        dd($products ? 'ok' : 'no', $products);
+        
         $finalProducts = (!empty($products)) ? $products->toArray() : array();        
         
         if ($finalProducts && count($finalProducts) > 0) {
-            if (count($products->toArray()) > 0) {
+            if ($products->isNotEmpty()) {
                 return (new ProductResource($finalProducts))->response()->setStatusCode(200);
             }            
             return [            
