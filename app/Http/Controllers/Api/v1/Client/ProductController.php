@@ -99,7 +99,7 @@ class ProductController extends Controller
         
         // $data = $this->paginate($products,1,$request->page);
         
-        $finalProducts = (!empty($product)) ? $product->toArray() : array();        
+        $finalProducts = (!empty($products)) ? $products->toArray() : array();        
         
         if ($finalProducts && count($finalProducts) > 0) {
             return (new ProductResource($finalProducts))->response()->setStatusCode(200);
