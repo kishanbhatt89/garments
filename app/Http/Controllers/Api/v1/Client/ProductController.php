@@ -322,9 +322,7 @@ class ProductController extends Controller
     }
 
     public function store(ProductRequest $request) {
-        dd(collect($request->variations)->sortBy('price')->first()['price'],collect($request->variations)->sortBy('price')->first()['discounted_price']);
-        dd(collect($request->variations)->sortBy('price')->first()->price, collect($request->variations)->sortBy('price')->first()->discounted_price);
-
+        
         if (auth('client')->user()->is_store_setup == 0) {
             return response()->json([                
                 'msg'   => 'Store not setup. Please setup store first.',
@@ -386,6 +384,10 @@ class ProductController extends Controller
                         $productVariation->status = 'active';
                         $productVariation->save();
                     }
+                    $product->update([
+                        'price' => collect($request->variations)->sortBy('price')->first()['price'],
+                        'discounted_price' => collect($request->variations)->sortBy('price')->first()['discounted_price']
+                    ]);                  
                 }
 
                 return response()->json([                
