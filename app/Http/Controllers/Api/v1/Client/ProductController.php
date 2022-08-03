@@ -68,7 +68,7 @@ class ProductController extends Controller
             }
         }        
         
-        $data = $this->paginate($products);
+        $data = $this->paginate($products,1,$request->page);
 
         $finalProducts = (!empty($data)) ? $data->toArray() : array();        
         
@@ -862,7 +862,7 @@ class ProductController extends Controller
 
     }    
 
-    public function paginate($items, $perPage = 1, $page = null, $options = []) {
+    public function paginate($items, $perPage , $page = null, $options = []) {
         $page = $page ?: (Paginator::resolveCurrentPage() ?: 1);
         $items = $items instanceof Collection ? $items : Collection::make($items);
         return new LengthAwarePaginator($items->forPage($page, $perPage), $items->count(), $perPage, $page, $options);
