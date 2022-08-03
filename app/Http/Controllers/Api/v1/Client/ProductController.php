@@ -47,7 +47,7 @@ class ProductController extends Controller
             $sort = 'price-ltoh';
             $order = $request->order ?? 'asc';
         } 
-        
+        dd("calling1");
         if ($request->status == 'all') {
             if ($request->category_id) {       
                 $products = $this->getProductsByCategory($request->category_id, $sort, $order);                               
