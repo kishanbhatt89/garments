@@ -362,7 +362,7 @@ class ProductController extends Controller
             $product->status = $request->status;
 
             if ($product->save()) {
-
+                dd($product);
                 if (!empty($request->colors)) {
                     foreach ($request->colors as $color) {
                         $productColor = new ProductColor();
@@ -383,11 +383,7 @@ class ProductController extends Controller
                         $productVariation->discounted_price = $variation['discounted_price'];
                         $productVariation->status = 'active';
                         $productVariation->save();
-                    }
-                    $product->fill([
-                        "price" => collect($request->variations)->sortBy('price')->first()['price'],
-                        "discounted_price" => collect($request->variations)->sortBy('price')->first()['discounted_price']
-                    ]);                    
+                    }                                        
                 }
 
                 return response()->json([                
