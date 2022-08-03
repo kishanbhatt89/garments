@@ -69,7 +69,7 @@ class ProductController extends Controller
                 $products = $this->getProductsByStatus($request->status, $sort, $order, $perPage);                
             }
         }        
-        
+        dd($products);
         $finalProducts = (!empty($products)) ? $products->toArray() : array();        
         
         if ($finalProducts && count($finalProducts) > 0) {
