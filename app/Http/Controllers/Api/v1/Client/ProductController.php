@@ -665,7 +665,7 @@ class ProductController extends Controller
                         // }              
                     }
                 }                
-                
+                dd($existing_variation_type, $product->variation_type);
                 if ($existing_variation_type == 'single' && $product->variation_type == 'single') {
                     $variations = $request->variations;
                     
