@@ -52,13 +52,14 @@ class ProductController extends Controller
             if ($request->category_id) {       
                 $products = $this->getProductsByCategory($request->category_id, $sort, $order);                               
             } else {
-                dd('calling');
+                dd('calling2');
                 $products = $this->getProducts($sort, $order);                               
             }
         } else if (!$request->status) {
             if ($request->category_id) {                
                 $products = $this->getProductsByCategory($request->category_id, $sort, $order);                 
             } else {
+                dd('calling3');
                 $products = $this->getProducts($sort, $order);                       
             }
         } else {
