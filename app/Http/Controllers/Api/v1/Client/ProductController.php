@@ -51,15 +51,13 @@ class ProductController extends Controller
         if ($request->status == 'all') {
             if ($request->category_id) {       
                 $products = $this->getProductsByCategory($request->category_id, $sort, $order);                               
-            } else {
-                dd('calling2');
+            } else {                
                 $products = $this->getProducts($sort, $order);                               
             }
         } else if (!$request->status) {
             if ($request->category_id) {                
                 $products = $this->getProductsByCategory($request->category_id, $sort, $order);                 
-            } else {
-                dd('calling3');
+            } else {                
                 $products = $this->getProducts($sort, $order);                       
             }
         } else {
@@ -270,6 +268,8 @@ class ProductController extends Controller
                             ->orderBy($sort,$order)
                             ->get();                
         }        
+
+        dd($products);
 
         foreach ($products as $product) {
             
