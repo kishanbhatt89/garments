@@ -69,7 +69,7 @@ class ProductController extends Controller
         }        
         
         $data = $this->paginate($products,1,$request->page);
-        dd($data, $products, $request->all());
+        
         $finalProducts = (!empty($data)) ? $data->toArray() : array();        
         
         if ($finalProducts && count($finalProducts) > 0) {
@@ -862,16 +862,9 @@ class ProductController extends Controller
     }    
 
     public function paginate($items, $perPage = 1 , $page = null, $options = []) {
-
-        //$page = $request->page ?? 1; // Get the current page or default to 1, this is what you miss!
-        //$perPage = 20;
-        $offset = ($page * $perPage) - $perPage;
-
-        return new LengthAwarePaginator(array_slice($items, $offset, $perPage, true), count($items), $perPage, $page);
-
-        // $page = $page ?: (Paginator::resolveCurrentPage() ?: 1);
-        // $items = $items instanceof Collection ? $items : Collection::make($items);
-        // return new LengthAwarePaginator($items->forPage($page, $perPage), $items->count(), $perPage, $page, $options);
+        $page = $page ?: (Paginator::resolveCurrentPage() ?: 1);
+        $items = $items instanceof Collection ? $items : Collection::make($items);
+        return new LengthAwarePaginator($items->forPage($page, $perPage), $items->count(), $perPage, $page, $options);
     }
 
 }
