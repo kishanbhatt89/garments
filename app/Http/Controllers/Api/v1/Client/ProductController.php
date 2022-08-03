@@ -39,7 +39,7 @@ class ProductController extends Controller
             $order = 'asc';
         } else if ($request->sort == 'default') {
             $sort = 'created_at';
-            $order = 'desc';
+            $order = $request->order ?? 'desc';
         } else if ($request->sort == 'price-htol') {
             $sort = 'price';
             $order = 'desc';
