@@ -36,7 +36,7 @@ class ProductController extends Controller
         
         if ($request->sort == 'name') {
             $sort = 'name';
-            $order = 'asc';
+            $order = $request->order ?? 'desc';
         } else if ($request->sort == 'default') {
             $sort = 'created_at';
             $order = $request->order ?? 'desc';
