@@ -52,6 +52,7 @@ class ProductController extends Controller
             if ($request->category_id) {       
                 $products = $this->getProductsByCategory($request->category_id, $sort, $order);                               
             } else {
+                dd('calling');
                 $products = $this->getProducts($sort, $order);                               
             }
         } else if (!$request->status) {
