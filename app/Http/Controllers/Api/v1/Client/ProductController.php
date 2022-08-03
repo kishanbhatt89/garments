@@ -46,9 +46,7 @@ class ProductController extends Controller
         } else if ($request->sort == 'price-ltoh') {
             $sort = 'price';
             $order = 'asc';
-        } 
-
-        $productsArr = [];
+        }         
 
         $perPage = 1;
         
@@ -75,7 +73,14 @@ class ProductController extends Controller
         $finalProducts = (!empty($products)) ? $products->toArray() : array();        
         
         if ($finalProducts && count($finalProducts) > 0) {
-            return (new ProductResource($finalProducts))->response()->setStatusCode(200);
+            if (count($products->toArray()) > 0) {
+                return (new ProductResource($finalProducts))->response()->setStatusCode(200);
+            }            
+            return [            
+                'msg' => 'No products found.',
+                'status' => false,
+                'data' => (object)[]                
+            ];        
         }
 
         return [            
