@@ -323,6 +323,8 @@ class ProductController extends Controller
 
     public function store(ProductRequest $request) {
 
+        dd($request->variations);
+
         if (auth('client')->user()->is_store_setup == 0) {
             return response()->json([                
                 'msg'   => 'Store not setup. Please setup store first.',
