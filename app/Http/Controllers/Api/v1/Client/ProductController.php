@@ -690,7 +690,7 @@ class ProductController extends Controller
 
                             // Delete Variations
                             if (isset($variation['id']) && isset($variation['flag'])) {
-                                
+                                dd($product->variations()->where('is_deleted', 0),collect($product->variations()->where('is_deleted', 0))->sortBy('price')->first());
                                 $product->variations()->where('id', $variation['id'])->first()->update([
                                     'is_deleted' => 1
                                 ]);
