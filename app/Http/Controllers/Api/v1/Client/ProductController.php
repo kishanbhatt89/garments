@@ -42,10 +42,10 @@ class ProductController extends Controller
             $order = 'desc';
         } else if ($request->sort == 'price-htol') {
             $sort = 'price';
-            $order = 'asc';
+            $order = 'desc';
         } else if ($request->sort == 'price-ltoh') {
             $sort = 'price';
-            $order = 'desc';
+            $order = 'asc';
         } 
 
         $productsArr = [];
@@ -148,7 +148,7 @@ class ProductController extends Controller
     }
 
     public function getProducts($sort, $order, $perPage) {
-        dd($sort,$order);
+        
         return Product::with(['client','store','category','subcategory','variations','images','colors'])
         ->where('client_id', auth('client')->user()->id)
         ->where('is_deleted',0)                            
