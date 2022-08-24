@@ -41,7 +41,7 @@ Route::get('v1/clear', function() {
 
 Route::group(['prefix' => 'v1/client','middleware' => ['assign.guard:client']],function ()
 {
-    Route::post('register', [ClientAuthController::class, 'register']);    
+    Route::post('register', [ClientAuthController::class, 'register'])->middleware(['is_client_sms_verified']);    
     
     Route::get('email/verify/{id}', [ClientVerificationController::class, 'emailVerify'])->name('verification.verify');
     Route::get('email/resend', [ClientVerificationController::class, 'emailResend'])->name('verification.resend');

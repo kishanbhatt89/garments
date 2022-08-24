@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\Client;
 use Closure;
 use Illuminate\Http\Request;
 
@@ -16,16 +17,30 @@ class ClientSmsVerified
      */
     public function handle(Request $request, Closure $next)
     {           
-        if (auth('client')->user()->sms_verified_at == null) {
+        if (auth('client')->user()) {
 
-            auth('client')->logout();
+            if (auth('client')->user()->sms_verified_at == null) {
+                auth('client')->logout();
 
-            return response()->json([                
-                'msg' => 'You need to confirm your account. We have sent you an otp, please check your sms.',
-                'status' => false,
-                'data' => (object)[]
-            ], 200);                        
+                return response()->json([                
+                    'msg' => 'You need to confirm your account. We have sent you an otp, please check your sms.',
+                    'status' => false,
+                    'data' => (object)[]
+                ], 200);                        
 
+            }
+            
+        }
+
+        if (request()->get('email')) {
+            $client = Client::where('email',request()->get('email'))->first();
+            if ($client && $client->sms_verified_at === null) {
+                return response()->json([                
+                    'msg' => 'You need to confirm your account. We have sent you an otp, please check your sms.',
+                    'status' => false,
+                    'data' => (object)[]
+                ], 200); 
+            }            
         }
 
         return $next($request);
