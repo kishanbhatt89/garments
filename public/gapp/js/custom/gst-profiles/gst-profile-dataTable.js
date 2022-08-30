@@ -203,34 +203,82 @@ let KTDatatablesServerSide = function () {
                 
                 const gstProfile = parent.querySelectorAll('td')[1].innerText;
 
-                $.ajax({
+                Swal.fire({
 
-                    type:'DELETE',
-            
-                    url: APP_URL+'/admin/gst-profiles/' + gstProfile,
-            
-                    data: { gstProfile },
-            
-                    success:function(data){                                            
+                    text: "Are you sure you want to delete " + gstProfile + "?",
+                    icon: "warning",
+                    showCancelButton: true,
+                    buttonsStyling: false,
+                    confirmButtonText: "Yes, delete!",
+                    cancelButtonText: "No, cancel",
+                    customClass: {
+                        confirmButton: "btn fw-bold btn-danger",
+                        cancelButton: "btn fw-bold btn-active-light-primary"
+                    }
+
+                }).then(function (result) {
+
+                    if (result.value) {        
+
+                        $.ajax({
+
+                            type:'DELETE',
+                    
+                            url: APP_URL+'/admin/gst-profiles/' + gstProfile,
+                    
+                            data: { gstProfile },
+                    
+                            success:function(data){                                            
+                                
+                                toastr.success(data.msg);
+        
+                                dt.search('').draw();                                                    
+        
+                                return false;
+                    
+                            },
+                    
+                            error: function(data) {                                                                
+                                
+                                toastr.error(data.responseJSON.msg);
+        
+                                return false;
+                                
+                            }
+                        });
+
+                        // $.ajax({
+
+                        //     type:'DELETE',
+                    
+                        //     url: APP_URL+'/admin/states/' + state,
+                    
+                        //     data: { state },
+                    
+                        //     success:function(data){                                            
+                                
+                        //         toastr.success(data.msg);
+
+                        //         dt.search('').draw();                                                    
+                    
+                        //     },
+                    
+                        //     error: function(data) {                                                                
+                                
+                        //         toastr.error(data.responseJSON.msg);
+                                
+                        //     }
+                        // });
+
                         
-                        toastr.success(data.msg);
-
-                        dt.search('').draw();                                                    
-
-                        return false;
-            
-                    },
-            
-                    error: function(data) {                                                                
+                    } else if (result.dismiss === 'cancel') {                        
                         
-                        toastr.error(data.responseJSON.msg);
-
-                        return false;
+                        toastr.error(gstProfile + " gst was not deleted.");
                         
                     }
                 });
-                
-            })
+            })                
+                            
         });
     }
 

@@ -42,8 +42,15 @@
                         <!--end::Username-->
                     </div>
                 </div>
-                <!--end::Menu item-->
+                <!--end::Menu item-->                            
+
+                <div class="separator my-2"></div>
                 
+                <div class="menu-item px-5">
+                    <a href="{{ route('admin.changepasswordform') }}" class="menu-link px-5">
+                    Change Password</a>                    
+                </div>                
+
                 <div class="separator my-2"></div>
                 
                 <div class="menu-item px-5">

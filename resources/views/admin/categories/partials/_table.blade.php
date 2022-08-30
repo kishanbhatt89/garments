@@ -12,6 +12,7 @@
             <th>Category</th>
             <th>Slug</th>
             <th>Parent Category</th>
+            <th>Active/Inactive</th>
             <th>Created At</th>
             <th>Updated At</th>                                
             <th class="text-end min-w-100px">Actions</th>

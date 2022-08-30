@@ -196,6 +196,7 @@ class ClientController extends Controller
             $email = $record->email;
             $phone = $record->phone;  
             $status = ($record->is_active == 1) ? 'Active' : 'Block';          
+            $isVerified = ($record->sms_verified_at !== NULL) ? 'Yes' : 'No';
             $created_at = $record->created_at->diffForHumans();                
 
             $data_arr[] = array(
@@ -205,6 +206,7 @@ class ClientController extends Controller
                 "email" => $email,
                 "phone" => $phone,       
                 "is_active" => $status,                                
+                'sms_verified_at' => $isVerified,
                 "created_at" => $created_at                    
             );                        
         }

@@ -79,4 +79,9 @@ class Client extends Authenticatable implements JWTSubject, MustVerifyEmail
         return $this->hasMany(ClientToken::class);
     }
 
+    public function otps()
+    {
+        return $this->hasMany(ClientOtp::class);
+    }
+
 }

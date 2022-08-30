@@ -31,6 +31,7 @@ let KTDatatablesServerSide = function () {
                 { data: 'name' },
                 { data: 'slug' },
                 { data: 'parent' },
+                { data: 'is_active' },
                 { data: 'created_at' },
                 { data: 'updated_at' },                
                 { data: null },
@@ -70,9 +71,15 @@ let KTDatatablesServerSide = function () {
                     render: function (data, type, row) {                        
                         return data;
                     }
-                },
+                },                                
                 {
                     targets: 5,
+                    render: function (data, type, row) {                        
+                        return data;
+                    }
+                },
+                {
+                    targets: 6,
                     render: function (data, type, row) {                        
                         return data;
                     }

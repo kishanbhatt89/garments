@@ -229,32 +229,59 @@ let KTDatatablesServerSide = function () {
                 
                 const employee = parent.querySelectorAll('td')[1].innerText;
 
-                $.ajax({
+                Swal.fire({
 
-                    type:'DELETE',
-            
-                    url: APP_URL+'/admin/employees/' + employee,
-            
-                    data: { employee },
-            
-                    success:function(data){                                            
-                        
-                        toastr.success(data.msg);
+                    text: "Are you sure you want to delete " + employee + "?",
+                    icon: "warning",
+                    showCancelButton: true,
+                    buttonsStyling: false,
+                    confirmButtonText: "Yes, delete!",
+                    cancelButtonText: "No, cancel",
+                    customClass: {
+                        confirmButton: "btn fw-bold btn-danger",
+                        cancelButton: "btn fw-bold btn-active-light-primary"
+                    }
 
-                        dt.search('').draw();           
-                        
-                        return false;
-            
-                    },
-            
-                    error: function(data) {                                                                
-                        
-                        toastr.error(data.responseJSON.msg);
+                }).then(function (result) {
 
-                        return false;
+                    if (result.value) {     
+                        
+                        $.ajax({
+
+                            type:'DELETE',
+                    
+                            url: APP_URL+'/admin/employees/' + employee,
+                    
+                            data: { employee },
+                    
+                            success:function(data){                                            
+                                
+                                toastr.success(data.msg);
+        
+                                dt.search('').draw();           
+                                
+                                return false;
+                    
+                            },
+                    
+                            error: function(data) {                                                                
+                                
+                                toastr.error(data.responseJSON.msg);
+        
+                                return false;
+                                
+                            }
+                        });
+
+                        
+
+                        
+                    } else if (result.dismiss === 'cancel') {                        
+                        
+                        toastr.error(employee + " employee was not deleted.");
                         
                     }
-                });
+                });                
                 
                 
             })

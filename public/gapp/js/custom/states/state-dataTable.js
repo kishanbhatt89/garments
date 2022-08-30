@@ -211,7 +211,7 @@ let KTDatatablesServerSide = function () {
 
                 }).then(function (result) {
 
-                    if (result.value) {                                        
+                    if (result.value) {        
 
                         $.ajax({
 

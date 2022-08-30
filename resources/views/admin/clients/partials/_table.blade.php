@@ -11,7 +11,8 @@
             <th>Last Name</th>
             <th>Email</th>
             <th>Phone</th>    
-            <th>Status</th>        
+            <th>Status</th>   
+            <th>Is Verfied?</th>     
             <th>Created At</th>                                            
             <th class="text-end">Actions</th>
 

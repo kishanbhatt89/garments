@@ -33,6 +33,7 @@ let KTDatatablesServerSide = function () {
                 { data: 'email' },  
                 { data: 'phone' },
                 { data: 'is_active' },                                         
+                { data: 'sms_verified_at'},
                 { data: 'created_at' },                
                 { data: null },
             ],
@@ -80,6 +81,12 @@ let KTDatatablesServerSide = function () {
                 },
                 {
                     targets: 6,
+                    render: function(data, type, row) {
+                        return data;
+                    }
+                },
+                {
+                    targets: 7,
                     render: function (data, type, row) {
                         return `${data}`;                                                
                     }

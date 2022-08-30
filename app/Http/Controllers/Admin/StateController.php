@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\State;
+use App\Models\Store;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Validator;
@@ -76,8 +77,15 @@ class StateController extends Controller
 
     public function destroy(Request $request)
     {
+
         $state = State::where('name', $request->get('state'))->first();
         
+        $store = Store::where('state_id',$state->id)->first();
+
+        if ($store) {
+            return response()->json(['msg'=> 'Error in deleting state. Because state exist in store record.'], 400);    
+        }
+
         if ($state->delete()) {
             return response()->json(['msg'=> 'State deleted successfully!'], 200);
         }

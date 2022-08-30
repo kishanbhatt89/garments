@@ -46,7 +46,7 @@
                             <span class="required">GST Percentage</span>
                         </label>
                         
-                        <input class="form-control form-control-solid" placeholder="Enter a gst percentage" name="gst_percentage" id="gst_percentage" />
+                        <input type="number" class="form-control form-control-solid" placeholder="Enter a gst percentage" name="gst_percentage" id="gst_percentage" />                        
                         
                         <span class="invalid-feedback d-none gst_percentage-error" role="alert">
                             <strong></strong>

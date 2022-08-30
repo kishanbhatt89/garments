@@ -75,11 +75,11 @@
             </div> -->
             <div data-kt-menu-trigger="click" class="menu-item menu-accordion mb-1 
                 {{ 
-                   request()->is('admin/categories') ? 'show' : '' 
+                   request()->is('admin/categories') || request()->is('admin/categories/add') || request()->is('admin/categories/edit/*') ? 'show' : '' 
                 }}">
                 <span class="menu-link 
                 {{ 
-                   request()->is('admin/categories') ? 'active' : '' 
+                   request()->is('admin/categories') || request()->is('admin/categories/add') || request()->is('admin/categories/edit/*') ? 'active' : '' 
                 }}">
                     <span class="menu-icon">
                         
@@ -96,7 +96,7 @@
                 <div class="menu-sub menu-sub-accordion">                    
                     
                     <div class="menu-item">
-                        <a class="menu-link {{ (request()->is('admin/categories')) ? 'active' : '' }}" href="{{ route('admin.categories.index') }}">
+                        <a class="menu-link {{ (request()->is('admin/categories')) || request()->is('admin/categories/add') || request()->is('admin/categories/edit/*') ? 'active' : '' }}" href="{{ route('admin.categories.index') }}">
                             <span class="menu-bullet">
                                 <span class="bullet bullet-dot"></span>
                             </span>
@@ -247,6 +247,21 @@
                 </a>
             </div>
             @endrole            
+            <div class="menu-item">
+                <a class="menu-link {{ (request()->is('admin/changepassword')) ? 'active' : '' }}" title="Change Password Module" data-bs-toggle="tooltip" href="{{ route('admin.changepassword') }}" data-bs-trigger="hover" data-bs-dismiss="click" data-bs-placement="right">
+                    <span class="menu-icon">
+                        
+                    <span class="svg-icon svg-icon-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                            <path d="M17.5 11H6.5C4 11 2 9 2 6.5C2 4 4 2 6.5 2H17.5C20 2 22 4 22 6.5C22 9 20 11 17.5 11ZM15 6.5C15 7.9 16.1 9 17.5 9C18.9 9 20 7.9 20 6.5C20 5.1 18.9 4 17.5 4C16.1 4 15 5.1 15 6.5Z" fill="currentColor"></path>
+                            <path opacity="0.3" d="M17.5 22H6.5C4 22 2 20 2 17.5C2 15 4 13 6.5 13H17.5C20 13 22 15 22 17.5C22 20 20 22 17.5 22ZM4 17.5C4 18.9 5.1 20 6.5 20C7.9 20 9 18.9 9 17.5C9 16.1 7.9 15 6.5 15C5.1 15 4 16.1 4 17.5Z" fill="currentColor"></path>
+                        </svg>
+                    </span>
+                        
+                    </span>
+                    <span class="menu-title">Change Password</span>
+                </a>
+            </div>
         </div>
         <!--end::Menu-->
     </div>

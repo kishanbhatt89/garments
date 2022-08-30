@@ -26,14 +26,14 @@ class CategoryController extends Controller
 
     public function add()
     {
-        $categories = Category::all();
+        $categories = Category::where('parent_id',0)->get();
         return view('admin.categories.add', compact('categories'));
     }
 
     public function edit($id)
     {
         $category = Category::find($id);
-        $categories = Category::all();
+        $categories = Category::where('parent_id',0)->get();
         return view('admin.categories.edit', compact('category','categories'));
     }
 
@@ -50,7 +50,7 @@ class CategoryController extends Controller
 
     public function store(Request $request)
     {
-
+        
         $request->validate([
             'name' => 'required|unique:categories,name',
             'slug' => 'required|unique:categories,slug',
@@ -70,6 +70,10 @@ class CategoryController extends Controller
         $category->parent_id = $request->parent_id ? $request->parent_id : 0;
         $category->slug = $request->slug;        
         $category->image = basename($image_uploaded_path);
+
+        if ($request->is_active && $request->is_active === 'on') {
+            $category->is_active = true;
+        }
 
         if ($category->save()) {
             return redirect()->back()->with('success', 'Category added successfully!');
@@ -114,6 +118,12 @@ class CategoryController extends Controller
             $image_uploaded_path = $image->store($uploadFolder, 'public');
 
             $category->image = basename($image_uploaded_path);
+        }
+
+        if ($request->is_active && $request->is_active === 'on') {
+            $category->is_active = true;
+        } else {
+            $category->is_active = false;
         }
 
         if($category->save()) 
@@ -183,6 +193,7 @@ class CategoryController extends Controller
             $name = $record->name;
             $slug = $record->slug;
             $parent = isset($record->parent->name) ? $record->parent->name : '';  
+            $is_active = $record->is_active ? 'Active' : 'Inactive';
             $created_at = $record->created_at->diffForHumans();
             $updated_at = $record->updated_at->diffForHumans();
     
@@ -191,6 +202,7 @@ class CategoryController extends Controller
               "name" => $name,               
               "slug" => $slug,
               "parent" => $parent,   
+              "is_active" => $is_active,
               "created_at" => $created_at,
               "updated_at" => $updated_at
             );

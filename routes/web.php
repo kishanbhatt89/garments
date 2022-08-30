@@ -13,6 +13,7 @@ use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\TypeController;
 use App\Http\Controllers\Admin\StateController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Auth\ChangePasswordController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
@@ -51,6 +52,9 @@ Route::post('password/reset', [ResetPasswordController::class, 'reset']);
 Route::middleware(['auth','role:admin|employee'])->name('admin.')->prefix('admin')->group(function () {
 
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+    Route::get('/changepassword', [ChangePasswordController::class, 'changepasswordform'])->name('changepasswordform');
+    Route::post('/changepassword', [ChangePasswordController::class, 'changepassword'])->name('changepassword');
 
     Route::delete('employees/destroyMultiple', [UserController::class, 'destroyMultiple'])->name('employees.destroyMultiple');
     Route::get('/employees/{user}/details', [UserController::class, 'show'])->name('employees.show');

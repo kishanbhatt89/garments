@@ -199,6 +199,26 @@
                                         </div>                                        
 
                                     </div>
+
+                                    <div class="row fv-row mb-7">
+
+                                        <div class="col-md-3 text-md-end">
+                                            
+                                            <label class="fs-6 fw-bold form-label mt-3">
+                                                <span class="required">Active/InActive</span>
+                                                <i class="fas fa-exclamation-circle ms-1 fs-7" data-bs-toggle="tooltip"></i>
+                                            </label>
+                                            
+                                        </div>
+
+                                        <div class="col-md-9" style="margin-top: 10px;">
+                                            
+                                            <input class="form-check-input" type="checkbox" @if($category->is_active) checked  @endif name="is_active" />
+                                            <span class="form-check-label">Active</span>                                            
+                                            
+                                        </div>                                        
+
+                                    </div>                                    
                                     
                                                                                                             
                                     <div class="row">
@@ -214,6 +234,8 @@
                                                     <span class="indicator-progress">Please wait...
                                                     <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
                                                 </button>
+
+                                                <a href="{{ route('admin.categories.index') }}" class="btn btn-primary ms-2">Back</a>                                            
 
                                             </div>
 
