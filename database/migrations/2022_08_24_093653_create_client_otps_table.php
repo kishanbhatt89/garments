@@ -16,8 +16,10 @@ return new class extends Migration
         Schema::create('client_otps', function (Blueprint $table) {
             $table->id();
             $table->foreignId('client_id')->nullable()->constrained();                        
+            $table->string('phone');
             $table->string('otp');
             $table->longText('otp_token');
+            $table->string('verification_for');
             $table->timestamps();
         });
     }

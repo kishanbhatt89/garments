@@ -7,12 +7,21 @@ use App\Http\Requests\Api\v1\Client\ForgotPasswordRequest;
 use App\Http\Requests\Api\v1\Client\OtpVerifyRequest;
 use App\Http\Requests\Api\v1\Client\ResetPasswordRequest;
 use App\Models\Client;
+use App\Models\ClientOtp;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Tymon\JWTAuth\Facades\JWTAuth;
+use Illuminate\Support\Str;
 
 class VerficationController extends Controller
 {
+
+    private $apiKey;
+
+    public function __construct() {
+        $this->apiKey = "ee0fc98c-3e1e-11ed-9c12-0200cd936042";
+    }
 
     /*
     public function emailVerify($client_id, Request $request) 
@@ -64,9 +73,10 @@ class VerficationController extends Controller
 
     public function otpVerfiy(OtpVerifyRequest $request)
     {
-        $otp = $request->otp;        
-
-        if (!$request->bearerToken()) {
+        $otp = $request->otp;   
+        $otpToken = $request->otp_token;  
+        
+        if (!$otp || !$otpToken) {
 
             return response()->json([                
                 'msg'   => 'Invalid token or token not found.',
@@ -76,9 +86,78 @@ class VerficationController extends Controller
 
         }
 
-        $client = JWTAuth::parseToken()->authenticate();        
+        $verficationURL = 'https://2factor.in/API/V1/'.$this->apiKey.'/SMS/VERIFY/'.$otpToken.'/'.$otp;
+        
+        $curl = curl_init();
 
-        if (!$client) {
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => $verficationURL,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'GET',
+        ));
+
+        $response = curl_exec($curl);
+
+        curl_close($curl);
+
+        $responseData = json_decode($response);        
+
+        if ($responseData) {
+
+            if ((isset($responseData->Status) && $responseData->Status == 'Success') && (isset($responseData->Details) && $responseData->Details == 'OTP Matched')) {
+
+                $clientDetails = ClientOtp::where('otp',$otp)->where('otp_token',$otpToken)->first();
+
+                if ($clientDetails) {                    
+
+                    $clientDetails->client->sms_verified_at = now();                    
+                    $clientDetails->client->save();
+
+                    return response()->json([                                
+                        'msg'   => 'OTP verified successfully.',
+                        'status'   => true,
+                        'data'  => [                            
+                            'client' => $clientDetails->client, 
+                            'clientDetails' => $clientDetails->client->clientDetails,
+                            'store' => $clientDetails->client->store,
+                        ]
+                    ], 200);
+
+                }
+
+            }
+        }
+
+        /*
+        if ($otp == '000000') {            
+
+            $clientOtp = ClientOtp::where('otp',$otp)->where('otp_token',$request->bearerToken())->first();
+            
+            if ($clientOtp) {
+
+                $client = Client::where('id',$clientOtp->client_id)->first();
+
+                $client->sms_verified_at = now();
+
+                $client->save();
+
+                return response()->json([                                
+                    'msg'   => 'OTP verified successfully.',
+                    'status'   => true,
+                    'data'  => [
+                        //'token' => JWTAuth::getToken(),
+                        'client' => $client, 
+                        'clientDetails' => $client->clientDetails,
+                        'store' => $client->store,
+                    ]
+                ], 200);
+                
+            }
 
             return response()->json([                
                 'msg'   => 'Invalid token or token not found.',
@@ -86,29 +165,11 @@ class VerficationController extends Controller
                 'data'  => (object) []
             ], 200);
 
-        }        
-
-        if ($otp == '000000') {            
-
-            $client->sms_verified_at = now();
-
-            $client->save();
-
-            return response()->json([                                
-                'msg'   => 'OTP verified successfully.',
-                'status'   => true,
-                'data'  => [
-                    //'token' => JWTAuth::getToken(),
-                    'client' => $client, 
-                    'clientDetails' => $client->clientDetails,
-                    'store' => $client->store,
-                ]
-            ], 200);
-
         } 
+        */
 
         return response()->json([                         
-            'msg'   => 'Invalid otp',
+            'msg'   => 'Invalid otp or otp token',
             'status'   => false,
             'data'  => (object) []
         ], 200);
@@ -161,26 +222,40 @@ class VerficationController extends Controller
 
     public function resetPassword(ResetPasswordRequest $request) {
 
-        $password = $request->password;        
+        $existingPassword = $request->password; 
+        $newPassword = $request->new_password;       
+        $otpToken = $request->otp_token;
 
-        $client = JWTAuth::parseToken()->authenticate();        
+        $clientDetails = ClientOtp::where('otp_token',$otpToken)->where('verification_for','forgotpassword')->first();
 
-        if (!$client) {
+        if($clientDetails) {
 
-            return response()->json([                               
-                'msg'   => 'Invalid token or token not found.',
-                'status'   => false,
+            $client = $clientDetails->client;            
+
+            if (!Hash::check($existingPassword,$client->password)) {
+                return response()->json([                               
+                    'msg'   => 'Invalid current password.',
+                    'status'   => false,
+                    'data'  => (object) []
+                ], 200);
+            }
+
+            
+            $client->password = bcrypt($newPassword);
+            $client->last_password_change_at = now();
+            $client->save();
+
+            return response()->json([                       
+                'msg'   => 'Password changed successfully.',
+                'status'   => true,
                 'data'  => (object) []
             ], 200);
-        }        
 
-        $client->password = bcrypt($password);
-        $client->last_password_change_at = now();
-        $client->save();
-
-        return response()->json([                       
-            'msg'   => 'Password changed successfully.',
-            'status'   => true,
+        }           
+        
+        return response()->json([                               
+            'msg'   => 'Invalid otp.',
+            'status'   => false,
             'data'  => (object) []
         ], 200);
 
@@ -199,19 +274,67 @@ class VerficationController extends Controller
             ], 200);        
 
         }
+
+        if ($client->is_active == 0) {
+
+            return response()->json([                
+                'msg' => 'Your account is blocked please contact administrator',
+                'status' => false,
+                'data' => (object)[]
+            ], 402);
+
+        }
         
-        Auth::login($client);
+        $curl = curl_init();
 
-        $token = auth('client')->refresh();
+        $sendOtpUrl = "https://2factor.in/API/V1/".$this->apiKey."/SMS/+91".$request->phone."/AUTOGEN2/Forgot%20Password";
+        
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => $sendOtpUrl,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'GET',
+        ));
 
-        return response()->json([            
-            'msg' => '',
-            'status' => true,
-            'data' => [
-                'otp' => '000000',
-                'token' => $token
-            ]
+        $response = curl_exec($curl);
+
+        curl_close($curl);
+
+        $responseData = json_decode($response);
+
+        if ($responseData) {
+            if (isset($responseData->Status) && $responseData->Status == 'Success') {
+
+                $clientOTP = new ClientOtp();
+                $clientOTP->client_id = $client->id;
+                $clientOTP->phone = $request->phone;
+                $clientOTP->otp = $responseData->OTP;
+                $clientOTP->otp_token = $responseData->Details;
+                $clientOTP->verification_for = 'forgotpassword';
+                $clientOTP->save();
+
+                return response()->json([                
+                    'msg' => 'OTP has been sent to your registered phone number.',
+                    'status' => true,
+                    'data' => [
+                        'otp' => $responseData->OTP,
+                        'token' => $responseData->Details
+                    ]
+                ], 200);
+
+            }
+        }
+
+        return response()->json([                
+            'msg' => 'Error in sending otp.',
+            'status' => false,
+            'data' => (object)[]
         ], 200);
+
 
     }
 

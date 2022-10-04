@@ -10,6 +10,7 @@ use App\Http\Requests\Api\v1\Client\SessionRequest;
 use App\Http\Requests\Api\v1\Client\UpdateClientRequest;
 use App\Models\Client;
 use App\Models\ClientDetail;
+use App\Models\ClientOtp;
 use App\Models\ClientToken;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -18,6 +19,14 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AuthController extends Controller
 {
+
+    private $apiKey;
+
+    public function __construct() {
+
+        $this->apiKey = "ee0fc98c-3e1e-11ed-9c12-0200cd936042";
+
+    }
     
     public function register(RegisterRequest $request) {
 
@@ -31,22 +40,63 @@ class AuthController extends Controller
 
         if ($client->save()) {
 
-            $client->sendEmailVerificationNotification();
+            // Send Email Verification To Client (Optional)
 
-            $token = auth()->guard('client')->attempt(request(['email', 'password']));
+            //$client->sendEmailVerificationNotification();
+
+            $curl = curl_init();
+
+            $sendOtpUrl = "https://2factor.in/API/V1/".$this->apiKey."/SMS/+91".$request->phone."/AUTOGEN2/Registration%20Verification";
+            
+            curl_setopt_array($curl, array(
+                CURLOPT_URL => $sendOtpUrl,
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_ENCODING => '',
+                CURLOPT_MAXREDIRS => 10,
+                CURLOPT_TIMEOUT => 0,
+                CURLOPT_FOLLOWLOCATION => true,
+                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                CURLOPT_CUSTOMREQUEST => 'GET',
+            ));
+
+            $response = curl_exec($curl);
+
+            curl_close($curl);
+
+            $responseData = json_decode($response);
+
+            if ($responseData) {
+
+                if (isset($responseData->Status) && $responseData->Status == 'Success') {
+
+                    $clientOTP = new ClientOtp();
+                    $clientOTP->client_id = $client->id;
+                    $clientOTP->phone = $request->phone;
+                    $clientOTP->otp = $responseData->OTP;
+                    $clientOTP->otp_token = $responseData->Details;
+                    $clientOTP->verification_for = 'register';
+                    $clientOTP->save();
+
+                    return response()->json([                
+                        'msg' => 'Registered successfully. OTP has been sent to your registered phone number.',
+                        'status' => true,
+                        'data' => [
+                            'otp' => $responseData->OTP,
+                            'token' => $responseData->Details
+                        ]
+                    ], 200);
+
+                }
+
+            }            
 
             return response()->json([                
-                'msg' => 'Registered successfully. OTP has been sent to your registered phone number.',
-                'status' => true,
-                'data' => [
-                    'otp' => '000000',
-                    'token' => $token
-                ]
+                'msg' => 'Error in sending otp.',
+                'status' => false,
+                'data' => (object)[]
             ], 200);
 
         }
-
-        // Send SMS Verification Code
 
         return response()->json([            
             'msg' => 'Error registering client.',
@@ -59,7 +109,7 @@ class AuthController extends Controller
     public function login(LoginRequest $request) {
 
         $client = Client::where('phone', $request->phone)->first(); 
-
+        
         if (!$client) {
             return response()->json([                
                 'msg' => 'Invalid credentials.',
